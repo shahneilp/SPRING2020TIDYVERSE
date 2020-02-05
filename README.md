@@ -32,3 +32,7 @@ You should complete both parts of the assignment and make your submissions on th
 
 
 ## Vignettes:
+
+forcats_makes_plots_better.Rmd - how to use capabilities of forcats package to improve your plots!  Andy Catlin and Ait Elmouden Abdellah
+
+

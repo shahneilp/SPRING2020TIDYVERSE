@@ -1,0 +1,58 @@
+---
+title: "forcats makes plots better"
+author: "Catlin"
+date: "2/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(forcats)  # tidyverse package for factors; needs to be explicitly loaded
+```
+
+# load information from fivethirtyeight.com on college majors
+Thank you to Ait Elmouden Abdellah for introducing me to this dataset!
+
+```{r}
+CollegeMajors <- read.csv("https://raw.githubusercontent.com/aaitelmouden/DATA607S2020/master/Week1/recent-grads.csv")
+```
+
+```{r}
+str(CollegeMajors)
+```
+
+```{r}
+str(CollegeMajors)
+```
+
+## consider default ordering
+
+```{r}
+CollegeMajors %>%
+  count(Major_category, wt = Total, sort = TRUE) %>%
+  ggplot(aes(Major_category, n)) + geom_col() + coord_flip() +
+labs(x = "",
+     y = "Total # of Graduates")
+```
+
+Consider: 
+
+(1) what is the current sort order?
+(2) What is the desired sort order?
+
+```{r}
+CollegeMajors %>%
+  count(Major_category, wt = Total, sort = TRUE) %>%
+  ggplot(aes(x = fct_reorder(Major_category, n), y = n)) + geom_col() + coord_flip() +
+labs(x = "",
+     y = "Total # of Graduates")
+```
+
+Notes: 
+
+* Sometimes, you'll want to wrap the call to fct_reorder() in an fct_rev()
+* fct_infreq() can be useful instead of fct_reorder when you're working with a single variable
