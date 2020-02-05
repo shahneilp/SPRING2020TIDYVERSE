@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, include=FALSE}
 library(tidyverse)
 library(forcats)  # tidyverse package for factors; needs to be explicitly loaded
 ```
@@ -19,14 +19,12 @@ Thank you to Ait Elmouden Abdellah for introducing me to this dataset!
 
 ```{r}
 CollegeMajors <- read.csv("https://raw.githubusercontent.com/aaitelmouden/DATA607S2020/master/Week1/recent-grads.csv")
+
+# str(CollegeMajors) - verify that Major_Category is a factor
 ```
 
 ```{r}
-str(CollegeMajors)
-```
 
-```{r}
-str(CollegeMajors)
 ```
 
 ## consider default ordering
