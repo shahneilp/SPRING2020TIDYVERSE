@@ -31,6 +31,6 @@ You should complete both parts of the assignment and make your submissions on th
 
 ## "In the Style of" Vignettes:
 
-* https://github.com/acatlin/SPRING2020TIDYVERSE/blob/master/forcats_makes_plots_better.Rmd - how to use capabilities of forcats package to improve your plots!  Andy Catlin and Ait Elmouden Abdellah
+* https://acatlin.github.io/SPRING2020TIDYVERSE/forcats_makes_plots_better.html - how to use capabilities of forcats package to improve your plots!  Andy Catlin and Ait Elmouden Abdellah
 
 
