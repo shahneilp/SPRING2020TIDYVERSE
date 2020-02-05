@@ -5,11 +5,13 @@ date: "2/5/2020"
 output: html_document
 ---
 
+## Consider using forcats::fct_reorder() to improve your plots!
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, include=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(forcats)  # tidyverse package for factors; needs to be explicitly loaded
 ```
@@ -23,18 +25,14 @@ CollegeMajors <- read.csv("https://raw.githubusercontent.com/aaitelmouden/DATA60
 # str(CollegeMajors) - verify that Major_Category is a factor
 ```
 
-```{r}
-
-```
-
 ## consider default ordering
 
 ```{r}
 CollegeMajors %>%
-  count(Major_category, wt = Total, sort = TRUE) %>%
+  count(Major_category, wt = Total / 1000, sort = TRUE) %>%
   ggplot(aes(Major_category, n)) + geom_col() + coord_flip() +
 labs(x = "",
-     y = "Total # of Graduates")
+     y = "Total # of Graduates (thousands)")
 ```
 
 Consider: 
@@ -44,10 +42,10 @@ Consider:
 
 ```{r}
 CollegeMajors %>%
-  count(Major_category, wt = Total, sort = TRUE) %>%
+  count(Major_category, wt = Total / 1000, sort = TRUE) %>%
   ggplot(aes(x = fct_reorder(Major_category, n), y = n)) + geom_col() + coord_flip() +
 labs(x = "",
-     y = "Total # of Graduates")
+     y = "Total # of Graduates (thousands)")
 ```
 
 Notes: 
