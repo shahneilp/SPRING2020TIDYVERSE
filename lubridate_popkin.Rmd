@@ -1,0 +1,79 @@
+---
+title: "Working with Lubridate"
+author: "Ken Popkin"
+date: "3/12/2020"
+output: html_document
+---
+
+#### Dates are a frequent feature in data analysis and data science projects.  In this vignette we'll look at the Lubridate package and perform a few date transformations.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(lubridate)
+```
+
+#### Load information from Kaggle's Hourly Energy Consumption dataset
+[link to data description](https://www.kaggle.com/robikscube/hourly-energy-consumption/data#)
+
+```{r}
+energy <- read.csv('C:/Users/user/Documents/00_Applications_DataScience/CUNY/DATA607/DATA607-Class-Repository/zTidyVerse_Assignment/DEOK_hourly.csv')
+
+energy2 <- head(energy, 1)
+energy2
+```
+
+
+#### Now we'll explore some of the functionality that makes Lubridate so helpful and expand the date features in the energy dataframe.
+
+##### Parsing enables various parts of a date to be obtained
+```{r}
+#get the year, month and day
+energy2$year <- year(energy2$Datetime)
+energy2$month <- month(energy2$Datetime)
+energy2$day <- day(energy2$Datetime)
+```
+
+```{r}
+#get the week of the year and the iso week of the year
+energy2$week <- week(energy2$Datetime)
+energy2$isoweek <- isoweek(energy2$Datetime)
+
+select(energy2, Datetime, year, month, day, week, isoweek)
+```
+
+
+##### Timezones are another convenient and easy to obtain feature
+```{r}
+#Uncomment to see over 600 time zones that R can provide:   OlsonNames()
+
+energy2$Datetime <- as_datetime(energy2$Datetime)
+
+energy2$atlantic_tz <- with_tz(energy2$Datetime,"US/Atlantic")
+energy2$pacific_tz <- with_tz(energy2$Datetime,"US/Pacific")
+
+select(energy2, Datetime, atlantic_tz, pacific_tz)
+```
+
+
+##### Lubridate simplifies math operations on dates
+```{r}
+#add and subtract some days to Datetime and create a new feature
+energy2$two_weeks_out <- energy2$Datetime + days(14)
+
+energy2$two_weeks_back <- energy2$Datetime + days(-14)
+
+select(energy2, Datetime, two_weeks_back, two_weeks_out)
+```
+
+
+#### Conclusion: 
+This has been a small subset of the many capabilities of the Lubridate package.  There are a number of other capabilities that could be added to this vignette.
+```{r}
+energy2
+```

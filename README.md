@@ -36,3 +36,6 @@ You should complete both parts of the assignment and make your submissions on th
 
 ### dbplyr 
 dbplyr is great and simple to use backend solution for working with data that is stored on a SQL server. dbplyr follows the same grammar and formatting as dplyr, but translates R code into a SQL query to directly access the SQL database. 
+
+## "Working with Lubridate":
+This vignette loads the Lubridate package and performs a few date transformations.
