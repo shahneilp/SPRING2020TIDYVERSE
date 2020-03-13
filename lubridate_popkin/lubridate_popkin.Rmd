@@ -22,7 +22,9 @@ library(lubridate)
 [link to data description](https://www.kaggle.com/robikscube/hourly-energy-consumption/data#)
 
 ```{r}
-energy <- read.csv('C:/Users/user/Documents/00_Applications_DataScience/CUNY/DATA607/DATA607-Class-Repository/zTidyVerse_Assignment/DEOK_hourly.csv')
+#energy <- read.csv('C:/Users/user/Documents/00_Applications_DataScience/CUNY/DATA607/DATA607-Class-Repo#sitory/zTidyVerse_Assignment/DEOK_hourly.csv')
+
+energy <- read.csv('https://raw.githubusercontent.com/krpopkin/SPRING2020TIDYVERSE/master/lubridate_popkin/DEOK_hourly.csv')
 
 energy2 <- head(energy, 1)
 energy2
