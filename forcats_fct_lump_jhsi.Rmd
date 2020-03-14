@@ -1,0 +1,53 @@
+---
+title: "forcats::fct_lump - Tidyverse - Data 607"
+author: "Justin Hsi"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+# Forcats - a package with useful functions when working with categorical data 
+
+## When working with a categorical variable that potentially has an enormous amount of levels, you can use forcats::fct_lump() to quickly group less common levels and focus on what levels you think are important
+
+Let's load the rarepepe dataset [(article here).](https://fivethirtyeight.com/features/pepe-the-frog-symbolism-cryptoart-blockchain/)
+
+```{r}
+order_all = read_csv('https://raw.githubusercontent.com/fivethirtyeight/data/master/rare-pepes/ordermatches_all.csv')
+```
+
+Let's say you wanted to examine a categorical variable with too many levels. The rarepepe dataset has the names of rarepepe artworks which create many levels. If you tried to do a plot of them vs their summed historical forward asset sales, you might get something unusable like this:
+
+```{r}
+f = factor(x = order_all$ForwardAsset)
+order_all %>%
+  group_by(ForwardAsset) %>%
+  summarise(summed_for_quant = sum(ForwardQuantity)) %>% 
+  ggplot(aes(x = fct_reorder(ForwardAsset, summed_for_quant), y = summed_for_quant)) + 
+  geom_col() + coord_flip() + labs(x='rarepepe name', y='total combined forward assets in all transactions')
+```
+
+Part of what makes this visualization not helpful is the overwhelming number of levels. We can reduce this with *fct_lump*, as it will group the factors that do not occur frequently enough into a single level called "Other". Here we choose the 15 most frequently occuring levels/artworks :
+
+```{r}
+f = factor(x = order_all$ForwardAsset)
+order_all$ForwardAsset = fct_lump(f, 15)
+order_all %>%
+  group_by(ForwardAsset) %>%
+  summarise(summed_for_quant = sum(ForwardQuantity)) %>% 
+  ggplot(aes(x = fct_reorder(ForwardAsset, summed_for_quant), y = summed_for_quant)) + 
+  geom_col() + coord_flip() + labs(x='rarepepe name', y='total combined forward assets in all transactions')
+```
+
+## Conclusions
+Now we can clearly see the scale of the most transacted rarepepe, PEPEONECOIN, compared to every other rarepepe. This could be a useful first step in analysis, such as which rarepepes you might want to acquire at some point for their value.
+Some other things to note include the proportion method, rather than choosing the top n most frequent levels. You may consider using this function with fct_inorder, fct_infreq, or fct_inseq which are related to factor sorting. And finally, there is a similar function fct_lump_min, which has a slightly different functionality when you want to specify which level is the lowest count level before grouping to other.
+
+
