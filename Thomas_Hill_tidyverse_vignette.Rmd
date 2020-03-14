@@ -1,0 +1,117 @@
+---
+title: 'Tidyverse Vignette: Preparing online data for facet_wrap'
+author: "Thomas Hill"
+date: "3/13/2020"
+output:
+  html_document:
+    df_print: paged
+---
+
+# National Survey of Drug Use, Ages 12 +, an HTML Tidyverse vignette
+
+This vignette is based off one of the datasets available for Project 2.  After reading this, you should understand how imported table from the website, used the 'gather' function to collect the table contents, and finally used Tidyverse and ggplot to call facet_wrap in order to compare changes in illicit drug use over time.
+
+
+# Importing the original table
+
+I loaded the tidyr and rvest packages, then defined the url as the .gov website. I was able to extract only the table by finding the xpath within the HTML of the website.  I did this by opening the website in Google Chrome and pressing 'F12', or Developer Tools. 
+
+After some trial and error, here's how I was able to copy the xpath straight from Chrome: using Ctrl + Shift + C, I was able to inspect the table element and get a general sense of where it was in the html.  Then, I scrolled down until I found a '<table' tag.  I right clicked this > copy > Copy XPath.  
+
+```{r convert-drug-use}
+
+library(tidyr) #load tidyr package
+library(rvest) #load rvest package to scrape table from .gov site
+
+url <- "https://www.drugabuse.gov/national-survey-drug-use-health"
+drug_use_orig <- url %>% 
+  xml2::read_html() %>% #this function 
+html_nodes(xpath='//*[@id="node-4661"]/div/div/div/div/div/table') %>%
+   #the above line illustrates use of an xpath for the table
+  html_table(header = TRUE, fill = TRUE)
+drug_use_orig <- as.data.frame(drug_use_orig) #import as df
+head(drug_use_orig)
+```  
+
+# First Look at the Data Frame
+
+The original formmatting of the table has a few issues that needed to be addressed before gathering the data frame.  First, there are duplicate headers for 'drug' and 'time period.'
+
+```{r double header}
+
+
+drug_use_orig <- drug_use_orig[-1,] #Remove the first row of the data frame
+head(drug_use_orig)
+
+```
+
+Next, there are three columns for each age group, corresponding to 2016 - 2018 data. I used the dplyr function to select the age groups for each year.  Additionally, the prevalence of substance use is a character. I'll convert these columns to 
+
+```{r drug-abuse-tall}
+library(dplyr) #call dplyr package
+#values for 2016
+drug_abuse_tall_2016 <- drug_use_orig %>% 
+  select(Drug, Time.Period, Ages.12.or.Older, Ages.12.to.17, Ages.18.to.25, Ages.26.or.Older) %>%
+
+  #Create a new column, 'Age_Group', then gather the contents of the three columns into a second column containing all of the observations, 'Percent Use, 2016'.
+
+  
+    gather(Age_Group, "Percent Use, 2016", Ages.12.or.Older:Ages.26.or.Older)
+
+#Make sure percents are stored as numeric data
+
+drug_abuse_tall_2016$`Percent Use, 2016` <- as.numeric(drug_abuse_tall_2016$`Percent Use, 2016`)
+
+
+#Repeat the same process for 2017 and 2018
+
+drug_abuse_tall_2017 <- drug_use_orig %>%
+  select(Drug, Time.Period, Ages.12.or.Older.1, Ages.12.to.17.1, Ages.18.to.25.1, Ages.26.or.Older.1) %>%
+  gather(Age_Group, "Percent Use, 2017", Ages.12.or.Older.1:Ages.26.or.Older.1)
+drug_abuse_tall_2017$`Percent Use, 2017` <- as.numeric(drug_abuse_tall_2017$`Percent Use, 2017`)
+
+drug_abuse_tall_2018 <- drug_use_orig %>%
+  select(Drug, Time.Period, Ages.12.or.Older.2, Ages.12.to.17.2, Ages.18.to.25.2, Ages.26.or.Older.2) %>%
+  gather(Age_Group, "Percent Use, 2018", Ages.12.or.Older.2:Ages.26.or.Older.2)
+drug_abuse_tall_2018$`Percent Use, 2018` <- as.numeric(drug_abuse_tall_2018$`Percent Use, 2018`)
+
+#The last three steps generated three tall data frames. To keep everything as a single dataframe, I'll call the 'cbind' function to append these columns together
+
+drug_abuse_tall <- cbind(drug_abuse_tall_2016,"Percent Use, 2017" = drug_abuse_tall_2017$`Percent Use, 2017`,"Percent Use, 2018" = drug_abuse_tall_2018$`Percent Use, 2018`)
+head(drug_abuse_tall,10)
+```  
+
+
+# Visualization of Tall Data
+
+The data frame now has columns for age group and corresponding values for the three years surveyed.  As a final step, lets look at a specific use pattern and compare the bar plots for each age group.  
+
+```{r lifetime-use-per-category}
+
+
+#call our function that has the new columns
+drug_abuse_lifetime <- drug_abuse_tall %>% 
+  #start by looking at lifetime use, and any illicit drug use
+  filter(Time.Period == 'Lifetime', Drug == 'Illicit Drugs') %>%
+  #Gather the percentages, assigning them to the new 'Percent' column, also split each observation by year
+  gather(Year, Percent, 'Percent Use, 2016':'Percent Use, 2018') %>%
+  #edit the 'Year' column so that it omits the 'Percent Use' string
+  separate(Year, c(NA, "Year"), sep = ",", convert = TRUE)
+head(drug_abuse_lifetime)
+
+library(ggplot2)
+plot_drug_abuse <- drug_abuse_lifetime %>%
+  #call ggplot, plot year versus prevalence in terms of percent
+  #stat = 'identity' sets the bars equal to the percent magnitude instead of the frequency of values
+  ggplot(aes(x= Year, y = Percent)) + geom_bar(stat = "identity") +
+  #call facet_wrap function, specify the variable to wrap as the four age groups
+  facet_wrap(~Age_Group)
+
+plot_drug_abuse
+```  
+
+\newline
+
+# Conclusion
+
+The function facet_wrap is a useful tool for comparing plots over several variables on the same scale. Tidyverse fucntions make it easy to gather data into the correct format to visualize many different comparisons.  
