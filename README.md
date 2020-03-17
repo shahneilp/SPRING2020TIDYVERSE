@@ -33,6 +33,10 @@ From the forcats package, this function allows you to quickly group levels of a 
 ### Working with Lubridate:
 This vignette loads the Lubridate package and performs a few date transformations. Ken Popkin
 
+
+## ggplot2 - geom
+ggplot2 is a ubiquitous library that allows you to easily visualize data and explain patterns in data to people who are not nessesarliy familiar with the technical aspect of data analysis. Visualizations made with ggplot2 are easy to understand and contruct thanks to an API that allows visualizations to be "built" via layering of graphics and other visual elements.
+=======
 This file should help you understand how to export a table from a website, gather the data into a tall format, and plot the variables of interest into several plots for easy comparison
 
 # DATA607_Tidyverse_Vignette
