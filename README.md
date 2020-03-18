@@ -50,3 +50,9 @@ Please follow along with the steps I took to prepare date for ggplot exploration
 ### tidyverse
 Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout) 
 
+Gabriel Abreu
+
+Abdellah Ait Elmouden
+
+Samuel Bellows
+
