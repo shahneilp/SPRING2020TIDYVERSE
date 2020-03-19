@@ -6,7 +6,8 @@ output:
   prettydoc::html_pretty:
     theme: architect
     highlight: github
-
+params:
+  pwd: "data607"
 ---
 
 ```{r setup, include=FALSE}
@@ -63,9 +64,9 @@ conn <-
     dbConnect(
       MySQL(),
       username = "root",
-      password = rstudioapi::askForPassword("Database password"),
+      password = params$pwd,
       # For rmd on github use: rstudioapi::askForPassword("Database password")
-      # For knitting use params$pwd
+      # 
       host = '34.68.193.229',
       dbname = "Congress_v_Trump"
     )
