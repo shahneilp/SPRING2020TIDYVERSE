@@ -50,6 +50,37 @@ Please follow along with the steps I took to prepare date for ggplot exploration
 ### tidyverse
 Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout) 
 
+
+### An Example using TidyVerse packages - **ggplot2** and **dplyr**  and using tesla-stock-data-from-2010-to-2020 Data set from Kaggle 
+Author: Vinayak Kamath
+
+#### Package Selected : **ggplot2**  and **dplyr**
+
+##### Capability 1: **ggplot2 geom_line**
+
+###### Usage:  
+ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+  
+###### Demo:  
+ggplot2 geom_line to show the stock price movement over the years for Tesla shares.  
+
+##### Capability 2: **dplyr filter**
+  
+###### Usage:  
+dplyr filter helps in filtering of data based on one or more conditions.    
+  
+###### Demo:   
+dplyr filter to show the days when the stock price for Tesla moved by over 15% (profit or loss) in one day.    
+
+##### Capability 3: **dplyr group by and summarise**
+  
+###### Usage:  
+dplyr group by and summarise helps in getting aggregated data from the given data set for one or more columns.      
+    
+###### Demo:   
+dplyr group by and summarise to show the yearly minimum and maximum stock price close and arranging it in descending order of movement in a year. 
+
+
 Gabriel Abreu
 
 Abdellah Ait Elmouden
