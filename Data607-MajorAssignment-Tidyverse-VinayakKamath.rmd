@@ -97,7 +97,11 @@ tesla.hist.df %>%
 
 ```
  
- 
 --------------------------------------------------------------------------------
-
 \clearpage
+
+##### Extension of this vignette (Ken Popkin)
+This extension reviews several other capabilities that DPLYR offers and shares a bar chart that compares Tesla's defects to several other manufacturers.  
+
+The defect data was obtained from [link to dataset summary](https://data.world/nhtsa/nhtsas-odi-recalls/workspace/project-summary?agentid=nhtsa&datasetid=nhtsas-odi-recalls), then filtered to the years 2010 - 2017 (filtering of the years was done outside of this notebook to bring the dataset size to a level small enough to load on the class git hub)
+
