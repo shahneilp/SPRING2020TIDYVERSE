@@ -1,0 +1,103 @@
+---
+title: "Data607-MajorAssignment-Tidyverse"
+author: "Vinayak Kamath"
+date: "2/8/2020"
+output: 
+  html_document:
+    df_print: paged
+  pdf_document:
+    extra_dependencies:
+    - geometry
+    - multicol
+    - multirow
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### An Example using TidyVerse packages - **ggplot2** and **dplyr**  and using tesla-stock-data-from-2010-to-2020 Data set from Kaggle  [*https://www.kaggle.com/timoboz/tesla-stock-data-from-2010-to-2020*]: ##  
+  
+  
+  
+*Pls load ggplot2 and dplyr package using install.packages("ggplot2") and install.packages("dplyr")*  
+
+#### Load the library and Read the data using readr:  
+
+```{r}
+# Loading the tidyverse readr/ggplot2/dplyr package:
+library(readr)
+library(ggplot2)
+library(dplyr)
+
+  
+# Loading the tesla-stock-data-from-2010-to-2020:
+theUrl <- "https://raw.githubusercontent.com/kamathvk1982/Data607-MajorAssignment-Tidyverse/master/TSLA.csv"
+tesla.hist.df <- read_csv(theUrl)
+  
+# Adding two new columns to get the current day gain/loss and the gain/loss percentage:
+tesla.hist.df$GainLoss <-  tesla.hist.df$Close - tesla.hist.df$Open
+tesla.hist.df$GainLossPercent <- (tesla.hist.df$GainLoss/tesla.hist.df$Open)*100
+
+# Sample rows from the dataset:
+tail(tesla.hist.df)
+```
+
+--------------------------------------------------------------------------------
+
+#### Package Selected : **ggplot2**  and **dplyr**
+
+##### Capability 1: **ggplot2 geom_line**
+
+###### Usage:  
+ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+  
+###### Demo:  
+ggplot2 geom_line to show the stock price movement over the years for Tesla shares.  
+  
+```{r}
+ggplot(tesla.hist.df, aes(Date, Close)) + 
+  geom_line()
+```
+  
+   
+--------------------------------------------------------------------------------
+   
+##### Capability 2: **dplyr filter**
+  
+###### Usage:  
+dplyr filter helps in filtering of data based on one or more conditions.    
+  
+###### Demo:   
+dplyr filter to show the days when the stock price for Tesla moved by over 15% (profit or loss) in one day.    
+  
+```{r}
+tesla.hist.df %>%  
+  filter(GainLossPercent >= 15 | GainLossPercent <= -15 ) %>% 
+  arrange(desc(GainLossPercent))
+```
+
+
+--------------------------------------------------------------------------------
+
+##### Capability 3: **dplyr group by and summarise**
+  
+###### Usage:  
+dplyr group by and summarise helps in getting aggregated data from the given data set for one or more columns.      
+    
+###### Demo:   
+dplyr group by and summarise to show the yearly minimum and maximum stock price close and arranging it in descending order of movement in a year.  
+  
+```{r}
+tesla.hist.df %>% 
+  group_by(format(as.Date(tesla.hist.df$Date), "%Y")) %>% 
+  summarise(min_close = min(Close) , max_close = max(Close)) %>% 
+  arrange(desc( (max_close-min_close)/min_close)*100 )
+
+```
+ 
+ 
+--------------------------------------------------------------------------------
+
+\clearpage
