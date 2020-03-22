@@ -51,7 +51,7 @@ We will be manipulating the [Master Candy Power Rankings](https://fivethirtyeigh
 ## Loading Packages 
 
 Tidyverse and tidyr can be loaded easily as follows
-```
+```{r}
 library(tidyverse)
 library(tidyr)
 ```
@@ -73,44 +73,23 @@ x dplyr::lag()    masks stats::lag()
 
 First let's load the data into a data frame and explore.
 
-```
-> df=read.csv('https://raw.githubusercontent.com/fivethirtyeight/data/master/candy-power-ranking/candy-data.csv')
+```{r}
+df=read.csv('https://raw.githubusercontent.com/fivethirtyeight/data/master/candy-power-ranking/candy-data.csv')
 ```
 
 And let's just so some basic exploration.
 
+```{r}
+str(df)
 ```
-> str(df)
-'data.frame':	85 obs. of  13 variables:
- $ competitorname  : Factor w/ 85 levels "100 Grand","3 Musketeers",..: 1 2 45 46 3 4 5 6 7 8 ...
- $ chocolate       : int  1 1 0 0 0 1 1 0 0 0 ...
- $ fruity          : int  0 0 0 0 1 0 0 0 0 1 ...
- $ caramel         : int  1 0 0 0 0 0 1 0 0 1 ...
- $ peanutyalmondy  : int  0 0 0 0 0 1 1 1 0 0 ...
- $ nougat          : int  0 1 0 0 0 0 1 0 0 0 ...
- $ crispedricewafer: int  1 0 0 0 0 0 0 0 0 0 ...
- $ hard            : int  0 0 0 0 0 0 0 0 0 0 ...
- $ bar             : int  1 1 0 0 0 1 1 0 0 0 ...
- $ pluribus        : int  0 0 0 0 0 0 0 1 1 0 ...
- $ sugarpercent    : num  0.732 0.604 0.011 0.011 0.906 ...
- $ pricepercent    : num  0.86 0.511 0.116 0.511 0.511 ...
- $ winpercent      : num  67 67.6 32.3 46.1 52.3 .
- ```
+
  
- Alright--13 columns[variables] that composed of factors, numbers and integers. No need to change any variable type--thank you 538!
+Alright--13 columns[variables] that composed of factors, numbers and integers. No need to change any variable type--thank you 538!
  
  Now let's look at how it's structured. 
  
-```
-> head(df)
-  competitorname chocolate fruity caramel peanutyalmondy nougat crispedricewafer hard bar pluribus sugarpercent
-1      100 Grand         1      0       1              0      0                1    0   1        0        0.732
-2   3 Musketeers         1      0       0              0      1                0    0   1        0        0.604
-3       One dime         0      0       0              0      0                0    0   0        0        0.011
-4    One quarter         0      0       0              0      0                0    0   0        0        0.011
-5      Air Heads         0      1       0              0      0                0    0   0        0        0.906
-6     Almond Joy         1      0       0              1      0                0    0   1        0        0.465
-
+```{r}
+head(df)
 ```
 
 From the data we have a 85 different candies, each described by either a single or mulitple attribute, with a unque sugarpercent, pricepercent and winpercent.
@@ -129,9 +108,11 @@ as_tibble() will convert a passed dataframe to a tibble
 
 ### Example: converting a dataframe to a tibble
 
+```{r}
+as_tibble(df)
 ```
-> as_tibble(df)
 
+```
 # A tibble: 85 x 13
    competitorname chocolate fruity caramel peanutyalmondy nougat crispedricewafer  hard   bar pluribus sugarpercent
    <fct>              <int>  <int>   <int>          <int>  <int>            <int> <int> <int>    <int>        <dbl>
@@ -146,6 +127,7 @@ as_tibble() will convert a passed dataframe to a tibble
  9 Candy Corn             0      0       0              0      0                0     0     0        1        0.906
 10 Caramel Apple~         0      1       1              0      0                0     0     0        0        0.604
 ```
+
 Compare this to the default head(df) print and we can see the tibble is cleaner, providers the datatypes below each column and has a rectanguar structure.
 
 ## Using dplyr: select to slice dataframe 
@@ -168,22 +150,8 @@ select() allows you to choose or rename variables/columns in a passed table/data
 
 Let's say we have a sweet-tooth and want to only isolate candy's and their sugarpercent
 
-```
-> select(as_tibble(df),competitorname,sugarpercent)
-
-# A tibble: 85 x 2
-   competitorname     sugarpercent
-   <fct>                     <dbl>
- 1 100 Grand                 0.732
- 2 3 Musketeers              0.604
- 3 One dime                  0.011
- 4 One quarter               0.011
- 5 Air Heads                 0.906
- 6 Almond Joy                0.465
- 7 Baby Ruth                 0.604
- 8 Boston Baked Beans        0.313
- 9 Candy Corn                0.906
-10 Caramel Apple Pops        0.604
+```{r}
+select(as_tibble(df),competitorname,sugarpercent)
 ```
 
 
@@ -205,46 +173,20 @@ arrange(.data,...)
 
 ### Example: Sorting candy's by ascending sugarpercent 
 
+```{r}
+arrange(select(as_tibble(df),competitorname,sugarpercent),sugarpercent)
 ```
-> arrange(select(as_tibble(df),competitorname,sugarpercent),sugarpercent)
 
-# A tibble: 85 x 2
-   competitorname        sugarpercent
-   <fct>                        <dbl>
- 1 One dime                    0.011 
- 2 One quarter                 0.011 
- 3 ReeseÃ•s Miniatures         0.0340
- 4 Chiclets                    0.046 
- 5 Lemonhead                   0.046 
- 6 Sour Patch Kids             0.0690
- 7 Sour Patch Tricksters       0.0690
- 8 Jawbusters                  0.0930
- 9 Pixie Sticks                0.0930
-10 Warheads                    0.0930
-```
+
 ### Usage
 desc(.data,...)
 
 ### Example: Sorting candy's by descending sugarpercent 
 
+```{r}
+arrange(select(as_tibble(df),competitorname,sugarpercent),desc(sugarpercent))
 ```
-> arrange(select(as_tibble(df),competitorname,sugarpercent),desc(sugarpercent))
 
-
-# A tibble: 85 x 2
-   competitorname               sugarpercent
-   <fct>                               <dbl>
- 1 ReeseÃ•s stuffed with pieces        0.988
- 2 Milky Way Simply Caramel            0.965
- 3 Sugar Babies                        0.965
- 4 Skittles original                   0.941
- 5 Skittles wildberry                  0.941
- 6 Air Heads                           0.906
- 7 Candy Corn                          0.906
- 8 Gobstopper                          0.906
- 9 Mike & Ike                          0.872
-10 Runts                               0.872
-```
 
 ## Using dplyr:: %>% to pipe functions
 
@@ -263,25 +205,11 @@ x %>% f(x
 
 ### Example: Repeating the previous steps--sorting a tibble converted dataframe by a selected columns 
 
+```{r}
+df %>% as_tibble() %>% select(competitorname,sugarpercent) %>% arrange(sugarpercent)
 ```
-> df %>% as_tibble() %>% select(competitorname,sugarpercent) %>% arrange(sugarpercent)
 
 
-# A tibble: 85 x 2
-   competitorname        sugarpercent
-   <fct>                        <dbl>
- 1 One dime                    0.011 
- 2 One quarter                 0.011 
- 3 ReeseÃ•s Miniatures         0.0340
- 4 Chiclets                    0.046 
- 5 Lemonhead                   0.046 
- 6 Sour Patch Kids             0.0690
- 7 Sour Patch Tricksters       0.0690
- 8 Jawbusters                  0.0930
- 9 Pixie Sticks                0.0930
-10 Warheads                    0.0930
-
-```
 
 Compare that with the previous used code
 
@@ -293,24 +221,23 @@ arrange(select(as_tibble(df),competitorname,sugarpercent),desc(sugarpercent))
 
 The piping %>% operator is very useful in it's ability to pass a chain of commands to a function. Let's say we want to see if there is a relationship between winpercentage and sugarpercentage, we can follow the previous steps (selecting the winpercentage column in addition) and sending it all to ggplot [another core tidyverse package but beyond the scope of this notebook]
 
-```
+```{r}
 df %>% as_tibble() %>% select(competitorname,winpercent,sugarpercent) %>% ggplot(aes(x=winpercent,y=sugarpercent))+geom_point()
 ```
+
 The data looks evenly distributed so there doesn't seem to be a linear relation but let's add a best fit regression line to show off %>%
 
-![Sugar/Win](https://raw.githubusercontent.com/shahneilp/DATA607/master/Tidyverse/scattersugar.png)
-```
+
+```{r}
 df %>% as_tibble() %>% select(competitorname,winpercent,sugarpercent) %>% ggplot(aes(x=winpercent,y=sugarpercent))+geom_point()+geom_smooth(method='lm')
 ```
-![Sugar/winlinear](https://raw.githubusercontent.com/shahneilp/DATA607/master/Tidyverse/smoothplot.png)
 
 
 Finally--let's label the candy's for our diabetic friend that have a win percentage above 60% but have a sugar content less than 50%
 
+```{r}
+df %>% as_tibble() %>% select(competitorname,winpercent,sugarpercent) %>% ggplot(aes(x=winpercent,y=sugarpercent),label=competitorname)+geom_point()+geom_smooth(method='lm')+geom_text(aes(label=ifelse((sugarpercent<0.50 & winpercent>60),as.character(competitorname),'')))
 ```
-> df %>% as_tibble() %>% select(competitorname,winpercent,sugarpercent) %>% ggplot(aes(x=winpercent,y=sugarpercent),label=competitorname)+geom_point()+geom_smooth(method='lm')+geom_text(aes(label=ifelse((sugarpercent<0.50 & winpercent>60),as.character(competitorname),'')))
-```
-![Label Candy](https://raw.githubusercontent.com/shahneilp/DATA607/master/Tidyverse/labelcandy.png)
 
 
 ## Intermediary Conclusions
