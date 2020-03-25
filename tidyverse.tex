@@ -1,0 +1,294 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={tidyverse},
+  pdfauthor={Subhalaxmi Rout},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{tidyverse}
+\author{Subhalaxmi Rout}
+\date{3/14/2020}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{introduction}{%
+\subsection{1. Introduction}\label{introduction}}
+
+This is the dataset of \texttt{titanic}, I have chosen from
+\texttt{Kaggle}. This data set has below columns.
+
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{titanic_data_desc} \end{figure}
+
+\hypertarget{load-library}{%
+\subsection{2. Load library}\label{load-library}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#install.packages("tidyverse")}
+\CommentTok{#install.packages("ggplot2")}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Registered S3 method overwritten by 'rvest':
+##   method            from
+##   read_xml.response xml2
+\end{verbatim}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.2.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v tibble  2.1.3     v purrr   0.3.3
+## v tidyr   1.0.2     v dplyr   0.8.3
+## v readr   1.3.1     v stringr 1.4.0
+## v tibble  2.1.3     v forcats 0.4.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\hypertarget{load-data-to-r}{%
+\subsection{3. Load data to R}\label{load-data-to-r}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# get the data from Git repository}
+\NormalTok{url <-}\StringTok{ "https://raw.githubusercontent.com/SubhalaxmiRout002/tidyverse/master/titanic.csv"}
+\CommentTok{# read the csv file}
+\NormalTok{titanic_data <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(url, }\DataTypeTok{stringsAsFactors =} \OtherTok{FALSE}\NormalTok{)}
+\CommentTok{# view fisrt 6 rows of data}
+\KeywordTok{head}\NormalTok{(titanic_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   PassengerId Survived Pclass
+## 1           1        0      3
+## 2           2        1      1
+## 3           3        1      3
+## 4           4        1      1
+## 5           5        0      3
+## 6           6        0      3
+##                                                  Name    Sex Age SibSp Parch
+## 1                             Braund, Mr. Owen Harris   male  22     1     0
+## 2 Cumings, Mrs. John Bradley (Florence Briggs Thayer) female  38     1     0
+## 3                              Heikkinen, Miss. Laina female  26     0     0
+## 4        Futrelle, Mrs. Jacques Heath (Lily May Peel) female  35     1     0
+## 5                            Allen, Mr. William Henry   male  35     0     0
+## 6                                    Moran, Mr. James   male  NA     0     0
+##             Ticket    Fare Cabin Embarked
+## 1        A/5 21171  7.2500              S
+## 2         PC 17599 71.2833   C85        C
+## 3 STON/O2. 3101282  7.9250              S
+## 4           113803 53.1000  C123        S
+## 5           373450  8.0500              S
+## 6           330877  8.4583              Q
+\end{verbatim}
+
+\hypertarget{clean-data}{%
+\subsection{3. clean data}\label{clean-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# remove unwanted column}
+\NormalTok{titanic_data <-}\StringTok{ }\NormalTok{titanic_data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{SibSp,}\OperatorTok{-}\NormalTok{Ticket,}\OperatorTok{-}\NormalTok{Fare,}\OperatorTok{-}\NormalTok{Cabin,}\OperatorTok{-}\NormalTok{Embarked,}\OperatorTok{-}\NormalTok{Parch)}
+
+\CommentTok{# remove where name in NA}
+\NormalTok{titanic_data <-}\StringTok{ }\NormalTok{titanic_data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(Name))}
+
+\CommentTok{# remove duplicates from data, if present any}
+\NormalTok{titanic_data <-}\StringTok{ }\KeywordTok{unique}\NormalTok{(titanic_data)}
+
+\CommentTok{# rename column}
+\NormalTok{titanic_data <-}\StringTok{ }\NormalTok{titanic_data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rename}\NormalTok{(}\DataTypeTok{Class_Type =}\NormalTok{ Pclass)}
+
+\CommentTok{# view data}
+\KeywordTok{head}\NormalTok{(titanic_data,}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   PassengerId Survived Class_Type
+## 1           1        0          3
+## 2           2        1          1
+## 3           3        1          3
+## 4           4        1          1
+## 5           5        0          3
+##                                                  Name    Sex Age
+## 1                             Braund, Mr. Owen Harris   male  22
+## 2 Cumings, Mrs. John Bradley (Florence Briggs Thayer) female  38
+## 3                              Heikkinen, Miss. Laina female  26
+## 4        Futrelle, Mrs. Jacques Heath (Lily May Peel) female  35
+## 5                            Allen, Mr. William Henry   male  35
+\end{verbatim}
+
+\hypertarget{analysis}{%
+\subsection{4. Analysis}\label{analysis}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# find number of survivor ratio}
+\NormalTok{row <-}\StringTok{ }\KeywordTok{nrow}\NormalTok{(titanic_data)}
+
+\CommentTok{# add new colum Survived_Ration in to dataset}
+\NormalTok{titanic_data <-}\StringTok{ }\NormalTok{titanic_data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Survived_Ratio =}\NormalTok{ Survived}\OperatorTok{/}\NormalTok{row)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{survivor-group-by-sex}{%
+\subsection{4.1 survivor group by sex}\label{survivor-group-by-sex}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# number of survivor group by sex}
+\NormalTok{survivor_sex <-}\StringTok{ }\NormalTok{titanic_data }\OperatorTok{%>%}\StringTok{  }\KeywordTok{filter}\NormalTok{(Survived }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(Sex) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{count}\NormalTok{(Survived)}
+
+
+\CommentTok{# draw graph}
+\KeywordTok{ggplot}\NormalTok{(survivor_sex) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ survivor_sex}\OperatorTok{$}\NormalTok{Sex, }\DataTypeTok{y =}\NormalTok{ survivor_sex}\OperatorTok{$}\NormalTok{n), }\DataTypeTok{stat =} \StringTok{"identity"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"steelblue"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Sex"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Number of survivor(#)"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Number of suvivor by sex"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))}\OperatorTok{+}\StringTok{ }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ survivor_sex}\OperatorTok{$}\NormalTok{Sex,}\DataTypeTok{y =}\NormalTok{ survivor_sex}\OperatorTok{$}\NormalTok{n,}\DataTypeTok{label=}\NormalTok{survivor_sex}\OperatorTok{$}\NormalTok{n), }\DataTypeTok{vjust=}\FloatTok{1.6}\NormalTok{, }\DataTypeTok{color=}\StringTok{"white"}\NormalTok{, }\DataTypeTok{size=}\FloatTok{4.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{tidyverse_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\hypertarget{survivor-group-class-type}{%
+\subsection{4.2 survivor group class
+type}\label{survivor-group-class-type}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# number of survivor group by class type}
+\NormalTok{survivor_class <-}\StringTok{ }\NormalTok{titanic_data }\OperatorTok{%>%}\StringTok{  }\KeywordTok{filter}\NormalTok{(Survived }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(Class_Type,Sex) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{count}\NormalTok{(Survived)}
+
+\CommentTok{# draw graph}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ survivor_class, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ survivor_class}\OperatorTok{$}\NormalTok{Class_Type, }\DataTypeTok{y =}\NormalTok{ survivor_class}\OperatorTok{$}\NormalTok{n, }\DataTypeTok{fill =}\NormalTok{ survivor_class}\OperatorTok{$}\NormalTok{Sex)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat =} \StringTok{"identity"}\NormalTok{, }\DataTypeTok{position=}\KeywordTok{position_stack}\NormalTok{())}\OperatorTok{+}\StringTok{ }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Class Type"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Number of survivor(#)"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Number of suvivor by Class"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{))}\OperatorTok{+}\StringTok{ }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ survivor_class}\OperatorTok{$}\NormalTok{Class_Type,}\DataTypeTok{y =}\NormalTok{ survivor_class}\OperatorTok{$}\NormalTok{n,}\DataTypeTok{label=}\NormalTok{survivor_class}\OperatorTok{$}\NormalTok{n), }\DataTypeTok{hjust=}\FloatTok{1.2}\NormalTok{,}\DataTypeTok{vjust =} \FloatTok{2.6}\NormalTok{, }\DataTypeTok{color=}\StringTok{"white"}\NormalTok{, }\DataTypeTok{size=}\FloatTok{4.5}\NormalTok{)}\OperatorTok{+}\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values=}\KeywordTok{c}\NormalTok{(}\StringTok{"#1f5f76"}\NormalTok{, }\StringTok{"#92acb8"}\NormalTok{))}\OperatorTok{+}\KeywordTok{labs}\NormalTok{(}\DataTypeTok{fill =} \StringTok{"Sex"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{tidyverse_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\hypertarget{conclusion}{%
+\subsection{5. Conclusion}\label{conclusion}}
+
+From Plot 4.1 and 4.2 we found:
+
+\begin{itemize}
+\tightlist
+\item
+  The number of Surivior is high in female.
+\item
+  Highest survivor is in female and Class 1 type.
+\end{itemize}
+
+I have used, select(), filter(), mutate(), rename() functions of
+\texttt{tidyverse} package to clean and manupulate data.
+
+\end{document}
