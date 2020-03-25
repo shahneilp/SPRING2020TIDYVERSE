@@ -88,7 +88,15 @@ Gabriel Abreu
 
 Abdellah Ait Elmouden
 
-Samuel Bellows
+### Basic Functionalities of GGplot using polling data
+Author: Samuel Bellows
+
+#### Usages:
+
+calling basic geometries, calling aes and when arguments should go inside/outside aes, facet grid, and basic plot customization.
+Also includes some use of dplyr and lubridate.
+
+
 
 Nilsa Bermudez
 
