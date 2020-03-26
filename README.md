@@ -102,3 +102,6 @@ Nilsa Bermudez
 
 Vinayak Kamath
 
+### Extend GGPlot 
+Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels. 
+
