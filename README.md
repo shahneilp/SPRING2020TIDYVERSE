@@ -43,10 +43,16 @@ This file should help you understand how to export a table from a website, gathe
  A vignette describing the prepration of an online table for ggplot and facet_wrap
 Author: Thomas Hill
 
-Instructions:
+
+# Neil Shah Tidy
+ A vignette describing the progressive use of as_tibble(), dplyr functions select, arrange, filter and a gpplot to visualizae data.
+Author: Neil Shah
+
 
 Please follow along with the steps I took to prepare date for ggplot exploration.  I based this off of a previous project and added some annotations about the functions I called.
 
 ### tidyverse
-Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout) 
+Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. 
+This vignette was extended to show how to deal with NA values and pipe to statistically compare columns. 
+(Subhalaxmi Rout & Neil Shah) 
 
