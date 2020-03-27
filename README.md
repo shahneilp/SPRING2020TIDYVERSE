@@ -40,6 +40,11 @@ ggplot2 is a ubiquitous library that allows you to easily visualize data and exp
 =======
 This file should help you understand how to export a table from a website, gather the data into a tall format, and plot the variables of interest into several plots for easy comparison
 
+## tidyr's unite and pivot_wider found in tidyr_AC.Rmd
+Author: Angel Claudio
+
+This vignette is meant to teach you how to use the unite and pivot_wider function from the tidyr package.
+
 # DATA607_Tidyverse_Vignette
  A vignette describing the prepration of an online table for ggplot and facet_wrap
 Author: Thomas Hill
