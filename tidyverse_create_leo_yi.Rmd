@@ -1,0 +1,269 @@
+---
+title: "Tidyverse Create"
+author: "Leo Yi"
+date: "3/26/2020"
+output:
+  html_document:
+    highlight: pygments
+    theme: cosmo
+    toc: TRUE
+    toc_depth: 3    
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+      number_sections: true    
+
+---
+
+<style type="text/css">
+
+code.r{
+  font-size: 12px;
+  font-family: Consolas;
+}
+
+pre {
+  font-size: 12px;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Universe? Tidyverse!
+
+Today, we'll be demonstrating some of the uses of the tidyverse. We'll be using dplyr, tidyr, stringr, and ggplot2 to take a dataset and perform some exploratory analysis. The tidyverse is a wonderful tool to be able to take a dataset of any type, transform it, and present findings. Being flexible and powerful allows users to focus on answering layers of questions and deepening analysis, without being bogged down with technical tasks. 
+
+Personally, the packages we're using today are my favorites, notably the pipe operator in dplyr as well as ggplot2.
+
+***
+
+## The Raw Data
+
+### How Baby Boomers Get High
+
+Let's look at a dataset that comes from FiveThirtyEight. The article referenced can be found [here](https://fivethirtyeight.com/features/how-baby-boomers-get-high/) and discussed drug use for baby boomers and other age groups. There is one visualiztion in the article, but we'll create more to explore the data found on [GitHub](https://github.com/fivethirtyeight/data/tree/master/drug-use-by-age).
+
+Visualizations are one of the easiest ways for people to digest data. 
+
+### Packages
+
+We can load each of the packages separately, or we can just load the tidyverse:
+
+```{r, message = F}
+library(tidyverse)
+```
+
+### Loading
+
+Lets pull the data directly from GitHub into a new dataframe object, then take a quick peek at what we're working with:
+
+```{r}
+df <- read.csv('https://raw.githubusercontent.com/fivethirtyeight/data/master/drug-use-by-age/drug-use-by-age.csv',
+               stringsAsFactors = F)
+str(df)
+```
+
+### Evaluating the Quality of Data
+
+It looks like the data set can be generalized by a few points:
+
+  * Each row is an age group.
+  * Each column is a variable.
+    * There are multiple drug classes, showing summary statistics for the past 12 months:
+      * Use: Percent of users
+      * Frequency: Median frequency of use
+  * The dataset is a summarized view
+  
+Ideally, we would like to have the raw unit level data, which shows the results for every person surveyed. Fortunately, with the tidyverse, we can still make good use of this summary data.
+
+***
+
+## Preparing the Data
+
+### Method Explained
+
+Since we'll be trying to visualize the data in ggplot, we'll want this dataset in a different structure. We'll ignore the number of surveys for now, and we'll try to build a new dataframe that includes 4 fields:
+
+  * Age [group]
+  * Drug
+  * Use
+  * Frequency
+  
+We'll make sure of the following packages to do this:
+
+  * tidyr to unpivot the data
+  * stringr to extract information from the field names
+  * dplyr to manage the data
+  * ggplot2 to visualize the data
+  
+### tidyr::gather
+
+Lets start by taking this wide dataset and making it tall with the gather function from tidyr:
+
+```{r}
+tall <- gather(df, field_name, value, -age)
+head(tall,3)
+```
+
+### dplyr::filter
+
+Here's the powerhouse of the tidyverse IMO. Lets split the tall table into two- one for survey counts and another for drug usage. We'll be using the filter function in dplyr.
+
+```{r}
+counts <- filter(tall, field_name == 'n')
+
+usage <- filter(tall, field_name != 'n')
+head(usage,3)
+```
+
+The counts dataframe looks ready to use. Lets continue building out the usage dataframe.
+
+### stringr::str_extract
+
+Now that we're looking only at drug use and frequency, lets determine which row is which. We can use str_extract to find a specified pattern in the string and we'll be adding that as a new field:
+
+```{r}
+usage$type <- str_extract(usage$field_name, 'use|frequency')
+head(usage,3)
+```
+
+Now that we have use and frequency extracted into a separate field, we can use base R substr to clean up the field_name.
+
+```{r}
+usage$field_name <- substr(usage$field_name, 1, nchar(usage$field_name) - nchar(usage$type))
+head(usage[239:241,])
+```
+
+The third parameter of this function is the length of the field name minus the length of the type. 
+
+### stringr::str_replace_all
+
+We can skip this step, but lets clean up the extra periods since cleaning up the final product takes away from any distractions while trying to understand the visualization.
+
+```{r}
+usage$field_name <- str_replace_all(usage$field_name, '\\.', ' ')
+head(usage[239:241,])
+
+# Lets also fix the spelling error in the dataset
+usage$field_name <- str_replace_all(usage$field_name, 'releiver', 'reliever')
+head(usage[239:241,])
+
+# And replace the dash characters with zeros
+usage$value  <- str_replace_all(usage$value, '\\-', '0')
+```
+
+### stringr::str_trim
+
+One last string clean up to do here- lets trim the white space at the end of the field name. Also, since we've completely transformed the field, lets rename it.
+
+```{r}
+usage$field_name <- str_trim(usage$field_name, side = 'right')
+names(usage)[2] <- 'drug'
+```
+
+### tidyr::spread
+
+Now that we have all the data points separated, we can spread the data back out so that the variables, usage and frequency, are their own columns.
+
+```{r}
+drugs <- spread(usage, type, value)
+str(drugs)
+```
+
+### Final Touches
+
+Lets convert frequency and use to numeric values:
+
+```{r}
+drugs$frequency <- as.numeric(drugs$frequency)
+drugs$use <- as.numeric(drugs$use)
+str(drugs)
+```
+
+Since Age is actually age groups, we can leave it as a string. Luckily, it sorts in alphabetical order in a favorable way. If this didn't happen by luck, we would convert this field into a factor and define the order of the levels.
+
+***
+
+## Visualizations
+
+### dplyr %>%
+
+First of all, I'm curious about my own age group. I'm 34 right now, so I fit into the 30-34 age group. Lets filter for my age group then use that in a visualization. We can do this in separate steps, but dplyr's pipe allows us to take the results of one function and use it for another.
+
+```{r}
+# percent of this age group that uses listed drug
+filter(drugs, age == '30-34') %>%
+  ggplot(aes(x = reorder(drug, use), y = use)) +
+  geom_bar(stat = 'identity') +
+  coord_flip() +
+  labs(x = element_blank(),
+       y = element_blank(),
+       title = "Percent of People Who Have Used Drugs",
+       subtitle = 'Age Group: 30-34')
+```
+
+### Facet Wrap
+
+One of the most powerful tools of ggplot is the ability to add another dimension to your plot, so that you can see the same structure of your plot, but on an additional dimension.
+
+Instead of filtering and plotting each age group separately, we'll facet on age group and see them all at once.
+
+
+```{r}
+ggplot(drugs, aes(x = reorder(drug, use), y = use)) +
+  geom_bar(stat = 'identity') +
+  coord_flip() +
+  labs(x = element_blank(),
+       y = element_blank(),
+       title = "Percent of People Who Have Used Drugs") +
+  facet_wrap(~age) +
+  theme(text = element_text(size = 7))
+```
+
+
+We can also look at the distribution of usage by age for each drug:
+
+```{r}
+ggplot(drugs, aes(x = age, y = use)) +
+  geom_bar(stat = 'identity') +
+  labs(x = element_blank(),
+       y = element_blank(),
+       title = "Distribution of Age by Drug") +
+  facet_wrap(~drug) +
+  theme(text = element_text(size = 7),
+        axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+Looking at this at a high level, we can easily determine the most popular drugs, but seeing the trends in all drugs is difficult. For that, we'll need to free the y scale for each drug:
+
+```{r}
+ggplot(drugs, aes(x = age, y = use)) +
+  geom_bar(stat = 'identity') +
+  labs(x = element_blank(),
+       y = element_blank(),
+       title = "Distribution of Age by Drug") +
+  facet_wrap(~drug, scales = 'free_y') +
+  theme(text = element_text(size = 7),
+        axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+Now this is interesting! Here's a few things we can easily determine from this visualization:
+
+  * Alcohol usage peaks right around the legal age
+  * Cocaine usage peaks under 20 and doesn't seem to be very popular across all ages
+  * Not many people use crack, but the ones who do, continue to do so for the rest of their life
+  * Hallucinogen usage peaks just under 20 years old and doesn't seem very popular with all ages
+  * Youths seem to prefer inhalants
+  * Generally, across the board, it seems like various drug use peaks around 20.
+    * This might be the age where people are willing to take the most risk while simultaneously not being able to understand the full risk involved.
+    
+## Conclusion
+
+Tidyverse really makes R easy to use once you get the hang of it. Thanks Hadley!
+
+
+
+
