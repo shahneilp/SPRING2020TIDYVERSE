@@ -111,3 +111,8 @@ Vinayak Kamath
 ### Extend GGPlot 
 Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels. 
 
+### ggplot2::geom_polygon:
+Author: Adam Gersowitz
+This vignette looks at varisous ways to display visual data using ggplot2
+
+This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.
