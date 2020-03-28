@@ -106,3 +106,7 @@ Vinayak Kamath
 ### Extend GGPlot 
 Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels. 
 
+### purrr functions for filtering lists
+Author: Bonnie Cooper
+This vignette uses global shark attack data to demonstrate several purrr functions for filtering lists
+
