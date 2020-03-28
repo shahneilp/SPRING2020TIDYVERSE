@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # Lubridate
 Clever name aside, lubridate is a fantastic way (arguably the BEST way) to work with date and datetime objects. Lubridate allows you to easily convert strings or numbers to date-times, deal with timezones, and perform math with date-times.
 
+The dataset for this example can be found here: https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset#time_series_covid_19_confirmed.csv
+
 ## Example
 Start by loading the lubridate and tidyverse libraries along with your data.
 ```{r}
