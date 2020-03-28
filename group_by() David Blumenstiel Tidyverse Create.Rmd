@@ -1,0 +1,81 @@
+---
+title: "David Blumenstiel Tidyverse Create"
+author: "David Blumenstiel"
+date: "3/23/2020"
+output: html_document
+---
+
+## Tidyverse: Group_by()
+
+##### When working with data, it's often helpful to look at aspects of it in categories or groups.  the group_by() function makes this fairly easy to do.
+
+
+### First, we need to load the dplyr library
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+
+
+### Next, load the data you intend to use
+##### Here, we will load the 'diamonds' dataset.  https://www.kaggle.com/shivam2503/diamonds
+
+```{r}
+#Reads the raw github file into our dataframe: df
+df <- read.csv("https://raw.githubusercontent.com/tidyverse/ggplot2/master/data-raw/diamonds.csv")
+
+#Prints the first few rows
+head(df)
+```
+
+### Now we can start grouping the data
+##### Lets begin by grouping our diamonds by color
+```{r}
+#The function below essentialy reads as: applying (%>%) the group_by function to 'df', grouping by the 'color' variable, and storing it in the new dataframe 'colors'
+colors <- df  %>% group_by(color)
+
+#Printing out the first few rows
+head(colors)
+```
+
+### Our new 'colors' dataset looks exactly the same right?
+##### This is because group_by() dosn't actually change how the data is presented, but changes how other functions interact with it.  For example, lets compare what happens when we try to find the mean prices of the ungrouped dataset.
+
+```{r}
+#Summarizing mean of the prices within the old dataframe
+summarise(df, mean(price))
+```
+##### We only got the mean price of the entire dataset.  This was essentially the equivalant of entering mean(df$price)
+
+##### Now lets try on our grouped-by-colors dataframe
+```{r}
+summarise(colors, mean(price))
+```
+##### Now the differences between the two dataframes come to light.  The summarise function interpereted the dataset within the context of the color groups, and gave us the mean price for each color.
+
+### Ungrouping
+##### If your working on grouped data without creating seperate objects for the grouped data, it's reccomended to use the ungroup() function at the end.  This prevents one from untentionally working with grouped data later on, and helps keep things organized
+
+```{r}
+#For example, we can ungroup data as we work with it so we can make more groups afterwards
+highestPriceByCarat <- df %>% 
+  group_by(cut) %>%
+  filter(price == max(price)) %>%
+  ungroup() %>%
+  group_by(table) %>%
+  filter(table > 57) %>%
+  ungroup()
+highestPriceByCarat
+
+#We can also reset subsets of data if desired
+#Here we ungroup 'colors' from before, and find the mean of the entire dataset 
+colors <- colors %>% ungroup()
+summarise(colors, mean(price))
+
+```
+
+### There are several types of group_by()
+
+##### Functions like group_by_all() and group_by_if() can provide versitile solutions when it comes to analysing our data.  
+##### (One could even "extend" this vignette with some of the other group_by()s)
+
