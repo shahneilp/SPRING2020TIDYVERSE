@@ -111,6 +111,11 @@ Vinayak Kamath
 ### Extend GGPlot 
 Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels. 
 
+### purrr functions for filtering lists
+Author: Bonnie Cooper
+This vignette uses global shark attack data to demonstrate several purrr functions for filtering lists
+
+=======
 ### ggplot2::geom_polygon:
 Author: Adam Gersowitz
 
@@ -123,3 +128,4 @@ This can be very useful when trying to convey information that has a physical co
 Author: David Blumenstiel
 
 Group_by provides an intuitive way to look at one's data.  As the name implies, this function will interperet data based on "groups".  See the vignette for more information.
+=======

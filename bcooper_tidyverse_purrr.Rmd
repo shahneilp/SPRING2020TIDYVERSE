@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## a deep dive into purrr functions for filtering lists
 
-The purrr package is is a set of functions that facilitates iterating R objects. it is part of the tidyverse; a set of R packages designed to make data science 'faster, easier and more fun.' this vignette will demonstrate the use of several purrr methods used to [filter lists](https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf): **pluck()**, **head_while()**, **tail_while()**, **compact()**, **keep()** and **discard()**
+The purrr package is a set of functions that facilitates iterating elements of R objects. It is part of the tidyverse; a set of R packages designed to make data science 'faster, easier and more fun.' This vignette will demonstrate the use of several purrr methods used to [filter lists](https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf): **pluck()**, **head_while()**, **tail_while()**, **compact()**, **keep()** and **discard()**
 
 Global data on [<span style="color: red;">shark attacks</span> from Kaggle](https://www.kaggle.com/teajay/global-shark-attacks) will be used for demonstration.
 
@@ -43,7 +43,7 @@ library( ggplot2 )
 ## pluck()
 **used to select elements by name of by index number**
 <br>
-Suppose we have a particular shark attack incident that we are interested in such as [Bethany Hamilton's dramatic story](https://bethanyhamilton.com/) and we would like to return a specific feature. for example, the 'Date': 
+Suppose there is a particular shark attack incident that we are interested in such as [Bethany Hamilton's dramatic story](https://bethanyhamilton.com/) and we would like to return a specific feature. for example, the 'Date' of the incident: 
 ```{r}
 #index row number for Bethany's record
 idx <- which( attacks_df$Name == 'Bethany Hamilton')
@@ -55,7 +55,7 @@ bHam_date
 ```
 <br>
 
-That was simple enough! but where pluck() becomes increasingly useful in situations where a deeper indexing into a data structure is necessary.  suppose we reformate the 'Date' feature and split the string by the delimiter '-' :
+That was simple enough! but pluck() becomes increasingly useful in situations where a deeper indexing into a data structure is necessary. Suppose we reformat the 'Date' feature and split the string by the delimiter '-' :
 ```{r}
 #split the data strings and return as lists in a new column of the data.frame
 attacks_df$DateSplit <- lapply(strsplit( attacks_df$Date, '-' ),'[')
@@ -66,7 +66,7 @@ pluck( attacks_df, 'DateSplit', idx, 2 )
 ```
 <br>
 
-We will now use purrr list filtering functions to find the fequency of shark attack by the month the incidences occur in.  
+We will now use purrr list filtering functions to find the fequency of <span style="color: red;">shark attacks</span> by the month the incidences occur in.  
 
 The previous call the pluck() worked, however, further inspection of the 'Date' feature reveals the data is rather dirty. the lists length of 'Date' is variable:
 ```{r}
@@ -89,7 +89,7 @@ head_while(attackDates, function(x) x[2]=='Jun')
 ```{r}
 length(tail_while(attackDates, function(x) length(x)==0))
 ```
-The above output shows that there at over 19K null values taking up spave on the bottom of this set! Now to remove them...
+The above output shows that there at over 19K null values taking up space on this set! Now to remove them...
 
 ## compact()
 **used to drop empty elements**
