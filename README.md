@@ -40,6 +40,11 @@ ggplot2 is a ubiquitous library that allows you to easily visualize data and exp
 =======
 This file should help you understand how to export a table from a website, gather the data into a tall format, and plot the variables of interest into several plots for easy comparison
 
+## tidyr's unite and pivot_wider found in tidyr_AC.Rmd
+Author: Angel Claudio
+
+This vignette is meant to teach you how to use the unite and pivot_wider function from the tidyr package.
+
 # DATA607_Tidyverse_Vignette
  A vignette describing the prepration of an online table for ggplot and facet_wrap
 Author: Thomas Hill
@@ -109,4 +114,12 @@ Showcase a few more styles and customizations in GGPlot. Themes, guides, manual 
 ### purrr functions for filtering lists
 Author: Bonnie Cooper
 This vignette uses global shark attack data to demonstrate several purrr functions for filtering lists
+
+=======
+### ggplot2::geom_polygon:
+Author: Adam Gersowitz
+
+This vignette looks at varisous ways to display visual data using ggplot2 and specifically geom_polygon.
+
+This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.
 

@@ -1,0 +1,35 @@
+---
+title: "Tidyverse Create"
+author: "Vincent Miceli"
+date: "3/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+The tidyverse packages make it much easier to clean and tidy your data, preparing it for analysis.  An untidy dataset will make it almost impossible to find any meaningful conclusions.  One package in the tidyverse that is interesting is the forcats package, meant for handling categorical variables.  Along with dplyr and ggplot2, we can see the usefulness of forcats.
+
+```{r}
+pacman::p_load(tidyr, dplyr, ggplot2, forcats)
+```
+
+We import the countries of the world dataset from kaggle
+
+```{r}
+countries <- read.csv('countries_world.csv')
+colnames(countries)
+```
+
+We can see there are various variables about each country, both categorical and continuous.  One simple way to use forcats is to see the count of each factor of a variable in order.
+
+```{r}
+ggplot(countries, aes(x = fct_infreq(Region))) + 
+  xlab('Region') + 
+  geom_bar() + 
+  coord_flip()
+```
+
