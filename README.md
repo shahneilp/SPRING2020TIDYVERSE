@@ -117,3 +117,9 @@ Author: Adam Gersowitz
 This vignette looks at varisous ways to display visual data using ggplot2 and specifically geom_polygon.
 
 This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.
+
+
+### Group_by
+Author: David Blumenstiel
+
+Group_by provides an intuitive way to look at one's data.  As the name implies, this function will interperet data based on "groups".  See the vignette for more information.
