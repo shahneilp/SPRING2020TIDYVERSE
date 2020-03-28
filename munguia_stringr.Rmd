@@ -1,0 +1,95 @@
+---
+title: "Tidyverse: stringr"
+author: "Michael Munguia"
+date: "3/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(stringr)
+repo <- "https://raw.githubusercontent.com/mijomu/SPRING2020TIDYVERSE/master/"
+```
+
+# Introduction
+
+Through this example, we'll explore some of the capabilities of the `stringr` package, a particular component of the tidyverse that provides uniform and efficient string manipulation abilities that are much clearer to work with than the the analagous base functions. In many cases there are also convenience wrapper functions that handle scenarios that would otherwise be verbose, hard-to-read nested functions using the base language. We'll also be making use of functionality from `dplyr` to help make succinct examples. Let's get started.
+
+First we'll load and display the data using a typical call to readr::read_csv. Now we're ready to start exploring some helpful features of `stringr`.
+
+```{r, message=FALSE}
+(df <- readr::read_csv(paste0(repo, "endorsements-2020.csv")))
+```
+
+# Working with Substrings
+
+An important feature of `stringr` is the ability to easily work with substrings. In some cases a function like `str_detect` may prove useful:
+
+```{r}
+(dnc_df <- df %>% filter(str_detect(position, "DNC")))
+```
+
+In other cases, we may want to utilize something like `str_replace`. Because of the uniformity of argument placement in `stringr` functions, it becomes much more fluid to use the `mutate_*` series than with the available base functions. Moreover, we can make use of regular expressions to make the most of `stringr`.
+
+```{r}
+(dnc_df <- dnc_df %>% mutate_at("position", str_replace, "[A-Z]{3}", "Democratic National Convention"))
+```
+
+For a sense of completeness, we can pass this to one of the case convention functions, `str_to_title`, and have nicely formatted position strings.
+
+```{r}
+(dnc_df <- dnc_df %>% mutate_at("position", str_to_title))
+```
+
+# A More Complex Example
+
+Taking what we've seen so far, and some additional `stringr` functions, we can have a look at a more involved scenario. Let's try and take the names of mayoral endorsers and split them up into their constituent parts.
+
+First, we'll isolate and inspect the mayors. Having seen the first few rows of the data overall, we can anticipate that middle initials in names may prove a challenge, so we can split the data into separate sets to make handling this easier.
+
+```{r}
+mayors <- df %>%
+  filter(position == "mayor") %>%
+  select(endorser)
+
+middle_initial <- "\\s[:alpha:]{1}\\.?\\s"
+
+(has_initial <- mayors %>% filter(str_detect(endorser, middle_initial)))
+(no_initial <- mayors %>% filter(!str_detect(endorser, middle_initial)))
+```
+
+Handling the set with middle initials first, we can use `str_extract` followed by `str_split` to first create a copy of all middle initials as their own column and then split the first and last components of the mayors' names into two separate columns. Because `str_split` outputs a matrix, we'll convert that to a tibble. Binding by columns and renaming the generic matrix column names, we add an extra `mutate` whereby we first extract nicknames present in the last name column and then remove them from said space. By the end, our goal has been met (at least for this set).
+
+```{r}
+has_initial <- has_initial %>% mutate(middle = str_extract(endorser, middle_initial))
+initial_result <- str_split(has_initial$endorser, middle_initial, simplify = TRUE) %>% as_tibble()
+
+(has_initial_df <- bind_cols(has_initial, initial_result) %>%
+  rename("first" = "V1", "last" = "V2") %>%
+  mutate(nickname = str_extract(last, "(?<=[:punct:])[:alpha:]+(?=[:punct:])"),
+         last = str_remove(last, "[:punct:][:alpha:]+[:punct:]\\s")))
+```
+
+Now we move onto the other set. We can readily see that in the case of two of our mayors, we have an obstacle to reaching our goal: the presence of a third name. In this case, I will call on outside knowledge that tells me Yulín is part of Mayor Cruz's first name while Lance Bottoms should be seen as a single last name. In more complex cases, it may be useful to create some kind of helper column to handle varying scenarios like this before applying the string manipulation(s).
+
+Similar to earlier, I'll start by splitting on whitespace and converting the output matrix to a tibble for binding to the source data. From here, some handling for the two exceptional names is put into place through a pair of `if_else` calls and the relevant columns are kept and renamed while all others are dropped. Now both sets are in proper order.
+
+```{r}
+no_initial_result <- str_split(no_initial$endorser, "\\s", simplify = TRUE) %>% as_tibble()
+
+(no_initial_df <- bind_cols(no_initial, no_initial_result) %>%
+  mutate(V1 = if_else(V3 == "Cruz", str_c(V1, " ", V2), V1),
+         V2 = if_else(V3 == "Bottoms", str_c(V2, " ", V3), V2)) %>% 
+  select(endorser, "first" = V1, "last" = V2))
+```
+
+Finally, we can bind the results back together by row and reorganize the columns to a more readable order. We did it!
+
+```{r}
+(mayors <- bind_rows(has_initial_df, no_initial_df) %>% select(endorser, first, middle, last, nickname))
+```
+
+# Conclusion
+
+Hopefully this has been a useful glimpse at some of the ways `stringr` makes working with text data in R more approachable and easier to follow. While it might not be the most exciting aspect of data mining, it is certainly one where having a simplified and uniform toolset can greatly reduce the frustration and stress of dealing with difficult strings.
