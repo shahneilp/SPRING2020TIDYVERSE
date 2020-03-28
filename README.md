@@ -117,3 +117,8 @@ Author: Adam Gersowitz
 This vignette looks at varisous ways to display visual data using ggplot2 and specifically geom_polygon.
 
 This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.
+
+### Tidyverse: stringr
+Author: Michael Munguia
+
+This vignette showcases some of the text manipulation capacities of the stringr library using the context of restructuring the names of America's mayors.
