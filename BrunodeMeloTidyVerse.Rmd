@@ -1,0 +1,217 @@
+---
+title: "Tidyverse CREATE"
+author: "Bruno de Melo"
+date: "3/29/2020"
+output: html_document
+---
+
+
+## Video Game sales
+
+I'll demonstrate the power of Tidyverse on a dataset from Kaggle: https://www.kaggle.com/gregorut/videogamesales
+
+Fields in the dataset are:
+
+    Rank - Ranking of overall sales
+
+    Name - The games name
+
+    Platform - Platform of the games release (i.e. PC,PS4, etc.)
+
+    Year - Year of the game's release
+
+    Genre - Genre of the game
+
+    Publisher - Publisher of the game
+
+    NA_Sales - Sales in North America (in millions)
+
+    EU_Sales - Sales in Europe (in millions)
+
+    JP_Sales - Sales in Japan (in millions)
+
+    Other_Sales - Sales in the rest of the world (in millions)
+
+    Global_Sales - Total worldwide sales.
+
+
+# Data import
+
+Following Wickham & Grolemund data science framework, this is the fist step in any data science project: Import.
+
+```{r}
+
+library(tidyverse)
+
+#importing and converting into a dataframe using piping (%>%), which is widely used in tidyverse.
+
+sales_raw<-read.csv("https://raw.githubusercontent.com/bsvmelo/CUNY/master/vgsales.csv") %>% data.frame()
+
+#quick display
+head(sales_raw)
+
+#summary stats
+summary(sales_raw)
+
+```
+
+Some statistics:
+Number of rows: `r nrow(sales_raw)`    
+Number of columns: `r ncol(sales_raw)`   
+History size: `r ncol(sales_raw)`   
+Number of unique games: `r length(unique(sales_raw$Name))`   
+Number of unique platforms: `r length(unique(sales_raw$Platform))`    
+Number of unique genres: `r length(unique(sales_raw$Genre))`    
+Number of unique publishers: `r length(unique(sales_raw$Publisher))`    
+Number of NAs in each column: `r sapply(sales_raw, function(x) sum(is.na(x)))`    
+Number of N/A in each column: `r colSums(sales_raw=='N/A')`    
+
+Despite the facts there are no NAs, there are N/A which will have to be dealt with in a later stage.
+
+## Visualization
+Following Wickham & Grolemund data science framework, I'll start with some basic visualization using ggplot.
+
+
+# Top 20 ranked games
+
+```{r}
+top_20<-head(sales_raw,20)
+# Simple Bar Plot
+ggplot(top_20)+ geom_col(mapping=aes(x=reorder(Name,-Global_Sales),y=Global_Sales))+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))+labs(x="Games", y = "Global Sales in millions")
+
+```
+
+
+
+# Platforms
+#Number of games sold per platform
+```{r}
+ggplot(sales_raw) + geom_bar(mapping=aes(x=Platform))+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))+labs(y = "# units sold in mn")
+```
+
+# Genres
+# Types of Genres
+```{r}
+ggplot(sales_raw) + geom_bar(mapping=aes(x=Genre))+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))+labs(y = "# of games")
+
+```
+
+# Global Sales
+
+# Sales per year per platform
+```{r}
+ggplot(sales_raw) + geom_col(mapping=aes(Year,Global_Sales,fill=Platform))+theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+```
+
+# Sales per year per platform - Facets
+
+```{r}
+ggplot(sales_raw) + geom_col(mapping=aes(Year,Global_Sales,fill=Platform))+facet_wrap(~Platform)+theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(), legend.position = "none")
+
+```
+
+
+## Data Transformation
+
+1:
+First thing to do is to take care of the N/A values in the dataset.     
+To recap, this is the number of N/A in each column: `r colSums(sales_raw=='N/A')`    
+
+There are N/A in the Year and Publisher columns.
+
+I will delete all records in Year and Publisher columns that have an N/A.
+
+
+```{r}
+# replacing N/A by NA
+sales_df1<-sales_raw
+sales_df1<-sales_df1[sales_df1$Year !="N/A",]
+sales_df1<-sales_df1[sales_df1$Publisher !="N/A",]
+# confirming that all records containing N/As are deleted
+colSums(sales_df1=='N/A')
+```
+
+
+2:Filtering
+I will analyse only Sony Platform games, which I assume are: PS, PS2, PS3, PS4, PSP, PSV.
+
+```{r}
+# Date frame with only games for Sony platforms
+sales_sony<-drop_na(sales_df1)
+sales_sony<-filter(na.omit(sales_df1), Platform %in% c('PS', 'PS2', 'PS3', 'PS4', 'PSP', 'PSV'))
+head(sales_sony)
+```
+
+
+3:Selecting columns
+I will use the select() function to narrow down the analysis to games sold in Japan
+
+```{r}
+# Date frame with only sales in Japan
+sales_sony_jp<-select(sales_sony, -c(NA_Sales,EU_Sales,Other_Sales))
+head(sales_sony_jp)
+```
+
+4:Adding new variable with mutate()
+I will create a variable corresponding to the Global share of the Japanese sales
+
+```{r}
+sales_sony_jp<-mutate(sales_sony_jp,Share=JP_Sales/Global_Sales)
+```
+
+5:Grouped Summaries with summarize()
+I will summarize the Japanese Share of total sales in aggregate and also by year and publisher.
+
+```{r}
+sales_sony_jp_summ_1<-summarize(sales_sony_jp,sum(JP_Sales)/sum(Global_Sales))
+sales_sony_jp_summ_2<-sales_sony_jp %>%
+  group_by(Year) %>%
+  summarize(Share1=sum(JP_Sales)/sum(Global_Sales)) 
+```
+
+Historical share of Japanese sales  is: ` r sales_sony_jp_summ_1`
+
+
+Plotting share of Japanese sales over time:
+
+```{r}
+ggplot(sales_sony_jp_summ_2)+ geom_col(mapping=aes(sales_sony_jp_summ_2$Year,sales_sony_jp_summ_2$Share1))+theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))+labs(y = "JP Share", x="Year")
+```
+
+
+It seems there's an error with 2017 data. I will leave this to my colleagues to try to fix :-)
+
+Aggregation by year and by Platform
+
+```{r}
+(sales_sony_jp_summ_3<-sales_sony_jp %>%
+  group_by(Year, Platform) %>%
+  summarize(Share1=sum(JP_Sales)/sum(Global_Sales))) 
+```
+
+Aggregation by year by Genre and by Platform, when Share is greater than 0.
+
+```{r}
+(sales_sony_jp_summ_4<-sales_sony_jp %>%
+  group_by(Year, Platform, Genre) %>%
+  summarize(Share1=sum(JP_Sales)/sum(Global_Sales))) %>%
+  filter(Share1>0)
+
+```
+
+Aggregation by Platform, when Share is greater than 0.
+
+```{r}
+(sales_sony_jp_summ_5<-sales_sony_jp %>%
+  group_by(Platform) %>%
+  summarize(Share1=sum(JP_Sales)/sum(Global_Sales))) %>%
+  filter(Share1>0)
+
+```
+
+
+## Conclusion
+
+I have used a lot of different functions to transform, tidy, and present data. There's still a lot analysis that can be done.
+
+
