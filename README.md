@@ -266,8 +266,8 @@ Used the dataset https://fivethirtyeight.com/features/which-state-has-the-worst-
 
 #### 1. dplyr :: rename vs. dplyr :: select
 #### 2. dplyr :: top_n vs. dplyr :: top_frac
-> 3. tally        
-> 4. count
+#### 3. tally        
+#### 4. count
 
 * https://rpubs.com/dpong8988/591906 by Dennis Pong
    + explain the nuances between rename and select
