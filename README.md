@@ -48,6 +48,11 @@ Author: Angel Claudio
 
 This vignette is meant to teach you how to use the unite and pivot_wider function from the tidyr package.
 
+# Neil Shah Tidy
+ A vignette describing the progressive use of as_tibble(), dplyr functions select, arrange, filter and a gpplot to visualizae data.
+Author: Neil Shah
+
+
 # DATA607_Tidyverse_Vignette
  A vignette describing the prepration of an online table for ggplot and facet_wrap
 Author: Thomas Hill
@@ -222,6 +227,11 @@ Gabriel Abreu
 
 Abdellah Ait Elmouden
 
+##### Extension of Subhalaxmi Rout's vignette
+Author: Neil Shah
+Extended this vignette to also include how to deal with missing values
+
+Abdellah Ait Elmouden
 ### Basic Functionalities of GGplot using polling data
 Author: Samuel Bellows
 
