@@ -103,3 +103,101 @@ From Plot 4.1 and 4.2 we found:
 + Highest survivor is in female and Class 1 type. 
 
 I have used, select(), filter(), mutate(), rename() functions of `tidyverse` package to clean and manupulate data. 
+
+## 6. Extended--Neil Shah
+
+I'll take it from here Subhalaxmi Rout; great job!
+
+The titanic data age and fair data--let's see if there is somehow a relationship between age and survival! However upon inspecting our dataset, I saw some NA values.
+
+This is very commong when data munging so let's find different ways to identify them. We can use the is.na() function from manip--a tidverse package.
+
+### is.na(X) 
+is.na(X) returns a boolean True or False for an input X [dataframe or vector] based on location of a NA item.
+
+For example:
+
+```{r}
+head(is.na(titanic_data))
+```
+
+Here we can see the NA values in the age column--but what if this was a huge dataframe and we didnd't want to scroll through it all? Well we can use the apply() function! Apply is a very simple but super powerful function that will help with your tidying.
+
+### apply()
+Apply(X,LOC,Function) Apply will take an specifed function, and use it on the LOC [row =1 or column =2] of an input variable X. 
+
+```{r}
+apply(is.na(titanic_data), 2, which)
+```
+
+What's happening here is that we are taking out boolean is.na(titanic_data) and we are using which() that returns TRUE position elements across the column locations, specified by 2. 
+
+
+So it looks that Age has all of our NAs--I wonder how many we have? Well we can pipe this over via length and count!
+
+```{r}
+apply(is.na(titanic_data), 2, which)$Age  %>% length()
+```
+
+177 NAs in Titanic--what should we do with them? Well there are two options we can either fill them with a value or drop them.
+
+Let's hypothetically look at filling them with replace_NA() another tidyverse special
+
+### replace_na()
+replace_na(X,Y) will replace any NAs in input X [dataframe or vector] with Y
+
+
+It's common in datasets to replace NA with 0 due to lack of data but that doesn't make sense here, an age can't be 0! Also we really can't make up a random age either because maybe it's an outlier. What if we use the mean of the Ages?
+
+```{r}
+replace_na(titanic_data$Age,mean(titanic_data$Age,na.rm=TRUE))
+```
+
+Here I specified the column (Age since we knew it had the NAs) and chose the value to replace the NA as the mean of said Age column--note I set na.rm=TRUE so the mean would skip NA values when calculating. This make sense since if we just calculated the means without skipping the NA values 
+
+```{r]}
+mean(titanic_data$Age)
+```
+
+We would get a NA! Not to mention the entire point was to replace them anyway.
+
+That was one way to deal with NA but sometimes it's good practice not to add data which is what we are doing when we adjust the NA value wth a mean--we should just drop them and purge the incomplete data. We can use dropNA.
+
+### DropNA
+dropNA(data,VAR) will drop NA values for an input DATA specifically in rows/columns VAR if VAR is passed. If not it'll default to the entire dataframe.
+
+```{r}
+head(drop_na(titanic_data))
+```
+
+
+## Putting it all together 
+
+So now we know how to deal with missing values in our age group we can use all the tools (select, dropna, filter) to calculate statistics on the age of those that survived and did not.
+
+Let's do that--we'll take our dataframe, drop NA values, filter by survival, select age and then do a summary.
+
+```{r}
+titanic_data %>% drop_na() %>% filter(Survived==1) %>% select(Age) %>% summary()
+```
+
+And let's do that for those that did not survive (Survived ==0)
+
+```{r}
+titanic_data %>% drop_na() %>% filter(Survived==0) %>% select(Age) %>% summary()
+```
+
+Very intersting--so despite the differences in Classes and Sex the median age for those that lived and died were the same! The means were quite similar too, as were the  quartiles.
+
+Let's just do a side by side boxplot to visualize it--I will use par() to show them side by side
+
+### par()
+par() sets graphical parameters--but if passed a mfrow matrix (here 1 by 2) it will position plots/graphics after it according to say matrix. 
+
+```{r}
+par(mfrow=c(1,2))
+titanic_data %>% drop_na() %>% filter(Survived==0) %>% select(Age) %>% boxplot(main='Age Boxplot for Titanic Deceased')
+titanic_data %>% drop_na() %>% filter(Survived==1) %>% select(Age) %>% boxplot(main='Age Boxplot for Titanic Survivors')
+```
+
+Here you can see while there was definitely higher whiskers and age outliers on the deceased boxplot, which makes sense sadly that elderly/older individuals would  be more suspectible to elements/injury and thus death, the boxes for both plots haev a simiarl median and range. I guess Emily Dickinson was right--Death will comes for all!
