@@ -12,7 +12,7 @@ If you are going to use RStudio as your version control software, make sure to a
 ***After you’ve read each part of the assignment, please submit your GitHub handle name in the submission link provided in the Major Assignments folder!*** This will let your instructor know that your work is ready to be graded.
 
 ## Deadline
-You should complete both parts of the assignment and make your submissions on the schedule specified in our ourse syllabus
+You should complete both parts of the assignment and make your submissions on the schedule specified in our course syllabus
 
 ## References
 * GitHub repository:  https://github.com/acatlin/SPRING2020TIDYVERSE
