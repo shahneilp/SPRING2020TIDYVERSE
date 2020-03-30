@@ -264,4 +264,9 @@ Used the dataset https://fivethirtyeight.com/features/which-state-has-the-worst-
 ### dplyr, tidyr, tibble, ggplot2, readr
 
 
+### stringr: 8 most popular verbs
+Author: Philip Tanofsky
+
+Vignette for the popular stringr functions from the Tidyverse packages. The stringr library provides a suite of commonly used string manipulation functions to assist in data cleaning and data preparation tasks on a vector of 10 tweets.
+
 
