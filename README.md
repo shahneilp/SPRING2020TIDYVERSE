@@ -261,7 +261,16 @@ Group_by provides an intuitive way to look at one's data.  As the name implies, 
 Author: Amit Kapoor
 Used the dataset https://fivethirtyeight.com/features/which-state-has-the-worst-drivers/
 
-### dplyr, tidyr, tibble, ggplot2, readr
+### Highlights of these tutorials  
 
+#### dplyr :: rename vs. dplyr :: select
+#### dplyr :: top_n vs. dplyr :: top_frac
+> tally        
+> count
 
-
+* https://rpubs.com/dpong8988/591906 by Dennis Pong
+   + explain the nuances between rename and select
+   + explain what's top_frac and how is it different from top_n
+   + explain how to use an alternative to summarise/summarize's n() -- tally
+   + explain an even simpler way to do tally by introducing count
+ 
