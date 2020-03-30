@@ -261,12 +261,13 @@ Group_by provides an intuitive way to look at one's data.  As the name implies, 
 Author: Amit Kapoor
 Used the dataset https://fivethirtyeight.com/features/which-state-has-the-worst-drivers/
 
-### Highlights of these tutorials  
 
-#### dplyr :: rename vs. dplyr :: select
-#### dplyr :: top_n vs. dplyr :: top_frac
-> tally        
-> count
+### Highlights of the tutorials  
+
+#### 1. dplyr :: rename vs. dplyr :: select
+#### 2. dplyr :: top_n vs. dplyr :: top_frac
+> 3. tally        
+> 4. count
 
 * https://rpubs.com/dpong8988/591906 by Dennis Pong
    + explain the nuances between rename and select
