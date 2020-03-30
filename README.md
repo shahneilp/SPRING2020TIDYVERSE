@@ -12,7 +12,7 @@ If you are going to use RStudio as your version control software, make sure to a
 ***After you’ve read each part of the assignment, please submit your GitHub handle name in the submission link provided in the Major Assignments folder!*** This will let your instructor know that your work is ready to be graded.
 
 ## Deadline
-You should complete both parts of the assignment and make your submissions on the schedule specified in our ourse syllabus
+You should complete both parts of the assignment and make your submissions on the schedule specified in our course syllabus
 
 ## References
 * GitHub repository:  https://github.com/acatlin/SPRING2020TIDYVERSE
@@ -47,6 +47,11 @@ This file should help you understand how to export a table from a website, gathe
 Author: Angel Claudio
 
 This vignette is meant to teach you how to use the unite and pivot_wider function from the tidyr package.
+
+# Neil Shah Tidy
+ A vignette describing the progressive use of as_tibble(), dplyr functions select, arrange, filter and a gpplot to visualizae data.
+Author: Neil Shah
+
 
 # DATA607_Tidyverse_Vignette
  A vignette describing the prepration of an online table for ggplot and facet_wrap
@@ -222,6 +227,11 @@ Gabriel Abreu
 
 Abdellah Ait Elmouden
 
+##### Extension of Subhalaxmi Rout's vignette
+Author: Neil Shah
+Extended this vignette to also include how to deal with missing values
+
+Abdellah Ait Elmouden
 ### Basic Functionalities of GGplot using polling data
 Author: Samuel Bellows
 
@@ -232,7 +242,7 @@ Also includes some use of dplyr and lubridate.
 
 
 
-Nilsa Bermudez
+Nilsa Bermudez - Tidyverse recipe
 
 Vinayak Kamath
 
@@ -263,6 +273,18 @@ Used the dataset https://fivethirtyeight.com/features/which-state-has-the-worst-
 
 
 ### Highlights of the tutorials  
+=======
+======
+### Dplyr::summarise/group_by/count/arrange/select/filter
+Author: Manolis Manoli
+looking through hotel booking data using some dplyr functions and a bit of lubridate
+=======
+
+
+### stringr: 8 most popular verbs
+Author: Philip Tanofsky
+
+Vignette for the popular stringr functions from the Tidyverse packages. The stringr library provides a suite of commonly used string manipulation functions to assist in data cleaning and data preparation tasks on a vector of 10 tweets.
 
 #### 1. dplyr :: rename vs. dplyr :: select
 #### 2. dplyr :: top_n vs. dplyr :: top_frac
