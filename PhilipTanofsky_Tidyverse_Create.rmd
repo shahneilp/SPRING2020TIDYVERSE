@@ -7,13 +7,124 @@ output: html_document
 
 # Introduction
 
-Just a start
+Vignette for the popular stringr functions from the Tidyverse packages.
 
-```{r cars}
-summary(cars)
+The stringr library provides a suite of commonly used string manipulation functions to assist in data cleaning and data preparation tasks.
+
+The 8 most popular stringr verbs:
+
+1. detect:  Identifies a match to the pattern
+2. count:   Counts the number of instances of the pattern
+3. subset:  Extracts the strings with matching components to the pattern
+4. locate:  Identifies the position index of the match in the string
+5. extract: Extracts the matching text to the pattern
+6. match:   Extracts the parts of the match as defined in the parenthesis
+7. replace: Replaces the matching text with the provided text.
+8. split:   Split the string at the matching text.
+
+The stringr functions require a vector of strings as the first argument.
+
+Load the Tidyverse package.
+
+```{r load-tidyverse, warning=FALSE, message=FALSE}
+library(tidyverse)
+```
+
+Read in a CSV file from the web site fivethirtyeight Github repository and convert to an R dataframe. The CSV file contains tweets determined to be sent by Russian trolls. For examining the use cases of the stringr library, this exercise focuses on non-structured sentences from the tweets. The input file is subset to the first 10 tweets, which are displayed below.
+
+```{r get-data, warning=FALSE, message=FALSE}
+# Read CSV from fivethirtyeight.com
+data <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/russian-troll-tweets/master/IRAhandle_tweets_1.csv")
+head(data)
+
+tweets <- data[1:10,1:6]
+
+df <- as.data.frame(tweets)
+
+# Output the content column as this will be the string data used for stringr functions
+df$content
+```
+
+### Detect
+
+Detect if the exact string "US" appears in any of the tweets. Output will be "TRUE" or "FALSE" for each string.
+
+```{r str-detect-example}
+detect_result <- str_detect(df$content, "US")
+
+detect_result
+```
+
+### Count
+
+Count the number of occurrences of the letters 'u' or 's', uppercase and lowercase for each string. Output is the integer count for each string.
+
+```{r}
+count_result <- str_count(df$content, "[USus]")
+
+count_result
+```
+
+### Subset
+
+Subset the initial vector of strings to only the strings containing the exact string "US". Output is a vector of strings.
+
+```{r}
+subset_result <- str_subset(df$content, "US")
+
+subset_result
+```
+
+### Locate
+
+Identify the start and stop position in each string with a match of the exact string "the". Output identifies start and end for each string and results in 'NA' for strings that do not match the pattern.
+
+```{r}
+locate_result <- str_locate(df$content, "the")
+
+locate_result
+```
+
+### Extract
+
+Extracts the first instance that matches the letters 'u' or 's', uppercase and lowercase. Output is the string of the first matching pattern from the input vector of strings which in this case is a single letter.
+
+```{r}
+extract_result <- str_extract(df$content, "[USus]")
+
+extract_result
+```
+
+### Match
+
+Extracts the 5 characters from a string following the match of the exact string "US". The 5 periods in the parenthesis define the part of the string to be extracted. Output is the matching 5-character string or 'NA'.
+
+```{r}
+match_result <- str_match(df$content, "US(.....)")
+
+match_result
+```
+
+### Replace
+
+Replaces all instances that matches the letters 'u' or 's', uppercase and lowercase with an ampersand ('%'). Output is the initial vectors of strings with the replaced characters.
+
+```{r}
+replace_result <- str_replace(df$content, "[USus]", "%")
+
+replace_result
+```
+
+### Split
+
+Splits the strings by the hashtag ('#'). Output is a list of lists after splitting the input strings containing a hashtag.
+
+```{r}
+split_result <- str_split(df$content, "#")
+
+split_result
 ```
 
 # Conclusion
 
-You can also embed plots, for example:
-
+The stringr library provides easy-to-use string manipulation functions for data cleaning and preparation tasks. The functions are applied on vectors of strings which allows for straightforward manipulation of entire columns in a dataframe.
