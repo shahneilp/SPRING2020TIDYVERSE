@@ -1,0 +1,138 @@
+---
+title: "Data607-MajorAssignment-Tidyverse"
+author: "Vinayak Kamath"
+date: "2/8/2020"
+output: 
+  html_document:
+    df_print: paged
+  pdf_document:
+    extra_dependencies:
+    - geometry
+    - multicol
+    - multirow
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### An Example using TidyVerse packages - **ggplot2** and **dplyr**  and using tesla-stock-data-from-2010-to-2020 Data set from Kaggle  [*https://www.kaggle.com/timoboz/tesla-stock-data-from-2010-to-2020*]: ##  
+  
+  
+  
+*Pls load ggplot2 and dplyr package using install.packages("ggplot2") and install.packages("dplyr")*  
+
+#### Load the library and Read the data using readr:  
+
+```{r}
+# Loading the tidyverse readr/ggplot2/dplyr package:
+library(readr)
+library(ggplot2)
+library(dplyr)
+
+  
+# Loading the tesla-stock-data-from-2010-to-2020:
+theUrl <- "https://raw.githubusercontent.com/kamathvk1982/Data607-MajorAssignment-Tidyverse/master/TSLA.csv"
+tesla.hist.df <- read_csv(theUrl)
+  
+# Adding two new columns to get the current day gain/loss and the gain/loss percentage:
+tesla.hist.df$GainLoss <-  tesla.hist.df$Close - tesla.hist.df$Open
+tesla.hist.df$GainLossPercent <- (tesla.hist.df$GainLoss/tesla.hist.df$Open)*100
+
+# Sample rows from the dataset:
+tail(tesla.hist.df)
+```
+
+--------------------------------------------------------------------------------
+
+#### Package Selected : **ggplot2**  and **dplyr**
+
+##### Capability 1: **ggplot2 geom_line**
+
+###### Usage:  
+ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+  
+###### Demo:  
+ggplot2 geom_line to show the stock price movement over the years for Tesla shares.  
+  
+```{r}
+ggplot(tesla.hist.df, aes(Date, Close)) + 
+  geom_line()
+```
+  
+   
+--------------------------------------------------------------------------------
+   
+##### Capability 2: **dplyr filter**
+  
+###### Usage:  
+dplyr filter helps in filtering of data based on one or more conditions.    
+  
+###### Demo:   
+dplyr filter to show the days when the stock price for Tesla moved by over 15% (profit or loss) in one day.    
+  
+```{r}
+tesla.hist.df %>%  
+  filter(GainLossPercent >= 15 | GainLossPercent <= -15 ) %>% 
+  arrange(desc(GainLossPercent))
+```
+
+
+--------------------------------------------------------------------------------
+
+##### Capability 3: **dplyr group by and summarise**
+  
+###### Usage:  
+dplyr group by and summarise helps in getting aggregated data from the given data set for one or more columns.      
+    
+###### Demo:   
+dplyr group by and summarise to show the yearly minimum and maximum stock price close and arranging it in descending order of movement in a year.  
+  
+```{r}
+tesla.hist.df %>% 
+  group_by(format(as.Date(tesla.hist.df$Date), "%Y")) %>% 
+  summarise(min_close = min(Close) , max_close = max(Close)) %>% 
+  arrange(desc( (max_close-min_close)/min_close)*100 )
+
+```
+ 
+--------------------------------------------------------------------------------
+\clearpage
+
+##### Extension of this vignette (Ken Popkin)
+This extension describes how to construct a ggplot bar chart that compares Tesla's defects to several other manufacturers.  
+
+The defect data was obtained from [link to dataset summary](https://data.world/nhtsa/nhtsas-odi-recalls/workspace/project-summary?agentid=nhtsa&datasetid=nhtsas-odi-recalls), then filtered to the years 2010 - 2017 (filtering of the years was done outside of this notebook to bring the dataset size to a level small enough to load on the class git hub).
+
+##### load the dataset
+```{r echo=FALSE,warning=FALSE,message=FALSE,error=FALSE}
+defects <- read_csv('https://raw.githubusercontent.com/krpopkin/SPRING2020TIDYVERSE/master/FLAT_RCL-FLAT_RCL_2010_to_2017.csv')
+
+dim(defects)
+```
+
+24,698 rows is more data than we need for the extension of this vignette.  We'll now narrow the defects to automobile manufacturers that are viewed among Tesla's competitors.
+
+Vinayak already demonstrated the use of DPLYR's filter command to select rows. Another way to filter rows is via the Subset command (note that Subset is actually part of native R, not DPLYR).
+
+```{r}
+defects1 <- subset(defects, MAKETXT %in% c('FORD','TOYOTA', 'GM', 'HONDA', 'TOYOTA', 'TESLA'))
+dim(defects1)
+dim(defects[1]) - dim(defects1[1])
+```
+
+Selecting only defects from Ford, Toyota, GM, Honda, Toyota, and Tesla decreased the dataset to 1,576 rows, a reduction of 23,122 rows.  This is a dataset that should be much easier to work with.
+
+We'll now demonstrate constructing a bar chart using ggplot.
+
+##### ggplot barplot
+```{r echo=FALSE,warning=FALSE,message=FALSE,error=FALSE}
+
+#Defects
+ggplot(defects1, aes(x=factor(MAKETXT)))+
+  geom_bar(stat="count", width=0.7, fill="steelblue")+
+  theme_minimal()
+```
+
+These results imply that Tesla has the lowest number of defects.  But to conclude this more study is needed, i.e. how many vehicles does Tesla manufacture versus the other competitors.

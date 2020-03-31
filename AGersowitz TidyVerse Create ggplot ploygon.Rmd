@@ -1,0 +1,125 @@
+---
+title: "TidyVerse Create ggplot2"
+author: "Adam Gersowitz"
+date: "3/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Using ggplot2::geom_polygon in Visual Context 
+
+
+```{r library}
+library (readr)
+library(RCurl)
+library(sqldf)
+library(ggplot2)
+```
+
+## Load information from 538 on Information on Foul Balls in the MLB
+
+In this section I bring in a dataset from 538 that contains information on MLB fould balls. In this analysis I would like to look at the number of balls and the average exit velocity of balls that reach the stands in baseball. I acquire these summary statistics after removing records that do not have an exit velocity or would not have reached the stands.
+
+
+```{r csv}
+x <- getURL("https://raw.githubusercontent.com/agersowitz/Data-607-Datasets/master/foul-balls%5B1%5D.csv")
+foul <- read.csv(text=x)
+
+foul<-subset(foul, foul$type_of_hit != "Ground")
+foul<-subset(foul, foul$type_of_hit != "Batter hits self")
+foulev<-subset(foul,foul$exit_velocity!="NA")
+
+
+
+avg_exit<-sqldf("select avg(exit_velocity) aev, used_zone from foulev group by used_zone")
+count_hit<-sqldf("select count(exit_velocity) cev, used_zone from foul group by used_zone")
+
+
+
+```
+
+## Mapping this data to the rough outline of a baseball diamond
+
+In this final section I use various ggplot functions to create a baseball diamond based on an x,y plot. I roughly based the sections off of the graphic found at https://fivethirtyeight.com/features/we-watched-906-foul-balls-to-find-out-where-the-most-dangerous-ones-land/
+
+
+```{r baseball}
+
+
+
+
+
+ids <- factor(c( "1", "2", "3", "4", "5","6","7"))
+
+ev <- data.frame(
+  id = ids,
+  value = c(avg_exit$aev)
+)
+
+ch <- data.frame(
+  id = ids,
+  value = c(count_hit$cev)
+)
+
+positions <- data.frame(
+  id = rep(ids, each = 5),
+  x = c(
+        -0.25, -0.5, 0.5, 0.25, 0,
+        -0.25,-0.5, -0.75, -0.5,-0.5,
+        0.25,0.5, 0.75, 0.5,0.5,
+        -0.5, -0.75, -1,-0.75,-0.75,
+        0.5, 0.75, 1,0.75,0.75,
+        -0.75, -1, -1,-1,-1,
+        0.75, 1, 1,1,1)
+  ,
+  y = c(
+        -0.75, -1, -1, -0.75, -1,
+        -0.75, -0.5, -0.75, -1, -1,
+        -0.75, -0.5, -0.75, -1, -1,
+        -0.5, -0.75, -0.25, -0.25,-0.25,
+        -0.5, -0.75, -0.25, -0.25,-0.25,
+        -0.25, -.25, 0, 0, 0,
+        -0.25, -.25, 0, 0, 0)
+)
+
+
+datapoly <- merge(ev, positions, by = c("id"))
+
+datapolych <- merge(ch, positions, by = c("id"))
+
+
+p <- ggplot(datapoly, aes(x = x, y = y)) +
+  geom_polygon(aes(fill = value, group = id))
+
+pc <- ggplot(datapolych, aes(x = x, y = y)) +
+  geom_polygon(aes(fill = value, group = id))
+  
+baseline<-data.frame(
+  x = c(-1,0,1),
+  y = c(0,-1,0)
+)
+
+field <- data.frame(x = c(1, 0, -1, 0), y = c(0, 1, 0, -1))
+
+pev<-p + scale_fill_gradient(low = "pink", high = "red") + 
+  ggtitle("Average Exit Velocity of Foul Balls by Seating Zone") +
+ geom_line(data = baseline, colour = "grey30", size = 2) 
+  
+
+pch<-pc + scale_fill_gradient(low = "cyan", high = "blue") + 
+  ggtitle("Number of Foul Balls by Seating Zone") +
+  geom_line(data = baseline, colour = "grey30", size = 2)
+pev
+pch
+
+```
+
+
+
+## Conclusion
+
+By the end of this analysis you can visualy see statistics on foul balls in MLB. This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.
+

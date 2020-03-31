@@ -1,0 +1,46 @@
+---
+-title: "How to use dplyr"
+author: "Patrick Maloney"
+date: "3/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+We will see some uses of the dplyr package by loading a data set of contestants on the Bachelorette season's 11-15.
+
+```{r}
+library(dplyr)
+
+df <- read.csv("https://raw.githubusercontent.com/pmalo46/SPRING2020TIDYVERSE/master/BacheloretteDSFinal-Dogu.csv")
+head(df)
+```
+
+One of the most useful functions in the dplyr package is the filter function, which allows us to filter down to only rows that meet a certain condition.
+
+```{r}
+filter(df, Win_Loss == 1)
+```
+
+The table above shows the winners of the last five seasons. Another useful function is the group_by function.
+
+```{r}
+group_by(df, State) %>%
+  summarise(mean(Height..cm.))
+
+
+```
+
+The chunk above uses the group_by method to group the contestants by which state they are from, and then take the average height by state.  Another dplyr method, 'summarise' is on display here, which allows us to reduce multiple values down to a single value. Another useful function is arrange()
+
+```{r}
+as_tibble(tail(arrange(df, Occupation), 15))
+```
+
+The chunk above uses arrange() to sort the contestants alphabetically, while the as_tibble method makes the output more easily viewable.
+
+These demonstrate some of the many uses of the great dplyr package.

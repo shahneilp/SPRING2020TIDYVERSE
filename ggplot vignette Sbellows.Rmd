@@ -1,0 +1,79 @@
+---
+title: "GGPlot Recipe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+if (!file.exists('president_approval_polls.csv')){
+  download.file('https://projects.fivethirtyeight.com/polls-page/president_approval_polls.csv', 'president_approval_polls.csv')
+}
+df <- read.csv('president_approval_polls.csv')
+```
+
+# GGPlot Vignette
+
+GGPlot is centered around is base function ggplot and then adding certain geometries to ggplot to create different types of graphs. The grammar of ggplot is ggplot(arguments) + geom_type() where geom_type determines the type of plot you will make. Here are some examples.
+
+```{r}
+df$end_date <- df$end_date %>% mdy()
+df %>% ggplot(aes(x = end_date, y = yes)) + geom_line()
+```
+
+Here we have a basic plot. Inside the ggplot call we call aes which creates the aesthetics for the plot. Inside the aes call we create the x and y variables. However we see that the graph is extremely cluttered and that perhaps the line geometry is not correct for this graph. Let us try and get more visual clarity by using geom_point rather than geom_line. I also added a second geometry geom_smooth to see the trend.
+
+```{r}
+df %>% ggplot(aes(x = end_date, y = yes)) + geom_point() + geom_smooth()
+```
+
+We see that changing geometry is as simple as changing the geometry argument. Now each poll is much clearer, and we can see an interesting phenomena: There are horizontal lines in this graph where polls are being rounded to the nearest percent. You can find a full list of different geometries here https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf.
+
+Now say we want to graph approval vs. disapproval. We do this by making two geom calls, and we will no longer use a global aesthetic.
+
+```{r}
+df %>% ggplot() + geom_point(aes(end_date, yes), color = 'green') + geom_point(aes(end_date, no), color = 'red')
+```
+
+Here I made 2 different calls to geom_point and set the aesthetics for each of them within their own function call rather than as part of the global graph. This is because I wanted each of them to plot different things. I also set the color for each set of points outside of the aesthetics call. Let us see what happens when we set color inside of the aesthetics call.
+
+```{r}
+if (!file.exists('president_polls.csv')){
+  download.file('https://projects.fivethirtyeight.com/polls-page/president_polls.csv', 'president_polls.csv')
+}
+df2 <- read.csv('president_polls.csv')
+df2$created_at <- df2$created_at %>% mdy_hm()
+df2 <- df2 %>% filter(candidate_name %in% c('Donald Trump', 'Joseph R. Biden Jr.', 'Bernard Sanders'))
+df2 %>% ggplot(aes(created_at, pct, color = candidate_name)) + geom_point() + geom_smooth()
+```
+
+Notice how I called color with a column name. This indicates to ggplot that each value in that column should receive a different color. When you want to give different values in a column different colors that must go inside the aes call, whereas if you want to assign all points the same color, that falls outside the aes call.
+
+Another way to split data is by using the facet_grid function.
+
+```{r}
+df2 %>% ggplot(aes(created_at, pct)) + geom_point() + geom_smooth() + facet_grid(. ~ candidate_name)
+```
+
+The facet grid function tells ggplot to split the data into different graphs based on the values in the faceted columns. to split into columns we use the notation . ~ column, and to split into rows we use column . ~
+
+One other functionality we should discuss is the personalization of graphs. Adding labels and titles to graphs is extremely easy.
+
+```{r}
+df2 %>% ggplot(aes(created_at, pct, color = candidate_name)) + geom_point() + geom_smooth() + xlab('Date') + ylab('%') + ggtitle('Presidential Candidate Approval over Time')
+```
+
+Using the functions xlab, ylab, and ggtitle, we quickly labeled and titled our plot. Another easy personalization we can do is to change the theme of said plot.
+
+```{r}
+df2 %>% ggplot(aes(created_at, pct, color = candidate_name)) + geom_point() + geom_smooth() + xlab('Date') + ylab('%') + ggtitle('Presidential Candidate Approval over Time') + theme_bw()
+```
+
+Here I changed the theme of the graph by adding theme_bw. There are a variety of themes included with ggplot, and even more added in the ggthemes package for added variability.
+
+There are many other useful functionalities for ggplot including zooming on certain coordinates, scaling axes, and generating statistics. If you want more information, I encourage you to use the cheat sheet above to find out more about ggplot.
