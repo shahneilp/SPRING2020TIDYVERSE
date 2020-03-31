@@ -1,6 +1,6 @@
 ---
 title: "tidyverse"
-author: "Subhalaxmi Rout"
+author: "Subhalaxmi Rout & Neil Shah"
 date: "3/14/2020"
 output:
   html_document:
