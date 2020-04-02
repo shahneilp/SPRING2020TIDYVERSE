@@ -607,3 +607,6 @@ Vignette for the popular stringr functions from the Tidyverse packages. The stri
    + explain how to use an alternative to summarise/summarize's n() -- tally
    + explain an even simpler way to do tally by introducing count
 
+### Explore and manipulate a dataset using dplyr and tidyr (by Abdellah Ait Elmouden)
+
+The purpose of this Vignette is to demonstrate how some of tidyverse packages can be used to explore and manipulate a dataset in R. A dataset was selected from the fivethirtyeight Package. the R markdown file can be accessed from [here](/tidyverse_AitElmouden) 
