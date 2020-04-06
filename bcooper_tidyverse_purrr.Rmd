@@ -1,0 +1,153 @@
+---
+title: "Tidyverse: the purrr(fect) list"
+author: "Bonnie Cooper"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+---
+
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTNGxBlEGobrFgLrWR3FyuUatPwVnQkK3wBuhMD8XkVcwrtSB_P" width="200%" height="200%" />
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## a deep dive into purrr functions for filtering lists
+
+The purrr package is a set of functions that facilitates iterating elements of R objects. It is part of the tidyverse; a set of R packages designed to make data science 'faster, easier and more fun.' This vignette will demonstrate the use of several purrr methods used to [filter lists](https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf): **pluck()**, **head_while()**, **tail_while()**, **compact()**, **keep()** and **discard()**
+
+Global data on [<span style="color: red;">shark attacks</span> from Kaggle](https://www.kaggle.com/teajay/global-shark-attacks) will be used for demonstration.
+
+## <span style="color: red;">shark attack</span> data set
+A .csv of the dataset has been uploaded to be accessed here:
+```{r}
+#github raw url
+attacksURL <- 'https://raw.githubusercontent.com/SmilodonCub/DATA607/master/attacks.csv'
+#read the url to an r data.frame
+attacks_df <- read.csv( attacksURL, stringsAsFactors = F )
+#show the dimentions...
+dim( attacks_df )
+#...and features of the data.frame
+colnames( attacks_df )
+
+```
+<br>
+the necessary libraries:
+```{r, message=F}
+library( tidyverse )
+library( dplyr )
+library( ggplot2 )
+```
+<br>
+
+## pluck()
+**used to select elements by name of by index number**
+<br>
+Suppose there is a particular shark attack incident that we are interested in such as [Bethany Hamilton's dramatic story](https://bethanyhamilton.com/) and we would like to return a specific feature. for example, the 'Date' of the incident: 
+```{r}
+#index row number for Bethany's record
+idx <- which( attacks_df$Name == 'Bethany Hamilton')
+#pluck the corresponding 'Date' element by name...
+bHam_date <- pluck( attacks_df, 'Date', idx )
+#...or num feature index number
+#bHam_date <- pluck( attacks_df, 2, idx )
+bHam_date
+```
+<br>
+
+That was simple enough! but pluck() becomes increasingly useful in situations where a deeper indexing into a data structure is necessary. Suppose we reformat the 'Date' feature and split the string by the delimiter '-' :
+```{r}
+#split the data strings and return as lists in a new column of the data.frame
+attacks_df$DateSplit <- lapply(strsplit( attacks_df$Date, '-' ),'[')
+```
+Here we use pluck() to return the string corresponding to the month of Bethany Hamilton's incident.
+```{r}
+pluck( attacks_df, 'DateSplit', idx, 2 )
+```
+<br>
+
+We will now use purrr list filtering functions to find the fequency of <span style="color: red;">shark attacks</span> by the month the incidences occur in.  
+
+The previous call the pluck() worked, however, further inspection of the 'Date' feature reveals the data is rather dirty. the lists length of 'Date' is variable:
+```{r}
+#work with the date strings as a list of lists:
+attackDates <- lapply(strsplit( attacks_df$Date, '-' ),'[')
+#return the unique lengths of the lists of strings in the 'Date'feature
+unique(unlist(map(attackDates, length)))
+```
+<br>
+Something is fishy!, we will explore the data with purrr list filtering functions
+
+## head_while()
+**returns top elements down to the point where an elements fails a logical test**
+```{r}
+head_while(attackDates, function(x) x[2]=='Jun')
+```
+
+## tail_while()
+**returns the bottom elements up to the point where an element fails a logical test**
+```{r}
+length(tail_while(attackDates, function(x) length(x)==0))
+```
+The above output shows that there at over 19K null values taking up space on this set! Now to remove them...
+
+## compact()
+**used to drop empty elements**
+remove all the dates where there is no value entered.
+```{r}
+oldLength <- length( attackDates )
+#apply the compact() function to the date data:
+attackDates <- compact( attackDates )
+newLength <- length( attackDates )
+difLength <- oldLength - newLength
+cat('the compact() function eliminated', difLength, 'empty elements')
+```
+
+Properly formatted dates result in a list length of 3 (c('DD','MMM','YYYY')). here we use the purrr function keep() to select for all the cases (rows) where the length == 3.
+
+## keep()
+**used to select elements that pass a logical test**
+```{r}
+attackDates_3 <- keep(attackDates, function(x) length(x)==3 )
+unique( unlist(map(attackDates_3, length) ) )
+```
+<br>
+Alternatively, discard() can be used to remove values based on a criteria...
+
+## discard()
+**used to select elements that fail a logical test**
+```{r}
+#remove all elements with a list length of 2
+attackDates_no2 <-  discard(attackDates, function(x) length(x)==2 ) 
+unique( unlist(map(attackDates_no2, length) ) )
+```
+<br>
+
+We will now plot the cleaned date data
+```{r}
+month_strs <- c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                'Jul', 'Aug', 'Sep', 'Nov', 'Dec')
+#select the 2nd elements as lists, unlist them, 
+#keep only those strings that occur in the 'month_str' list & 
+#format the results as a table.
+attack_bymonth <- table(keep(unlist(lapply( attackDates_3, '[[',2 )), 
+                             function(x) x %in% month_strs ))
+attack_bymonth
+#now to visualize.....
+plotdata <- data.frame( names = names( attack_bymonth ),
+                        values = as.vector( attack_bymonth ))
+months_bp <- ggplot(plotdata, aes(x=names, y=values)) + 
+    geom_bar(stat = "identity") +
+    scale_x_discrete( limits = month_strs ) +
+    geom_hline(yintercept = mean( plotdata$values ), color = 'red' ) +
+    ggtitle( 'Number of Shart Attacks per Month' ) +
+    xlab( 'Month' ) +
+    ylab( 'count' )
+months_bp
+```
+<br>
+The bar plot above shows the total <span style="color: red;">shark attacks</span> per month with a red horizontal line which indicates the average deaths per month. We can see that <span style="color: red;">shark attacks</span> are much more frequent in the summer months with another surge in January (presumably corresponding to increased vacationers).  
+
+We got to sink our teeth into several purrr functions for filtering lists. Hopefully this will help your future data wrangling go swimmingly!
+
+<br><br><br>
