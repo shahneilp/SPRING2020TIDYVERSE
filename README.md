@@ -50,12 +50,15 @@ Functions added for extension:
 RPubs Link: https://rpubs.com/MsQCSNYC/592259
 
 
-## ggplot2 - geom
-ggplot2 is a ubiquitous library that allows you to easily visualize data and explain patterns in data to people who are not nessesarliy familiar with the technical aspect of data analysis. Visualizations made with ggplot2 are easy to understand and contruct thanks to an API that allows visualizations to be "built" via layering of graphics and other visual elements.
-=======
+### ggplot2 - barcharts
+Author: Laylah Quinones
+Extended By: Angel Claudio
+
+ggplot2 is a ubiquitous library that allows you to easily visualize data and explain patterns in data to people who are not nessesarliy familiar with the technical aspect of data analysis. Visualizations made with ggplot2 are easy to understand and construct thanks to an API that allows visualizations to be "built" via layering of graphics and other visual elements.
+
 This file should help you understand how to export a table from a website, gather the data into a tall format, and plot the variables of interest into several plots for easy comparison
 
-## tidyr's unite and pivot_wider found in tidyr_AC.Rmd
+### tidyr's unite and pivot_wider found in tidyr_AC.Rmd
 Author: Angel Claudio
 
 This vignette is meant to teach you how to use the unite and pivot_wider function from the tidyr package.
@@ -179,16 +182,6 @@ From the forcats package, this function allows you to quickly group levels of a 
 ### Working with Lubridate:
 Author: Ken Popkin
 This vignette loads the Lubridate package and performs a few date transformations. Ken Popkin
-
-## ggplot2 - geom
-ggplot2 is a ubiquitous library that allows you to easily visualize data and explain patterns in data to people who are not nessesarliy familiar with the technical aspect of data analysis. Visualizations made with ggplot2 are easy to understand and contruct thanks to an API that allows visualizations to be "built" via layering of graphics and other visual elements.
-=======
-This file should help you understand how to export a table from a website, gather the data into a tall format, and plot the variables of interest into several plots for easy comparison
-
-## tidyr's unite and pivot_wider found in tidyr_AC.Rmd
-Author: Angel Claudio
-
-This vignette is meant to teach you how to use the unite and pivot_wider function from the tidyr package.
 
 # DATA607_Tidyverse_Vignette
  A vignette describing the prepration of an online table for ggplot and facet_wrap
@@ -350,15 +343,6 @@ This vignette loads the Lubridate package and performs a few date transformation
 ### Stringr package - how to manipulate strings using stringr
 Author: Devin Teran
 
-## ggplot2 - geom
-ggplot2 is a ubiquitous library that allows you to easily visualize data and explain patterns in data to people who are not nessesarliy familiar with the technical aspect of data analysis. Visualizations made with ggplot2 are easy to understand and contruct thanks to an API that allows visualizations to be "built" via layering of graphics and other visual elements.
-=======
-This file should help you understand how to export a table from a website, gather the data into a tall format, and plot the variables of interest into several plots for easy comparison
-
-## tidyr's unite and pivot_wider found in tidyr_AC.Rmd
-Author: Angel Claudio
-
-This vignette is meant to teach you how to use the unite and pivot_wider function from the tidyr package.
 
 # Neil Shah Tidy
  A vignette describing the progressive use of as_tibble(), dplyr functions select, arrange, filter and a gpplot to visualizae data.
@@ -478,15 +462,6 @@ From the forcats package, this function allows you to quickly group levels of a 
 Author: Ken Popkin
 This vignette loads the Lubridate package and performs a few date transformations. Ken Popkin
 
-## ggplot2 - geom
-ggplot2 is a ubiquitous library that allows you to easily visualize data and explain patterns in data to people who are not nessesarliy familiar with the technical aspect of data analysis. Visualizations made with ggplot2 are easy to understand and contruct thanks to an API that allows visualizations to be "built" via layering of graphics and other visual elements.
-=======
-This file should help you understand how to export a table from a website, gather the data into a tall format, and plot the variables of interest into several plots for easy comparison
-
-## tidyr's unite and pivot_wider found in tidyr_AC.Rmd
-Author: Angel Claudio
-
-This vignette is meant to teach you how to use the unite and pivot_wider function from the tidyr package.
 
 # DATA607_Tidyverse_Vignette
  A vignette describing the prepration of an online table for ggplot and facet_wrap
