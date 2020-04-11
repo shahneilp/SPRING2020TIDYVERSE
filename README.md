@@ -34,6 +34,7 @@ From the forcats package, this function allows you to quickly group levels of a 
 ### Working with Lubridate:
 Author: Ken Popkin
 This vignette loads the Lubridate package and performs a few date transformations. Ken Popkin
+Lubridate Extension Author: Christian Thieme - RPubs Link: https://rpubs.com/christianthieme/597573
 
 ### Stringr package - how to manipulate strings using stringr
 Author: Devin Teran
