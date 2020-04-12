@@ -97,3 +97,84 @@ raptor1 <- raptor1 %>%
 
 raptor1
 ```
+
+
+***
+
+### Extend Assignment - Leo Yi
+
+First, I'd like to admit that I'm not actually a basketball fan so these calculations aren't very clear to me. From what I can tell, the raptor dataset is an evalulation of individual players based on different metrics. 
+
+The code above, by Chun San Yip, seems to ulitmately summarize the average box total by team, for players who have at least 2,000 minutes of play in the 2020 season.
+
+I'll be using the tidyverse package to create a few visualizations using ggplot2 to try and understand what's being calculated above.
+
+#### 2,000 Minutes of Play Time
+
+The first thing I want to take a look at is why 2000 minutes of play time was used above. Lets use ggplot to see the distribution of play time of each of the players in the raptor dataset and see how many players go into each team's overall average box total.
+
+```{r}
+# plot a histogram of each players' active play time
+ggplot(raptor, aes(x = mp)) +
+  geom_histogram() +
+  theme_bw() +
+  labs(title = 'Histogram of Minutes Played',
+       x = element_blank(),
+       y = element_blank())
+  
+```
+
+It looks like we're only looking at a very small fraction of the players in this dataset. Let's determine how many, exactly. Let's do this by creating a flag for the most active players and showing the results, using dplyr:
+
+```{r}
+# add a flag for players with 2000 or more minutes of playtime
+raptor_aflag <- raptor %>%
+  mutate(active_flag = ifelse(mp >= 2000, 1, 0))
+
+# calculate the percent of the most active players
+raptor_aflag %>%
+summarize(active_players = sum(active_flag),
+          total_players = n(),
+          pct_active_players = active_players / total_players)
+```
+
+It seems like we're barely looking at 5% of the players in this dataset. This makes for a curious team level average, as it seems possible that a few, perhaps even only one player, is making up the team average calculated above. Lets use dplyr again to take a look at how many active players there are per team:
+
+```{r}
+# show the number of active players per team
+team_pcts <- raptor_aflag %>%  
+  group_by(team) %>%
+  summarize(active_players = sum(active_flag),
+            total_players = n(),
+            pct_active_players = active_players / total_players) %>%
+  arrange(desc(pct_active_players))
+
+head(team_pcts)
+
+# show the number of active players per team
+ggplot(team_pcts, aes(x = active_players)) +
+  geom_bar() +
+  scale_y_continuous(limits = c(0,12),
+                     breaks = seq(0,12,1)) +
+  labs(title = 'Distribution of Active Players by Teams',
+       x = "Number of Active Players",
+       y = "Number of Teams") +
+  theme_bw()
+
+# table version of visualization
+team_pcts %>%
+  group_by(active_players) %>%
+  summarize(number_of_teams = n(),
+            pct_of_grp = n() / nrow(team_pcts),
+            min_pct_active_players = min(pct_active_players),
+            max_pct_active_players = max(pct_active_players))
+```
+
+#### Results
+
+It looks like 11 teams or over a third of all the teams listed here won't be included in the average team box totals above. Also, 12 teams, or 40% of the teams in the dataset, are averaged using only one player on their team. Even with 3 players with over 2,000 minutes of play time in one team, we're only looking at 15% of that team's players.
+
+I'm still unclear as to what this metric is and why it's important to basketball-- but it suggests interest in the most active players rather than the combination of the team. Perhaps it would be better to look at box scores by player rather than by team.
+
+
+
