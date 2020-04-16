@@ -1,8 +1,15 @@
 ---
-title: "Tydiverse_create"
-author: "Dennis Pong"
-date: "3/29/2020"
-output: html_document
+title: "Tydiverse Create Extend"
+author: "Dennis Pong / Vinayak kamath for Extend"
+date: "04/15/2020"
+output:
+  html_document:
+    df_print: paged
+    theme: cosmo
+  pdf_document:
+    extra_dependencies:
+    - geometry
+    - multicol
 ---
 
 ```{r setup, include=FALSE}
@@ -19,6 +26,7 @@ I'll be using the data from [SARS 2003 Outbreak Complete Dataset](https://www.ka
 ```{r}
 library(tidyverse)
 library(tidyr)
+library(knitr)
 ```
 
 ## Loading the data 
@@ -130,4 +138,62 @@ df2 %>% count (Country)
 
 ```
 
+  
+   
+<!-- Start: Extended by Vinayak on 04/15/2020--> 
+*** 
 
+## Using dplyr: mutate to add new variables that are functions of existing variables
+
+### Usage
+mutate(.data, ...)
+
+### Examples
+
+#### mutate() adds new variables and preserves existing ones
+
+```{r extend-mutate}
+#using Mutate to create new variable as `Year` having just the date component of the existing variable `Date` 
+df.new <- df %>% 
+  mutate(Year=format(as.POSIXct(df$Date,format="%Y-%m-%d"),"%Y"))
+str(df.new)
+kable(head(df.new,10))
+```
+
+*** 
+
+## Using dplyr: arrange to changes the ordering of the rows
+
+### Usage
+arrange(.data, ...)
+
+### Examples
+
+#### arrange() changes the ordering of the rows based on one or more columns and in ascending or descending order
+
+```{r extend-arrange}
+# ordering first by `Country` in descending and then by `Date` in defualt of ascending 
+df.new %>% 
+  arrange(desc(Country), Date)
+```
+
+*** 
+
+## Using dplyr: slice to Choose rows by their ordinal position in the tbl. Grouped tbls use the ordinal position within the group.
+
+### Usage
+slice(.data, ..., .preserve = FALSE)
+
+### Examples
+
+#### slice() does not work with relational databases because they have no intrinsic notion of row order. If you want to perform the equivalent operation, use filter() and row_number().
+
+```{r extend-slice}
+# choosing the last row using n() along with slice()
+kable(slice(df.new, n()))
+
+# choosing the first 7 row using n() along with slice()
+kable(slice(df.new, 1:7))
+```
+
+<!-- End: Extended by Vinayak on 04/15/2020--> 
