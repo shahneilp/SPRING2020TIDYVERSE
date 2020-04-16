@@ -1,0 +1,351 @@
+---
+title: "***stringr:*** a package used to manipulate strings"
+author: "Devan Turan - Extended By: Layla Quinones"
+date: "2020-03-28"
+output: rmdformats::readthedown
+
+---
+### **Getting started**
+
+First we need to load these packages:
+
+* **tidyverse** 
+* **stringr**  
+* **dplyr** - *used for subsetting data in our analysis*  
+* **rmdformats** - *used to for styling html document*   
+
+```{r necessary-libraries,include = FALSE}
+packages <- c('tidyverse','stringr','dpylr','rmdformats')
+
+library(tidyverse)
+library(stringr)
+library(dplyr)
+```
+  
+We're going to load a dataset from [fivethirtyeight.com](https://fivethirtyeight.com/features/a-handful-of-cities-are-driving-2016s-rise-in-murders/) to help us show examples of stringr at work. Our data shows murders in cities in America from 2014 to 2015. 
+
+We'll take the first 10 rows of the data for simplicity's sake.
+```{r setup}
+url <- 'https://raw.githubusercontent.com/fivethirtyeight/data/master/murder_2016/murder_2015_final.csv'
+murder_raw <- read_csv(url)
+
+murder <- head(murder_raw,10)
+```
+
+## **Ordering Strings**
+#### **str_order(character vector,decreasing = X)**  
+
+**Purpose:**   
+Order a character vector alphabetically.  
+
+**Input: **      
+character vector - what you want to order  
+X - indicate whether to order characters decreasing (FALSE - alphabetically) or increasing (TRUE - order from Z to A)  
+
+**Output:**  
+An ordered character vector 
+
+**Example:**  
+We'll order the column 'city' from our dataframe 'murder'
+```{r sort-descreasing-alphabetically}
+str_sort(murder$city,decreasing=FALSE)
+```
+If you want to reverse the order to Z-A you can set **decreasing = FALSE**
+```{r sort-reverse}
+str_sort(murder$city,decreasing=TRUE)
+```
+   
+## **Combining Strings**
+#### **str_c(String1,String2,...Stringn)**  
+
+**Purpose:**    
+The function takes in a strings or vectors of strings and concatentates them together
+  
+**Input:**     
+String or vector of strings separated by comma  
+  
+**Output:**  
+Single string of vector of combined strings  
+  
+**Example:**  
+You can combine as many strings as you want together at once  
+```{r combine-many-string}
+str_c('a','b','c','d','e','f','g','h')
+```  
+Let's let's see how we can combine two vectors of strings together from our dataframe: the city and the state  
+```{r combine-city-state}
+str_c(murder$city,murder$state)
+```
+You can add a separator between the strings you're combining using the **sep = ''** argument. Let's separate the city and state by a comma.  
+  
+Add this new data as a column, named **City_State**, in our dataframe murder.
+```{r combine-string-separated}
+murder$City_State <- str_c(murder$city,murder$state,sep=",")
+murder$City_State
+```
+ 
+## **Replacing Strings** 
+#### **str_replace_all(string, pattern, string)**
+**Purpose:**    
+This function will replace all instances of a pattern with the given replacement  
+
+**Input:**      
+String or vector of strings    
+Pattern - you can use [regular expressions](https://rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf) here
+
+**Output:**  
+Single string of vector of combined strings  
+
+**Example:**  
+Supposed we wanted to replace all appearances of **.** in the column 'City_State'.  We can easily do this with **str_replace_all()** 
+```{r string-replace-all}
+murder$City_State <- str_replace_all(murder$City_State,'[\\.]','*')
+murder$City_State
+```
+   
+## **Get the Length of a String**
+#### **str_length(string)**
+**Purpose:**    
+Find out the length of a string or a vector of strings   
+  
+**Input:**       
+String or vector of strings     
+
+**Output:**     
+Integer    
+  
+**Example:**  
+Let's find how out how long each city name   
+```{r string-length}
+str_length(murder$city)
+```
+  
+*Let's only view the rows in the dataframe where the city has more than 9 letters in the name.  To do this we'll also use the filter function from the package dplyr.*  
+```{r view-more-9-letter-city}
+filter(murder,str_length(murder$city) > 9)
+```
+
+### **Conclusion**
+These examples are just the beginning of what you can do with stringr.  If you need to manipulate, combine or work with strings in general, stringr is a great package to do so.  Here's a great stringr cheatsheet released by RStudio (https://rstudio.com/resources/cheatsheets/).
+
+
+
+**Resources:**
+
+* [https://cran.r-project.org/web/packages/rmdformats/vignettes/introduction.html](https://cran.r-project.org/web/packages/rmdformats/vignettes/introduction.html)
+* [https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html](https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html)
+
+# Extend - Layla Quinones
+
+`stringr` is a library built on top of `stringi` that enables easy and fast string manipulation. Specifically, `stringr` focuses on the most commonly used string manipuation functions when it comes to data cleaning ans preperation. All functions from the `stringr` package start with `str_` and take in a string vector argument; most functions also take in a text pattern (regular expression) as an argument.
+
+## `str_sub()`
+
+**`str_sub(string, start, end)`**
+
+**Purpose:**    
+This function extracts parts of strings based on it's location in the string, and can replace extracted characters with others. 
+
+**Input:**      
+`string`: a vector of strings    
+`start`: integer vector of the position of the first character to be extracted
+`end`: integer vector of the position of the last character to be extracted
+
+**Output:**  
+A vector of strings
+
+**Example:** 
+
+The `murder` dataframe used in this tutorial has two columns `2014_murders` and `2015_murders`. We can use `str_sub()` if we wanted to exclude the `_murders` part of the column names.This may be useful for graphing purposes so that category names are not too long for the visual. 
+
+```{r}
+#display column names before
+names(murder)
+
+#Select the 3rd and 4th element from  the 'names()` function called on the df 'murder'
+#Extract the 1st to the 4th position of the column names (which includes the year only)
+names(murder)[3:4] <- str_sub(names(murder)[3:4], 1, 4)
+
+#displace column names after
+names(murder)
+```
+
+Additionally we can substitute another value for the extracted value. 
+
+```{r}
+#Sub the last 5 characters of the `City_State` column for `,state` to reflect format
+str_sub(names(murder)[6], 5, 10) <- c(",state")
+
+#display column names after
+names(murder)
+```
+
+## `str_subset()`
+
+**`str_subset(string, pattern)`**
+
+**Purpose:**    
+This function extracts strings that contain the specified pattern.
+
+**Input:**      
+`string`: a vector of strings    
+`pattern`: the pattern of interest
+
+**Output:**  
+A vector of strings
+
+**Example:** 
+The `murder` dataframe has a column called `City,state` which contains the city and states where murders occur. We can use `str_subset` to select only the values for `City,state`located in Missouri.
+
+```{r}
+#Displays the items in City,state column
+murder$`City,state`
+
+#subset only the cities in Missouri
+str_subset(murder$`City,state`, "Missouri")
+
+```
+
+## `str_detect()`
+
+**`str_detect(string, pattern)`**
+
+**Purpose:**    
+This function detects the presence of a specific pattern in a string. If the pattern is detected then this function will return `TRUE` for every element in the vector where the pattern is present.
+
+**Input:**
+`string`: a vector of strings
+`pattern`: the pattern of interest
+
+**Output:**  
+A boolean (`TRUE` or `FALSE`)
+
+**Example:** 
+
+The `murder` dataframe has a column called `change` which contains the difference in the amount of murders between 2015 and 2014. We can use `str_detect` to find out which differences start with the number 1, contains the number 1 or ends with the number 1.
+
+```{r}
+#Displays the items in City,state column
+murder$change
+
+#Detect all values of the column that begins with the number 1
+str_detect(murder$change, "^1")
+
+#Detect all values of the column that containsthe number 1
+str_detect(murder$change, "1")
+
+#Detect all values of the column that end with the number 1
+str_detect(murder$change, "1$")
+```
+
+## `str_count()`
+
+**`str_count(string, pattern)`**
+
+**Purpose:**    
+This function counts the number of times a specific pattern appears in a vector of strings.
+
+**Input:**      
+`string`: a vector of strings    
+`pattern`: the pattern of interest
+
+**Output:**  
+A vector of integers
+
+**Example:** 
+
+We can use `str_count` to count the number of letters in each city in the `murder` dataframe.
+
+```{r}
+#Use regex for all uppercase and lowercase letters in `city` column
+str_count(murder$city, "[A-za-z]")
+```
+
+## `str_extract()` & `str_extract_all()`
+
+**`str_extract(string, pattern)`**
+
+**Purpose:**    
+This function extracts the first match of a specified pattern from a string of vectors and returns them in a string of vectors with the same length.
+
+**`str_extract_all(string, pattern)`**
+
+**Purpose:**    
+This function extracts all matches of a specified pattern from a string of vectors and returns them in a dataframe.
+
+**Input:**      
+`string`: a vector of strings <br/>
+`pattern`: the pattern of interest
+
+**Output:** <br/>
+`str_extract`: a vector of strings <br/>
+`str_extract_all`: a list of string vectors
+
+**Example:** <br/>
+We can use `str_extract` to extract all text before and including a ',' in the `City,state` column of the murder dataframe. We can also use `str_extract_all` to get the same result as a list of string vectors.This behavior can be reversed using `unlist`
+
+```{r}
+#Extracts the city names only into vector
+str_extract(murder$`City,state`, ".*,")
+
+##Extracts the city names only into a list of vectors
+str_extract_all(murder$`City,state`, ".*,")
+
+##Convert to vector
+unlist(str_extract_all(murder$`City,state`, ".*,"))
+```
+
+## `str_remove`
+
+**`str_remove(string, pattern)`**
+
+**Purpose:**    
+This function removes the specified pattern from a string vector.
+
+**Input:**      
+`string`: a vector of strings    
+`pattern`: the pattern of interest
+
+**Output:**  
+A string vector 
+
+**Example:** 
+We can use `str_remove` to remove the ',' from each element of the `City,state` column in the murder dataframe. 
+```{r}
+#Displays the items in City,state column
+murder$`City,state`
+
+#Remove ',' from each
+str_remove(murder$`City,state`, ',')
+```
+
+## `str_replace()`
+
+**`str_replace(string, pattern, replacement)`**
+
+**Purpose:**    
+This function removes the specified pattern from a string vectore and replaces it with another specified pattern. 
+
+**Input:**      
+`string`: a vector of strings    
+`pattern`: the pattern of interest<br/>
+`repacement`: the replacement pattern
+
+**Output:**  
+A string vector
+
+**Example:** <br/>
+We can use `str_replace` to remove the ',' from each element of the `City,state` column and replace it with a space. 
+
+```{r}
+#Displays the items in City,state column
+murder$`City,state`
+
+#Remove ',' from each and replace with space
+str_replace(murder$`City,state`, ",", " ")
+```
+
+## Conclusion
+`stringr` is a package that is extremely helpful with tasks such as data cleaning and web scraping. The various functions in this package allow for easy string manipulation which makes the job of presenting data and a clear manner swift and managable, specifically with large amounts of data. Stringr works in conjunction with regex and is part of the tidyverse package thereby making data manipulation seemless.
+
+

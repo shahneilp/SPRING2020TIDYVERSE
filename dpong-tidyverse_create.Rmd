@@ -1,0 +1,199 @@
+---
+title: "Tydiverse Create Extend"
+author: "Dennis Pong / Vinayak kamath for Extend"
+date: "04/15/2020"
+output:
+  html_document:
+    df_print: paged
+    theme: cosmo
+  pdf_document:
+    extra_dependencies:
+    - geometry
+    - multicol
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Data
+
+I'll be using the data from [SARS 2003 Outbreak Complete Dataset](https://www.kaggle.com/imdevskp/sars-outbreak-2003-complete-dataset) from Kaggle. The raw github link is [here](https://raw.githubusercontent.com/metis-macys-66898/data_607_sp2020/master/sars_2003_complete_dataset_clean.csv)
+
+
+## Loading Packages 
+
+```{r}
+library(tidyverse)
+library(tidyr)
+library(knitr)
+```
+
+## Loading the data 
+
+```{r}
+df=read.csv('https://raw.githubusercontent.com/metis-macys-66898/data_607_sp2020/master/sars_2003_complete_dataset_clean.csv', stringsAsFactors	
+ = F)
+
+head(df)
+str(df)
+```
+
+```{r}
+as.tibble(df)
+
+```
+
+
+## Using dplyr: rename to rename variables by name
+
+### Usage
+rename(.data, ...)
+
+select(.data, ...)
+
+### Examples
+
+#### rename( ) can be used to rename columns, except all columns not mentioned are kept
+
+```{r rename}
+df1 <- df %>% rename("Cumulative_number_of_cases" = "Cumulative.number.of.case.s.")
+names(df1)
+```
+
+#### Select( ) can be used to rename columns, though all columns not mentioned are dropped
+```{r}
+df %>% select("Cumulative_number_of_cases" = "Cumulative.number.of.case.s.") %>% head(5)
+```
+
+#### Need to make sure df1 is not tibble.
+
+```{r convert_df1_to_tibble, include=FALSE}
+df1 <- as.tibble(df1)
+```
+
+
+## Using dplyr: top_frac to select top (or bottom) n rows (by value)
+
+### Usage
+top_frac(x, n, wt)
+
+top_n(x, n, wt)  
+  
+  
+### Examples
+
+#### Wanted to get the top 30% of the countries by day in terms of cumulative number of cases
+```{r}
+# The funciton count will give us a count of records by day, denoted in n. 
+# group_by (x) followed by %>% will give you the result grouping by x
+df1 %>% group_by (Date) %>% count
+
+```
+
+#### .3 * n( ) will give you 30% of row count. Thus the following will give you the top 30% of the countries per date in terms of cumulative number of cases.
+```{r n_30%}
+#  Assign the result to df2  
+df2 <- df1 %>% group_by(Date ) %>% top_n(.3 * n(), Cumulative_number_of_cases)
+df2
+```
+
+
+#### top_frac is basically a shorthand to eliminate the need to put in n() for the total row count in that group. Simply put in the fraction as a the parameter. See below.
+
+```{r top_frac}
+# note that top_frac takes in .3 instead of .3 * n(). Assign the result to df2a
+df2a <- df1 %>% group_by(Date ) %>% top_frac(.3, Cumulative_number_of_cases)
+df2a 
+
+# checking if df2a is the same as df2
+all.equal(df2, df2a)
+```
+
+  
+  
+  
+### Use dplyr::tally or dplyr::count to do counts like n( )
+#### Besides summarize/summarise, what're some of the functions that one can use to tally counts?
+
+### Usage
+tally(x, wt = NULL, sort = FALSE, name = "n")
+
+count(x, ..., wt = NULL, sort = FALSE, name = "n", .drop = group_by_drop_default(x))  
+  
+  
+#### tally the record/obs count by country 
+
+```{r tally}
+# an automatic variable n is created to hold the results of tally
+df2 %>% group_by(Country) %>% tally
+```
+
+
+#### Count the number of record/obs by country 
+
+```{r count}
+# It can be further simplified to using just count. count (x) means counting the number of records grouping by x. 
+df2 %>% count (Country)
+
+```
+
+  
+   
+<!-- Start: Extended by Vinayak on 04/15/2020--> 
+*** 
+
+## Using dplyr: mutate to add new variables that are functions of existing variables
+
+### Usage
+mutate(.data, ...)
+
+### Examples
+
+#### mutate() adds new variables and preserves existing ones
+
+```{r extend-mutate}
+#using Mutate to create new variable as `Year` having just the date component of the existing variable `Date` 
+df.new <- df %>% 
+  mutate(Year=format(as.POSIXct(df$Date,format="%Y-%m-%d"),"%Y"))
+str(df.new)
+kable(head(df.new,10))
+```
+
+*** 
+
+## Using dplyr: arrange to changes the ordering of the rows
+
+### Usage
+arrange(.data, ...)
+
+### Examples
+
+#### arrange() changes the ordering of the rows based on one or more columns and in ascending or descending order
+
+```{r extend-arrange}
+# ordering first by `Country` in descending and then by `Date` in defualt of ascending 
+df.new %>% 
+  arrange(desc(Country), Date)
+```
+
+*** 
+
+## Using dplyr: slice to Choose rows by their ordinal position in the tbl. Grouped tbls use the ordinal position within the group.
+
+### Usage
+slice(.data, ..., .preserve = FALSE)
+
+### Examples
+
+#### slice() does not work with relational databases because they have no intrinsic notion of row order. If you want to perform the equivalent operation, use filter() and row_number().
+
+```{r extend-slice}
+# choosing the last row using n() along with slice()
+kable(slice(df.new, n()))
+
+# choosing the first 7 row using n() along with slice()
+kable(slice(df.new, 1:7))
+```
+
+<!-- End: Extended by Vinayak on 04/15/2020--> 

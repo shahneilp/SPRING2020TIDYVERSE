@@ -1,0 +1,137 @@
+---
+title: "***stringr:*** a package used to manipulate strings"
+author: "Devin Teran"
+date: "2020-03-28"
+output: rmdformats::readthedown
+
+---
+### **Getting started**
+
+First we need to load these packages:
+
+* **tidyverse** 
+* **stringr**  
+* **dplyr** - *used for subsetting data in our analysis*  
+* **rmdformats** - *used to for styling html document*   
+
+```{r necessary-libraries,include = FALSE}
+packages <- c('tidyverse','stringr','dpylr','rmdformats')
+
+library(tidyverse)
+library(stringr)
+library(rmdformats)
+library(dplyr)
+```
+  
+We're going to load a dataset from [fivethirtyeight.com](https://fivethirtyeight.com/features/a-handful-of-cities-are-driving-2016s-rise-in-murders/) to help us show examples of stringr at work. Our data shows murders in cities in America from 2014 to 2015. 
+
+We'll take the first 10 rows of the data for simplicity's sake.
+```{r setup}
+url <- 'https://raw.githubusercontent.com/fivethirtyeight/data/master/murder_2016/murder_2015_final.csv'
+murder_raw <- read_csv(url)
+
+murder <- head(murder_raw,10)
+```
+
+## **Ordering Strings**
+#### **str_order(character vector,decreasing = X)**  
+
+**Purpose:**   
+Order a character vector alphabetically.  
+
+**Input: **      
+character vector - what you want to order  
+X - indicate whether to order characters decreasing (FALSE - alphabetically) or increasing (TRUE - order from Z to A)  
+
+**Output:**  
+An ordered character vector 
+
+**Example:**  
+We'll order the column 'city' from our dataframe 'murder'
+```{r sort-descreasing-alphabetically}
+str_sort(murder$city,decreasing=FALSE)
+```
+If you want to reverse the order to Z-A you can set **decreasing = FALSE**
+```{r sort-reverse}
+str_sort(murder$city,decreasing=TRUE)
+```
+   
+## **Combining Strings**
+#### **str_c(String1,String2,...Stringn)**  
+
+**Purpose:**    
+The function takes in a strings or vectors of strings and concatentates them together
+  
+**Input:**     
+String or vector of strings separated by comma  
+  
+**Output:**  
+Single string of vector of combined strings  
+  
+**Example:**  
+You can combine as many strings as you want together at once  
+```{r combine-many-string}
+str_c('a','b','c','d','e','f','g','h')
+```  
+Let's let's see how we can combine two vectors of strings together from our dataframe: the city and the state  
+```{r combine-city-state}
+str_c(murder$city,murder$state)
+```
+You can add a separator between the strings you're combining using the **sep = ''** argument. Let's separate the city and state by a comma.  
+  
+Add this new data as a column, named **City_State**, in our dataframe murder.
+```{r combine-string-separated}
+murder$City_State <- str_c(murder$city,murder$state,sep=",")
+murder$City_State
+```
+ 
+## **Replacing Strings** 
+#### **str_replace_all(string, pattern, string)**
+**Purpose:**    
+This function will replace all instances of a pattern with the given replacement  
+
+**Input:**      
+String or vector of strings    
+Pattern - you can use [regular expressions](https://rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf) here
+
+**Output:**  
+Single string of vector of combined strings  
+
+**Example:**  
+Supposed we wanted to replace all appearances of **.** in the column 'City_State'.  We can easily do this with **str_replace_all()** 
+```{r string-replace-all}
+murder$City_State <- str_replace_all(murder$City_State,'[\\.]','*')
+murder$City_State
+```
+   
+## **Get the Length of a String**
+#### **str_length(string)**
+**Purpose:**    
+Find out the length of a string or a vector of strings   
+  
+**Input:**       
+String or vector of strings     
+
+**Output:**     
+Integer    
+  
+**Example:**  
+Let's find how out how long each city name   
+```{r string-length}
+str_length(murder$city)
+```
+  
+*Let's only view the rows in the dataframe where the city has more than 9 letters in the name.  To do this we'll also use the filter function from the package dplyr.*  
+```{r view-more-9-letter-city}
+filter(murder,str_length(murder$city) > 9)
+```
+
+### **Conclusion**
+These examples are just the beginning of what you can do with stringr.  If you need to manipulate, combine or work with strings in general, stringr is a great package to do so.  Here's a great stringr cheatsheet released by RStudio (https://rstudio.com/resources/cheatsheets/).
+
+
+
+**Resources:**
+
+* [https://cran.r-project.org/web/packages/rmdformats/vignettes/introduction.html](https://cran.r-project.org/web/packages/rmdformats/vignettes/introduction.html)
+* [https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html](https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html)
