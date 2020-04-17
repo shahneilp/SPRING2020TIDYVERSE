@@ -51,6 +51,7 @@ Functions added for extension:
 RPubs Link: https://rpubs.com/MsQCSNYC/592259
 
 ### (Extension) Stringr: Origional author Devin Teran, extended by David Blumenstiel on 04/17/20
+filename = TidyVerse_Devin_Teran.Rmd
 added:
 str_view()
 str_wrap()
