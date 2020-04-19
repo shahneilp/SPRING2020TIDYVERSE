@@ -148,6 +148,12 @@ This vignette looks at varisous ways to display visual data using ggplot2 and sp
 
 This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.
 
+### Tidyverse stringr Extension:
+### Original Author: Philip Tanofsky
+### Extension Author: Adam Gersowitz
+
+In the original vignette by Philip he demonstrated 8 string functions: Detect, Count, Subset, Locate, Extract, MAtch, Replace, Split. In my extension I usede the same format that Philip was using and provided examples fo 5 more string functions: Length, Upper, Trim, Truncate, Sub.
+
 ### Tidyverse: stringr
 Author: Michael Munguia
 
