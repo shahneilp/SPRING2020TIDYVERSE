@@ -1,0 +1,90 @@
+---
+-title: "How to use dplyr"
+author: "Patrick Maloney"
+date: "3/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+We will see some uses of the dplyr package by loading a data set of contestants on the Bachelorette season's 11-15.
+
+```{r}
+library(dplyr)
+
+df <- read.csv("https://raw.githubusercontent.com/pmalo46/SPRING2020TIDYVERSE/master/BacheloretteDSFinal-Dogu.csv")
+head(df)
+```
+
+One of the most useful functions in the dplyr package is the filter function, which allows us to filter down to only rows that meet a certain condition.
+
+```{r}
+filter(df, Win_Loss == 1)
+```
+
+The table above shows the winners of the last five seasons. Another useful function is the group_by function.
+
+```{r}
+group_by(df, State) %>%
+  summarise(mean(Height..cm.))
+
+
+```
+
+The chunk above uses the group_by method to group the contestants by which state they are from, and then take the average height by state.  Another dplyr method, 'summarise' is on display here, which allows us to reduce multiple values down to a single value. Another useful function is arrange()
+
+```{r}
+as_tibble(tail(arrange(df, Occupation), 15))
+```
+
+The chunk above uses arrange() to sort the contestants alphabetically, while the as_tibble method makes the output more easily viewable.
+
+These demonstrate some of the many uses of the great dplyr package.
+  
+## Devin Teran additional dplyr functions
+Let's use the dplyr function to further analyze the Bachelor franchise data.  
+  
+We can use the **select()** function to view only certain columns from the data.  
+
+1. Specify the data you want to select from  
+2. Followed by **%>%**
+3. Finally followed by **select()** and the **column names** you'd like to view  
+  
+Here we want to view the Season, Name, Age and whether the contest won or not.  
+```{r select}
+age <- df %>% select('Season','Name','Age','Win_Loss')
+```
+  
+Let's use the **filter** function and only look at contestants from Hannah Brown's season (Season 15).
+```{r Hannah-Brown}
+hb_contestants <- age %>% filter(Season == 15)
+hb_contestants
+```
+
+Hannah Brown was the Bachelorette for Season 15.  From, [https://www.washingtonpost.com/lifestyle/2019/05/13/bachelorette-premiere-heres-everything-you-need-know-about-hannah-b/](https://www.washingtonpost.com/lifestyle/2019/05/13/bachelorette-premiere-heres-everything-you-need-know-about-hannah-b/), we can see that Hannah Brown was 24 years old at the time of her season.  What if we wanted to know each contestant age in relation to Hannah? We can do that using **mutate()**.     
+
+**Mutate helps us create new columns from existing columns.**  Our new colum will be the age difference between Hannah Brown and each contestant.  
+```{r }
+hb_contestants <- hb_contestants %>% mutate(age_difference = Age - 24)
+hb_contestants
+```
+
+Let's order the contests in her season from youngest to oldest using **arrange()**.  Plotting the age difference we can see most contestants are 3 years older than her.
+```{r age}
+library(ggplot2)
+hb_contestants %>% arrange(age_difference)
+
+ggplot(hb_contestants,aes(x=age_difference)) + 
+  geom_bar()
+```
+
+Using **filter**, we can see that the winner, Jed Wyatt was 1 year older than Hannah Brown.
+```{r Jed-age}
+hb_contestants %>% filter(Win_Loss == 1)
+```
+
+Dplyr is a great tool to view and manipulate data.  It helped us learn more about the Bachelorette contestants vying for Hannah Brown's heart.
