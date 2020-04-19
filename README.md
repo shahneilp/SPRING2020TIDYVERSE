@@ -572,6 +572,10 @@ Author: Philip Tanofsky
 
 Vignette for the popular stringr functions from the Tidyverse packages. The stringr library provides a suite of commonly used string manipulation functions to assist in data cleaning and data preparation tasks on a vector of 10 tweets.
 
+### How to use dplyr
+Author: Patrick Maloney
+Extended by Philip Tanofsky
+
 #### 1. dplyr :: rename vs. dplyr :: select
 #### 2. dplyr :: top_n vs. dplyr :: top_frac
 #### 3. tally        
