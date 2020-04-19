@@ -1,0 +1,194 @@
+---
+title: "Tidyverse Create Assignment"
+author: "Philip Tanofsky"
+date: "3/29/2020"
+output: html_document
+---
+
+# Introduction
+
+Vignette for the popular stringr functions from the Tidyverse packages.
+
+The stringr library provides a suite of commonly used string manipulation functions to assist in data cleaning and data preparation tasks.
+
+The 8 most popular stringr verbs:
+
+1. detect:  Identifies a match to the pattern
+2. count:   Counts the number of instances of the pattern
+3. subset:  Extracts the strings with matching components to the pattern
+4. locate:  Identifies the position index of the match in the string
+5. extract: Extracts the matching text to the pattern
+6. match:   Extracts the parts of the match as defined in the parenthesis
+7. replace: Replaces the matching text with the provided text.
+8. split:   Split the string at the matching text.
+
+The stringr functions require a vector of strings as the first argument.
+
+Load the Tidyverse package.
+
+```{r load-tidyverse, warning=FALSE, message=FALSE}
+library(tidyverse)
+```
+
+Read in a CSV file from the web site fivethirtyeight Github repository and convert to an R dataframe. The CSV file contains tweets determined to be sent by Russian trolls. For examining the use cases of the stringr library, this exercise focuses on non-structured sentences from the tweets. The input file is subset to the first 10 tweets, which are displayed below.
+
+```{r get-data, warning=FALSE, message=FALSE}
+# Read CSV from fivethirtyeight.com
+data <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/russian-troll-tweets/master/IRAhandle_tweets_1.csv")
+head(data)
+
+tweets <- data[1:10,1:6]
+
+df <- as.data.frame(tweets)
+
+# Output the content column as this will be the string data used for stringr functions
+df$content
+```
+
+### Detect
+
+Detect if the exact string "US" appears in any of the tweets. Output will be "TRUE" or "FALSE" for each string.
+
+```{r str-detect-example}
+detect_result <- str_detect(df$content, "US")
+
+detect_result
+```
+
+### Count
+
+Count the number of occurrences of the letters 'u' or 's', uppercase and lowercase for each string. Output is the integer count for each string.
+
+```{r}
+count_result <- str_count(df$content, "[USus]")
+
+count_result
+```
+
+### Subset
+
+Subset the initial vector of strings to only the strings containing the exact string "US". Output is a vector of strings.
+
+```{r}
+subset_result <- str_subset(df$content, "US")
+
+subset_result
+```
+
+### Locate
+
+Identify the start and stop position in each string with a match of the exact string "the". Output identifies start and end for each string and results in 'NA' for strings that do not match the pattern.
+
+```{r}
+locate_result <- str_locate(df$content, "the")
+
+locate_result
+```
+
+### Extract
+
+Extracts the first instance that matches the letters 'u' or 's', uppercase and lowercase. Output is the string of the first matching pattern from the input vector of strings which in this case is a single letter.
+
+```{r}
+extract_result <- str_extract(df$content, "[USus]")
+
+extract_result
+```
+
+### Match
+
+Extracts the 5 characters from a string following the match of the exact string "US". The 5 periods in the parenthesis define the part of the string to be extracted. Output is the matching 5-character string or 'NA'.
+
+```{r}
+match_result <- str_match(df$content, "US(.....)")
+
+match_result
+```
+
+### Replace
+
+Replaces all instances that matches the letters 'u' or 's', uppercase and lowercase with an ampersand ('%'). Output is the initial vectors of strings with the replaced characters.
+
+```{r}
+replace_result <- str_replace(df$content, "[USus]", "%")
+
+replace_result
+```
+
+### Split
+
+Splits the strings by the hashtag ('#'). Output is a list of lists after splitting the input strings containing a hashtag.
+
+```{r}
+split_result <- str_split(df$content, "#")
+
+split_result
+```
+
+# Conclusion
+
+The stringr library provides easy-to-use string manipulation functions for data cleaning and preparation tasks. The functions are applied on vectors of strings which allows for straightforward manipulation of entire columns in a dataframe.
+
+
+# Extend: Adam Gersowitz
+
+I'm going to demonstrate 5 additional stringr funcitons that could come in useful when manipulating strings.
+
+
+### Length
+
+Get the Length of the strings by the number of characters. Useful in situations of unknown data quality (i.e. a 5 digit phone number)
+
+```{r}
+length_result <- str_length(df$content)
+
+length_result
+```
+
+### Upper
+
+Convert the strings to all upper case. This is helpful when looking for a string match that may be case sensetive or preparing data for a database that's users need consistency in the cas of the letters.
+
+```{r}
+upper_result <- str_to_upper(df$content)
+
+upper_result
+```
+
+
+### Trim
+
+Trim whitespace form strings on either the left, right or both sides. Helpful when cleaning up raw data.
+
+```{r}
+trim_result <- str_trim(df$content,side = c("both"))
+
+trim_result
+```
+
+### Truncate
+
+Truncate the width of strings which replaces the content after the length - 3. Helpful when the strings are a known pattern and for example you may only need the first 3 charaters.
+
+```{r}
+trunc_result <- str_trunc(df$content,13)
+
+trunc_result
+```
+
+
+
+### Sub
+
+Returns only the specified substring of characters. Useful when part of a code or string has significance.
+
+```{r}
+sub_result <- str_sub(df$content,1,20)
+
+sub_result
+```
+
+
+# Extend Conclusion
+
+Teh stringr library is extremely useful and easy to use when manipulating strings. All 13 of these functions would be extremely helpful to me in my day to day work.
