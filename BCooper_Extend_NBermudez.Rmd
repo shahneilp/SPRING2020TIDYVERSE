@@ -1,0 +1,80 @@
+---
+title: "TidyVerseRecipe"
+subtitle: "Nilsa Bermudez"
+author: "extended by Bonnie Cooper"
+date: "4/19/2020"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cosmo
+    highlight: zenburn
+---
+
+
+```{r, message=F}
+library(tidyverse);
+library(reshape)
+library(plyr)
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+For this assignment I will create an example.  Using one or more TidyVerse packages, and any dataset from fivethirtyeight.com or Kaggle, create a programming sample “vignette” that demonstrates how to use one or more of the capabilities of the selected TidyVerse package with my selected dataset.”
+
+In light of the current situation across the world, I chose the Bob Ross elements by episode recordset.  
+
+Load the Bob Ross dataset from fivethirtyeight into the RStudio environment:
+```{r RossDataSet}
+url<-"https://raw.githubusercontent.com/fivethirtyeight/data/master/bob-ross/elements-by-episode.csv"
+BobRoss <- read_csv(url)
+df <- data.frame(BobRoss)
+```
+
+Use the Reshape library's method 'melt' to transform the data set froma wide format to a long format
+```{r UseReshapeToGetAllObjects}
+Bulkbobr <- reshape::melt(df, id=c("EPISODE","TITLE"))
+Bob <- unique(subset(Bulkbobr, value == 1, select = c("EPISODE","TITLE","variable")))
+Bob <-Bob[order(Bob$EPISODE),]
+Bob <- rename(Bob, c("variable"="object"))
+head(Bob,10)
+```
+
+```{r CountFrequenciesOfObjects}
+Bob2 <-count(Bob,vars="object", wt_var = NULL)
+Bob2 <- Bob2 %>% dplyr::arrange( freq )
+```
+
+```{r GetTop10AndDisplay}
+  top10 <- tail(Bob2, n = 10)
+  ggplot(data=top10,aes(x=object, y=freq)) +  
+  ggplot2::aes(x=reorder(object, -freq), y=freq) +
+  ggplot2::geom_bar(stat="identity",fill="steelblue") +
+  ggplot2::labs(x="Objects",y="Frequency") +
+  ggplot2::ggtitle("Most used objects in Bob Ross Paintings") +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+Now use tidyr's 'pivot_longer()' and dplyr methods to replicate same reshaping of the the data and reproduce the same figure as above:
+```{r useTidyr2Reshape, message=F}
+Bob3 <- df %>%
+    pivot_longer(cols=3:69,names_to = "variable", values_to = "value") %>%
+    filter(value==1) %>%
+    select(-value) %>%
+    dplyr::rename( object = variable ) %>%
+    group_by( object ) %>%
+    dplyr::summarise('count'= n()) %>%
+    dplyr::arrange( desc(count)) %>%
+    dplyr::top_n(10) %>%
+    ggplot(aes(x=object, y=count)) +  
+    ggplot2::aes(x=reorder(object, -count), y=count) +
+    ggplot2::geom_bar(stat="identity",fill="steelblue") +
+    ggplot2::labs(x="Objects",y="Frequency") +
+    ggplot2::ggtitle("Most used objects in Bob Ross Paintings") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust=1))
+Bob3
+```
