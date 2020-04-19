@@ -264,4 +264,9 @@ Used the dataset https://fivethirtyeight.com/features/which-state-has-the-worst-
 ### dplyr, tidyr, tibble, ggplot2, readr
 
 
+### Amit Kapoor EXTENDS Devin Teran TidyVerse stringr package
+#### I have extended Devin Teran TidyVerse stringr assignment.
+
+
+
 
