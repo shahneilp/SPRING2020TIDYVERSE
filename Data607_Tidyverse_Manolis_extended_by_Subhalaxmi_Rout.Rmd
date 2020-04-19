@@ -1,0 +1,252 @@
+---
+title: "Data 607 - Tidyverse Assignment"
+author: "Manolis Manoli --extended by Subhalaxmi Rout"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: console
+---
+
+The assignment is to present a use case for the tidyverse packages and sdemonstrate how to use one or more of the capabilities TidyVerse package with your selected dataset
+
+#### 1) Libraries and Data
+
+Load needed libraries
+```{r load-libraries,warning=F, message=F}
+# The easiest way to get all libraries is to load the whole tidyverse but we will load just the packages we need
+
+#library(tidyverse)
+
+# Alternatively, loading all packages that we use:
+library(readr)
+library(lubridate)
+library(dplyr)
+library(knitr)
+```
+
+create my github path
+```{r set-Github-dir,eval=T}
+urlRemote  <- "https://raw.githubusercontent.com/"
+pathGithub <- "chilleundso/DATA607/master/Tidyverse/"
+```
+
+#### 2) Readr
+
+We start of by downloading our csv file from my Githib (originally from https://www.kaggle.com/jessemostipak/hotel-booking-demand) and turning it into a dataframe format:
+```{r read-csv,eval=T}
+#create HTML URL
+fileNamecsv   <- "hotels.csv"
+csv_URL <- paste0(urlRemote, pathGithub, fileNamecsv)
+
+#We read the CSV
+hotels_raw <- readr::read_csv(csv_URL) 
+
+```
+
+
+#### 3) Dplyr::filter
+
+We want to do some early filtering on the data to exclude some special cases from our data set:
+```{r filter-zero-days,eval=T}
+#we exclude all data rows that have no weekend and no weekday stays:
+
+hotels <- dplyr::filter(hotels_raw, stays_in_weekend_nights != 0 | stays_in_week_nights != 0 )
+names(hotels)
+```
+
+#### 4) Lubridate
+As we can see the dataframe has individual columns for the arrival year, month and day so we use lubridate to make an new arrival date column in date format and create a column that hows the check-out date based on adding days stayed in the hotel.
+
+```{r make-arrival-checkout-date}
+
+#lubridat lets us easily create a date object out of three columns that have year in yyyy, moonths in text format and days in dd
+hotels$arrival_date <- paste(hotels$arrival_date_year  , hotels$arrival_date_month, hotels$arrival_date_day_of_month, sep="-")  %>% lubridate::ymd() %>% as.Date()
+
+#we can easily add days to the date to get a cehck-out date column (some )
+hotels$checkout_date <- ymd(hotels$arrival_date) + days(hotels$stays_in_weekend_nights) + days(hotels$stays_in_week_nights)
+
+```
+
+
+#### 5) Dplyr::select
+
+We want to have a look at just the columns we used and created in the above section so we use dplyr::select
+```{r select-date-columns}
+
+kable(head(hotels %>% 
+  dplyr::select(arrival_date_year:arrival_date_day_of_month, arrival_date : checkout_date)))
+
+```
+
+
+#### 6) Dplyr::summarise/group_by/count/arrange
+
+Lastly we want see how we can use summarise, group by and count to show some overview statistics:
+```{r cancelation-columns}
+
+#We want to see how the reservation status behaves with the deposit type:
+
+hotels %>% 
+  dplyr::group_by(deposit_type) %>% 
+  dplyr::count(reservation_status)
+
+
+
+#To demonstrate the powerful pipe operator in combination with some dplyr functions we look at the average length of stay grouped by deposit type
+
+hotels %>%
+  dplyr::group_by(deposit_type) %>%
+  dplyr::summarise(mean = mean(checkout_date-arrival_date), n = n()/nrow(hotels)) %>%
+  dplyr::arrange(-mean)
+
+
+```
+From the first table we can actually see a large amount of cancellations even within the non-refundable bookings.  
+
+The second table shows us that the refunable bookings are on average the longest stay (which makes sense since they are probably the most expensive ones) however there are only very few of them (about 0.1%)
+We can see that the next longest stays are from bookings without deposits which make up about 88% of bookings. 
+Lastly, no refund bookings are on average the shortest.
+
+#### 7) Summary
+  
+dplyr has great functions to summarise, an access certain fields and pivot them around to show any desired permutation of the data 
+
+    
+
+GitHub:
+https://github.com/chilleundso/DATA607/blob/master/Tidyverse/Data607_Tidyverse_Manolis.Rmd
+
+https://rpubs.com/ManolisM/Data607_tidyverse
+
+#### Extended by Subhalaxmi Rout
+
+This is really clear explanations of tidyverse packages done by Manolis Manoli.
+
+Below use `stringr`,`tibble`,`ggplot` and `tidyr` package with the `hotels` dataset.
+
+```{r message=FALSE, warning=FALSE}
+library(stringr)
+library(tibble)
+library(ggplot2)
+library(tidyr)
+```
+
+#### 8) stringr()
+
+Using stringr we can manupulate the strings in the dataset. From hotels dataset, select `market segment` column which have charecter datatype. 
+
+#### 8.1) stringr: str_length(string)
+
+A numeric vector giving number of characters (code points) in each element of the character vector. Missing string have missing length.
+
+```{r message=FALSE, warning=FALSE}
+# select market 
+hotels_str <- hotels  %>% select(market_segment)
+# unique values of market segment
+market_segment <- unique(hotels_str$market_segment)
+# length of each market segment
+stringr::str_length(market_segment)
+```
+
+#### 8.2) stringr: str_subset(string, pattern, negate = FALSE)
+
+Vectorised over string and pattern
+
+```{r message=FALSE, warning=FALSE}
+# market segment which starts with "U"
+stringr::str_subset(market_segment, "^U")
+
+# market segment which not includes "U"
+stringr::str_subset(market_segment, "^U", negate = TRUE)
+```
+
+#### 8.3) stringr: str_locate(string, pattern)
+
+`str_locate`, an integer matrix. First column gives start postion of match, and second column gives end position. 
+
+```{r message=FALSE, warning=FALSE}
+# search position for "i"
+stringr::str_locate(market_segment, "i")
+
+# search position for "o"
+stringr::str_locate(market_segment, "o")
+```
+
+#### 8.4) stringr: str_sort(x, decreasing = FALSE, na_last = TRUE, locale = "en",numeric = FALSE, ...)
+
+Sort character vector to alphabetically.
+
+```{r message=FALSE, warning=FALSE}
+# sort the string from A to Z
+stringr::str_sort(market_segment, decreasing = FALSE)
+
+# reverse the order
+stringr::str_sort(market_segment, decreasing = TRUE)
+```
+
+#### 9) tibble()
+
+`tibble()` will convert a passed dataframe to a tibble
+
+```{r message=FALSE, warning=FALSE}
+tibble::as_tibble(hotels)
+```
+
+Here we can see, below column name datatype and table shows in a structure way. 
+
+#### 10) tidyr
+
+Using tidyr package, easy to work with tidy data. There are many functions availabe in this package .I will use `Spread()`.
+
+spread : takes two columns (a key-value pair) and spreads them in to multiple columns, making “long” data wider.
+
+```{r message=FALSE, warning=FALSE}
+# getting from Dplyr::summarise/group_by/count/arrange
+data <- hotels %>% 
+  dplyr::group_by(deposit_type) %>% 
+  dplyr::count(reservation_status)
+
+# change the table structure, convert deposite_type from column to row
+data_tidy <-  tidyr::spread(data, deposit_type, n)
+tibble::as_tibble(data_tidy)
+```
+
+#### 11) ggplot()
+
+ggplot() is a system for declaratively creating graphics for data. Visualizations made with ggplot() are easy to understand and contruct, thanks to an API that allows visualizations to be "built" via layering of graphics and other visual elements.
+
+```{r message=FALSE, warning=FALSE}
+data_1 <- data %>% group_by(reservation_status) %>% filter(reservation_status == "Canceled")
+
+ggplot(data = data_1, aes(x = data_1$deposit_type, y = data_1$n )) + geom_bar(stat = "identity", fill = "steelblue")+
+  xlab("Reservation Status") + ylab("Canceled status count(#)") + 
+  ggtitle("Deposite type count with canceled reservation status") + theme(plot.title = element_text(hjust = 0.5))+
+  geom_text(aes(x = data_1$deposit_type,y = data_1$n,label=data_1$n), hjust=0.2,vjust = -0.2,color="black", size=4.5)
+
+data_2 <- data %>% group_by(reservation_status) %>% filter(reservation_status == "No-Show")
+
+ggplot(data = data_2, aes(x = data_2$deposit_type, y = data_2$n )) + geom_bar(stat = "identity", fill = "steelblue")+
+  xlab("Reservation Status") + ylab("No show status count(#)") + 
+  ggtitle("Deposite type count with no-show reservation status") + theme(plot.title = element_text(hjust = 0.5))+
+  geom_text(aes(x = data_2$deposit_type,y = data_2$n,label=data_2$n), hjust=0.2,vjust = -0.2,color="black", size=4.5)
+
+data_3 <- data %>% group_by(reservation_status) %>% filter(reservation_status == "Check-Out")
+
+ggplot(data = data_3, aes(x = data_3$deposit_type, y = data_3$n )) + geom_bar(stat = "identity", fill = "steelblue")+
+  xlab("Reservation Status") + ylab("Check out status count(#)") + 
+  ggtitle("Deposite type count with check-out reservation status") + theme(plot.title = element_text(hjust = 0.5))+
+  geom_text(aes(x = data_3$deposit_type,y = data_3$n,label=data_3$n), hjust=0.2,vjust = -0.2,color="black", size=4.5)
+```
+
+
+#### Conclusion
+
+Above sections 8,9,10, and 11 given examples of stringr, tidyr, tibble and ggplot package, using these packages, we can do a lot more data analysis. Stringr hepls manupulate string datatype, tidyr helps work with tidy data, tibble convert data to a daatframe, and ggplot helps in visualisation.
+
+#### Reference 
+
+Github: https://github.com/SubhalaxmiRout002/tidyverse/blob/master/Data607_Tidyverse_Manolis_extended_by_Subhalaxmi_Rout.Rmd
+
+RPUB: https://rpubs.com/Subhalaxmi/601580
