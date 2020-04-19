@@ -1,0 +1,93 @@
+---
+title: "forcats::fct_lump - Tidyverse - Data 607"
+author: "Justin Hsi"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+# Forcats - a package with useful functions when working with categorical data 
+
+## When working with a categorical variable that potentially has an enormous amount of levels, you can use forcats::fct_lump() to quickly group less common levels and focus on what levels you think are important
+
+Let's load the rarepepe dataset [(article here).](https://fivethirtyeight.com/features/pepe-the-frog-symbolism-cryptoart-blockchain/)
+
+```{r}
+order_all = read_csv('https://raw.githubusercontent.com/fivethirtyeight/data/master/rare-pepes/ordermatches_all.csv')
+```
+
+Let's say you wanted to examine a categorical variable with too many levels. The rarepepe dataset has the names of rarepepe artworks which create many levels. If you tried to do a plot of them vs their summed historical forward asset sales, you might get something unusable like this:
+
+```{r}
+f = factor(x = order_all$ForwardAsset)
+order_all %>%
+  group_by(ForwardAsset) %>%
+  summarise(summed_for_quant = sum(ForwardQuantity)) %>% 
+  ggplot(aes(x = fct_reorder(ForwardAsset, summed_for_quant), y = summed_for_quant)) + 
+  geom_col() + coord_flip() + labs(x='rarepepe name', y='total combined forward assets in all transactions')
+```
+
+Part of what makes this visualization not helpful is the overwhelming number of levels. We can reduce this with *fct_lump*, as it will group the factors that do not occur frequently enough into a single level called "Other". Here we choose the 15 most frequently occuring levels/artworks :
+
+```{r}
+f = factor(x = order_all$ForwardAsset)
+order_all$ForwardAsset = fct_lump(f, 15)
+order_all %>%
+  group_by(ForwardAsset) %>%
+  summarise(summed_for_quant = sum(ForwardQuantity)) %>% 
+  ggplot(aes(x = fct_reorder(ForwardAsset, summed_for_quant), y = summed_for_quant)) + 
+  geom_col() + coord_flip() + labs(x='rarepepe name', y='total combined forward assets in all transactions')
+```
+
+## Conclusions
+Now we can clearly see the scale of the most transacted rarepepe, PEPEONECOIN, compared to every other rarepepe. This could be a useful first step in analysis, such as which rarepepes you might want to acquire at some point for their value.
+Some other things to note include the proportion method, rather than choosing the top n most frequent levels. You may consider using this function with fct_inorder, fct_infreq, or fct_inseq which are related to factor sorting. And finally, there is a similar function fct_lump_min, which has a slightly different functionality when you want to specify which level is the lowest count level before grouping to other.
+
+# Extend
+
+We will now examine some of the other functions of the forcats library that were not included in the original vignette: fct_relevel and fct_infreq.
+
+## fct_infreq
+
+fct_infreq is a tool used to reorder factors by their frequency (or count). It is a more specific use of the fct_reorder tool, and allows you to quickly reorder a factor by its count without creating a count variable. This is applicable to the above example. I also use the helper function fct_rev to reverse the factors and display them in decreasing order rather than increasing order.
+
+```{r}
+f = factor(x = order_all$ForwardAsset)
+order_all$ForwardAsset = fct_lump(f, 15)
+order_all %>%
+  ggplot(aes(x = fct_rev(fct_infreq(ForwardAsset)))) + 
+  geom_bar() + coord_flip() + labs(x='rarepepe name', y='total combined forward assets in all transactions')
+```
+
+This is slightly different to the above example as instead of measuring the sum of ForwardAsset's we are merely measuring the number of times something appeared as a ForwardAsset. However, we are able to quickly generate and display this information with the fct_infreq function.
+
+## fct_relevel
+
+```{r}
+#Limit Forward Asset to 3 levels.
+order_all$ForwardAsset = fct_lump(f, 5)
+levels(order_all$ForwardAsset)
+```
+
+We have 3 levels and then our other level. Let us say that we need the factor in a particular order. We can reorder the levels of the factor by using the fct_relevel function.
+
+```{r}
+order_all$ForwardAsset <- fct_relevel(order_all$ForwardAsset, 'XCP', 'RAREPEPEPRTY', 'PEPECASH')
+levels(order_all$ForwardAsset)
+```
+
+The levels of the factor are now in the order we specified. It is also possible to call fct_relevel with a function.
+
+```{r}
+order_all$ForwardAsset <- fct_relevel(order_all$ForwardAsset, sort)
+levels(order_all$ForwardAsset)
+```
+
+by using the function sort as an argument to factor_relevel, we reorder the factors alphabetically. Other potentially useful functions to call would be rev (similar to fct_rev) or sample, which takes a sample of the levels.

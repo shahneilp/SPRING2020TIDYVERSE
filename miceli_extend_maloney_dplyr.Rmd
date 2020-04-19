@@ -1,0 +1,81 @@
+---
+-title: "How to use dplyr"
+author: "Patrick Maloney"
+date: "3/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+We will see some uses of the dplyr package by loading a data set of contestants on the Bachelorette season's 11-15.
+
+```{r}
+library(dplyr)
+df <- read.csv("https://raw.githubusercontent.com/pmalo46/SPRING2020TIDYVERSE/master/BacheloretteDSFinal-Dogu.csv")
+head(df)
+```
+
+One of the most useful functions in the dplyr package is the filter function, which allows us to filter down to only rows that meet a certain condition.
+
+```{r}
+filter(df, Win_Loss == 1)
+```
+
+The table above shows the winners of the last five seasons. Another useful function is the group_by function.
+
+```{r}
+group_by(df, State) %>%
+  summarise(mean(Height..cm.))
+```
+
+The chunk above uses the group_by method to group the contestants by which state they are from, and then take the average height by state.  Another dplyr method, 'summarise' is on display here, which allows us to reduce multiple values down to a single value. Another useful function is arrange()
+
+```{r}
+as_tibble(tail(arrange(df, Occupation), 15))
+```
+
+The chunk above uses arrange() to sort the contestants alphabetically, while the as_tibble method makes the output more easily viewable.
+
+These demonstrate some of the many uses of the great dplyr package.
+
+## Extension - exploring summarise
+
+The summarise function of dplyr could be very useful for applying functions to groups of a dataset.
+
+```{r}
+mode = function(x){
+    uniq <- unique(x)
+    uniq[which.max(tabulate(match(x, uniq)))]
+}
+```
+
+Summarise can use any function, including user made functions.  Let's use a user function that calculates the mode to find the most common hair color by state:
+
+```{r}
+df %>%
+  group_by(State) %>%
+  summarise(mode(Hair.Color))
+```
+
+Let's see the average age by season:
+
+```{r}
+df %>%
+  group_by(Season) %>%
+  summarise(mean(Age))
+```
+
+Now let's combine these functions to get even more specific results:
+
+```{r}
+df %>%
+  group_by(State) %>%
+  filter(Age > 28) %>%
+  summarise(mode(Occupation))
+```
+
+The ability to combine functions in dplyr to get the specific data that you want out of your data set is what makes it so useful. 
