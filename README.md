@@ -50,6 +50,12 @@ Functions added for extension:
 - str_replace
 RPubs Link: https://rpubs.com/MsQCSNYC/592259
 
+### (Extension) Stringr: Origional author Devin Teran, extended by David Blumenstiel on 04/17/20
+filename = TidyVerse_Devin_Teran.Rmd
+added:
+str_view()
+str_wrap()
+
 
 ### ggplot2 - barcharts
 Author: Laylah Quinones
