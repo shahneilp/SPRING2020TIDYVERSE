@@ -1,0 +1,355 @@
+---
+title: "Data 607 - Bar Chart Visualization Using geom_col()"
+author: "Layla Quinones extended by Angel Claudio"
+date: "3/12/2020"
+output: rmdformats::readthedown
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(kableExtra)
+library(RCurl)
+```
+
+**By:** Layla Quinones, extended by Angel Claudio
+
+**Date:** 03/12/2020
+
+
+> Note: tidyverse, Rcurl, kableExtra, colorBrewer, and rmdformats used. 
+
+# I. Abstract
+
+`ggplot2` is a ubiquitous library that allows you to easily visualize data and explain patterns in data to people who are not necessarily familiar with the technical aspect of data analysis. Visualizations made with `ggplot2` are easy to understand and construct thanks to an API that allows visualizations to be "built" via layering of graphics and other visual elements.  In this document we explore the a few ways we can construct bar charts to visualize categorical data, specifically using `geom_col()`. All other functions of `ggplot2` can be found at this [reference link](https://ggplot2.tidyverse.org/reference/).
+
+# II. About the Data
+
+The data that I chose for this presentation provides information about the Incomes of U.S. Workers by Occupation and Gender. This data-set really appealed to me because I have heard some debate about the topic of gender and unequal pay, and I wanted to motivate data analysis and visualization so that it is easy for skeptics to interpret.
+
+The following variables are included:
+
+`Occupation:` Job title as given from BLS. Industry summaries are given in ALL CAPS.
+
+`All_workers:` Number of workers male and female, in thousands.
+
+`All_weekly:` Median weekly income including male and female workers, in USD.
+
+`M_workers:` Number of male workers, in thousands.
+
+`M_weekly:` Median weekly income for male workers, in USD.
+
+`F_workers:` Number of female workers, in thousands.
+
+`F_weekly:` Median weekly income for female workers, in USD.
+
+**DATASET SOURCE**: [Kaggle.com](https://www.kaggle.com/jonavery/incomes-by-career-and-gender#inc_occ_gender.csv)
+
+## Load the Data
+```{r}
+url <- "https://raw.githubusercontent.com/MsQCompSci/data/master/inc_occ_gender.csv"
+
+rawData <- getURL(url)
+rawData <- read.csv(text = rawData, header = TRUE)
+
+kable(rawData)%>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "200px")
+```
+
+# III. Visualize the Data Using GGPLOT2 Layers
+
+The basic anatomy of ggplot2 grammer consists of **raw data** that has been fine tuned based on your focus, **layers** which include all the things that are visible about your graph (ie. data points, lines, bars, area shading, title, legend, etc), **scale** which stretches or shrinks the data according to your plot area, **coordinate system** which can be a 2d grid (but others are also possible with ggplot2) and **themes** which includes font, fontsize, color, etc (aesthetic component). The more you want to fine tune your visualization, the more detailed your ggplot2 grammer will be. 
+
+### Context
+
+Before you visualize any data it is a good idea to get to know the data-set. For this data set it would be interesting to compare the mean weekly income for all workers in an occupation with the mean weekly income for females and for males. For this comparison, I will choose a bar chart because it can immediately give my audience an intuitive idea of what the data is trying to show.
+
+### Format the data
+
+Now that we have an idea about what we want to visualize and *HOW* we want to visualize it, we can format our data in long format and filter out any data you do not need. We will tidy data into a long format so that ggplot2 knows how to organize that data. To do this we complete the following steps:
+
+1. Select only the columns of data that report weekly earnings using the `select()` function a put them in a new variable
+
+2. Put this new data in long format using `pivot_longer()`
+
+3. Convert all salary values from factors, to characters to numeric (must be done in that order to retain numeric value)
+
+4. Drop all `NA` values using `drop_na()`
+
+```{r, warning = FALSE}
+# create a new dataframe called weekly data
+weeklyData <- rawData %>% 
+  select(Occupation, All_weekly, M_weekly, F_weekly)%>% # 1
+  pivot_longer(All_weekly:F_weekly, names_to = "salaryCat", values_to = "salary") #2
+
+#3
+weeklyData$salary <- as.numeric(as.character(weeklyData$salary))
+
+#4
+weeklyData <- weeklyData %>% 
+  drop_na()
+
+#display using kable
+kable(weeklyData)%>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "200px")
+```
+
+## Create a simple bar chart
+
+First we will focus on a simple bar chart that shows the weekly salaries for male and females from all professions. In `ggplot2` we can use two functions to create bar charts: `geom_bar()` and `geom_col()`. Here we will be using `geom_col()` because it will allow us to map bar size to one of our variables (salary). `geom_bar()` is best used when you are creating bar charts that visualize frequency. 
+
+To create a simple bar chart using `geom_col()` we need to do the following:
+
+1. Filter the data that corresponds to all professions using the `filter()` function to select only the data that corresponds to rows with `ALL OCCUPATIONS` data.
+
+2. Begin our chart by using `ggplot()` function and designating the dataframe we want to visualize
+
+3. Lay on the first layer by first adding the `+` symbol and calling on the`geom_col()` function which create a bar chart. 
+
+4. In `geom_col()` we must define which columns from our dataframe will be along the x axis and y axis using the `aes()` function.
+
+```{r}
+#1
+allOcc <- weeklyData %>%
+  filter(Occupation == "ALL OCCUPATIONS")
+
+ggplot(allOcc) + #2
+  geom_col(aes(x = salaryCat, y = salary)) #3 & 4
+```
+
+Now that we have our first simple bar chart we can layer on various components to make this graph more visually appealing. The first thing that comes to mind is to order the bars according to salary. We do this by adding the `reorder()` command to the x value in `aes()`.
+
+```{r}
+ ggplot(allOcc) +
+  geom_col(aes(x = reorder(salaryCat, salary), y = salary))
+```
+
+Then to add color to each category we can use the `fill` attribute **AFTER** `aes()`. We can choose colors by defining a character vector with specific color values for each category `fill = c("magenta", "lightgreen", "lightblue")`. 
+
+```{r}
+ ggplot(allOcc) +
+  geom_col(aes(x = reorder(salaryCat, salary), y = salary), fill = c("magenta", "lightgreen", "lightblue"))
+```
+
+To change the labels for each category so that they are more readable to viewers we can add the next layer using `scale_x_discrete(labels = "Female", "ALL", "Male"))`. NOTE: between each layer always include the `+` symbol.
+
+```{r}
+ggplot(allOcc) +
+  geom_col(aes(x = reorder(salaryCat, salary), y = salary), fill = c("magenta", "lightgreen", "lightblue")) +
+  scale_x_discrete(labels=c("Female", "ALL", "Male")) 
+```
+
+To change the x and y titles, as well as the title of the chart we can add another layer using `labs()` and center it in `theme()`. To change the x and y titles, as well as the title of the chart we can add another layer using `labs()` and center it in `theme()` by setting the `plot.title` attribute and `element_text()` function to adjust the position using `hjust` to the middle which corresponds to 0.5 (for half of the plot width). Also in theme we can change the background by setting the `panel.background` attribute and setting the rectangular panel using `element_rect` to a color using `fill`. I chose the color black here because I like the contrast on bright colors on a dark background
+
+```{r}
+ggplot(allOcc) +
+  geom_col(aes(x = reorder(salaryCat, salary), y = salary), fill = c("magenta", "lightgreen", "lightblue")) +
+  scale_x_discrete(labels=c("Female", "ALL", "Male")) +
+  labs(y = "Gender", x ="Salary", title = "Mean Weekly Salary for US Professionals") +
+  theme(plot.title = element_text(hjust = 0.5), panel.background = element_rect(fill = "black"))
+```
+
+For the viewers' convenience I would like to include the value of the salary on top of each bar. To do this we layer on the `geom_text` function which will add text to the plot. To place the text on top of each bar the x value needs to correspond to the category of `salary`, the y value should be a little below the bar therefore I used `salary - 20`, the actual text should correspond to the value of `salary` which we define using `label`
+
+```{r}
+ggplot(allOcc) +
+  geom_col(aes(x = reorder(salaryCat, salary), y = salary), fill = c("magenta", "lightgreen", "lightblue")) +
+  scale_x_discrete(labels=c("Female", "ALL", "Male")) +
+  labs(y = "Gender", x ="Salary", title = "Mean Weekly Salary for US Professionals") +
+   theme(plot.title = element_text(hjust = 0.5), panel.background = element_rect(fill = "black")) + 
+  geom_text(aes(x = salaryCat, y = salary - 20, label = salary))
+```
+
+As we can see here now it is totally obveous that males have a higher mean salary than females in the United States. In addition, the mean salary for males also exceed the mean salary for all genders. 
+
+## Create a grouped bar chart
+
+Now lets say we want to go more into detail about these salaries. We can easily visualize the salaries for each category by created a The weekly salary data is grouped in categories therefore a bar chart will be appropriate to visualize and compare the salaries in the different groups. To do this we complete the following steps:
+
+**1. Filter Data: **
+
+- Filter weekly salary for males and females using `filter()` from the `weeklyData` dataframe
+
+- Conver from long format to wide using `spread()`
+
+- Drop any rows that contain `NA` values (those are not comparable) using `drop_na()`
+
+- Convert back to long format using `pivot_longer()`
+
+**2. Graph Data:**
+
+- Begin chart by using `ggplot()`
+
+- First layer using `geom_col()` for bar chart
+
+- In `geom_col()` define columns for x axis, y axis and color parameter using the `aes()`
+
+**Note:** The big change here is that we are defining `fill` inside of `aes()` and setting it equal to the `salaryCat` column which identifies the group each salary belongs to (male or female)
+
+- Set the colors for male and female bard manually using `scale_fill_manual()`
+
+- Flip the graph so that the bars grow horizontally using `coord_flip()`
+
+- Change the position of the legend using `theme(legend.position = "top")`
+
+```{r}
+#1
+femaleMale <- weeklyData %>% 
+  filter(salaryCat == "F_weekly" | salaryCat == "M_weekly") %>% 
+  spread(salaryCat, salary) %>% 
+  drop_na() %>% 
+  pivot_longer(F_weekly:M_weekly, names_to = "salaryCat", values_to = "salary") 
+
+ggplot(femaleMale) +
+  geom_col(aes(x = reorder(Occupation,salary), y = salary, fill = salaryCat),
+           position = "dodge") +
+  scale_fill_manual(values=c("magenta", "lightblue"))+
+  coord_flip() +
+  theme(legend.position = "top")
+```
+
+As we can see from the plot above, the data seems very bunched up and messy. This is not visually appealing or easily interpret able. What we can do instead is filter the occupations by salary and choose only the top 10 highest salary occupations to analyze. 
+
+**1. Filter the data**
+
+- Convert to wide format using `spread()`
+
+- Filter rows where the column for male weekly salaries exceed \$1500
+
+- Convert back to long format using `pivot_longer()`
+
+- Select the top 10 occupations (first 20 rows)
+
+**2. Graph Data:**
+
+- Begin chart by using `ggplot()`
+
+- First layer using `geom_col()` for bar chart. 
+
+- In `geom_col()` define columns for x axis, y axis and color parameter using the `aes()`
+
+- Set the colors for male and female bard manually using `scale_fill_manual()`
+
+- Flip the graph so that the bars grow horizontally using `coord_flip()`
+
+- Label x and y axis and title using `labs()`
+
+- Change the position of the title and the legend using `theme()`
+
+```{r}
+#1
+femaleMale <- femaleMale %>% 
+  spread(salaryCat, salary) %>% 
+  filter(M_weekly >1500) %>%
+  pivot_longer(F_weekly:M_weekly, names_to = "salaryCat", values_to = "salary")
+
+femaleMaleHigh <- femaleMale[1:20,]
+
+#2
+ggplot(femaleMaleHigh) +
+  geom_col(aes(x = reorder(Occupation,salary), y = salary, fill = salaryCat), position = "dodge") +
+  scale_fill_manual(values=c("magenta", "lightblue"))+
+  coord_flip() +
+  labs(y = "Salary (USD)", x ="Occupation", title = "Top 10 Mean Weekly Salary for US Professionals") +
+   theme(plot.title = element_text(hjust = 0.5), legend.position = "top") 
+```
+
+We can clearly see the discrepancies between male and female salaries for the top 10 highest paying jobs. In addition to the salaries it would also be interesting to use `ggplot2` to visualize the number of males and females in these jobs.
+
+## A Different Take On the Data (Grouped Bar Charts)
+```{r, warning = FALSE}
+# create a new dataframe with number of workers and convert to long format
+workerData <- rawData %>% 
+  select(Occupation, M_workers, F_workers)%>%
+  pivot_longer(M_workers:F_workers, names_to = "Gender", values_to = "Workers") %>%
+  drop_na() 
+
+# Select only the rows that match with the top 10 paying jobs
+workerData <- workerData %>% filter(Occupation == femaleMaleHigh$Occupation[1] | Occupation == femaleMaleHigh$Occupation[3] | Occupation == femaleMaleHigh$Occupation[5] | Occupation == femaleMaleHigh$Occupation[7] |Occupation == femaleMaleHigh$Occupation[9]|Occupation == femaleMaleHigh$Occupation[11]|Occupation == femaleMaleHigh$Occupation[13]|Occupation == femaleMaleHigh$Occupation[15]|Occupation == femaleMaleHigh$Occupation[17]|Occupation == femaleMaleHigh$Occupation[19])
+
+#display using kable
+kable(workerData)%>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "200px")
+
+# Using the same method of plotting as above section (grouped bar charts)
+ggplot(workerData) +
+  geom_col(aes(x = reorder(Occupation,Workers), y = Workers, fill = Gender), position = "dodge") +
+  scale_fill_manual(values=c("magenta", "lightblue"))+
+  coord_flip() +
+  labs(y = "Number of Workers", x ="Occupation", title = "Number of Workers for the Top 10 Paying Jobs") +
+   theme(plot.title = element_text(hjust = 0.5), legend.position = "top") 
+```
+
+Not surprisingly there is a **HUGE** difference in the number males and females in fields designated as `COMPUTATIONAL`. Through this visualization, it is easy to provide evidence for the gender divide, unequal pay and gender bias in high paying jobs. 
+
+# IV Extend: Further Customizations of Bar Charts
+
+## Stacked Bars
+
+In the previous sections we wrangled the data into it's simplest form and configured the plot until it was in a nice readable format. It left us with the question: _"Are there any other options we can explore to simplify the graph further?"_ 
+
+Instead of using side by side bars lets consider using stacked bars with differing colors to compare classes.
+
+1. We used the **fill** argument of **geom_bar**, to indicate what feature will be the classifier
+2. Next, we used the **coord_flip** function to improve readability by listing vertically all the occupations
+3. Finally, instead of using **labs**, we used the **xlab** function since we only wanted to slap a label on the side of the graph. As a bonus, **xlab("Occupation")** is much more readable and easier to maintain as well
+
+```{r stacked-plot}
+ggplot(workerData) +
+  geom_bar(aes(reorder(x = Occupation, Workers), y = Workers, fill = Gender), stat = "identity") +
+  coord_flip() + xlab("Occupation")
+```
+
+## Overlay Bars
+
+Stacking the bars pushed the scale further and can be a bit confusing when trying to discern the amounts of each particular bar. We can overlay bars in order to preserve the original scale.
+
+1. By using the **position** argument we can completely separate the bars by using the value **dodge**, **identity** will do the opposite byputting them one directly on top of the other
+2. Instead we can partially overlay the bars using the value **position_dodge(.25)**, this let's us specify to have the bars "dodge" each other by only 25% of each others proportion
+
+```{r overlay-plot}
+ggplot(workerData) +
+  geom_bar(aes(reorder(x = Occupation, Workers), 
+               y = Workers, fill = Gender),  stat = "identity", position = position_dodge(.25)) +
+  coord_flip() + xlab("Occupation")
+```
+
+## Full Circle
+
+By reserving more of the plot's real estate and scale, we can now try to fit the plot back to the original horizontal position, which was a problem earlier in the presentation.
+
+1. We start by removing the **coord_flip()** function to return the plot to it's original horizontal position
+2. Using **theme** we specify the **axis.text.x** attribute, which says to specifically manipulate x-axis only 
+3. We then use the **element_text** function to specify manipulating the text, and pass **angle = 45** so that the labels can be anchored 45 degrees
+
+```{r overlay-unflipped}
+ggplot(workerData) +
+  geom_bar(aes(reorder(x = Occupation, Workers), 
+               y = Workers, fill = Gender),  stat = "identity", position = position_dodge(.25)) +
+  xlab("Occupation") + theme(axis.text.x = element_text(angle = 45))
+```
+
+The plot above still has some problems. For one the labels are in the actual plot and the sort order is now incorrect when in the horizontal position. Let's fix these problems while also adding some extra features.
+
+1. We added to **aes** the **alpha** attribute and set the transparency level, so we can see the relationships of the bars even better
+2. Using the **theme** function  we removed the most of the grid lines by using the **panel.grid.major** attribute and setting the value to **element_blank()**
+3. To adjust the axis labels lower we add **hjust = 1** and re-sorted to descending by removing the **-** sign from _Workers_ in the the **reorder** function 
+4. For fun we set the **panel.background** with **element_rect()** attribute, and use the same color of the sidebar of the presentation with the **fill** attribute
+5. Lastly, using **scale_fill_manual** we set the colors to a nice sky blue against electric pink to make it pop against the deep black red background
+
+```{r overlay-final}
+ggplot(workerData) +
+  geom_bar(aes(reorder(x = Occupation, -Workers), 
+               y = Workers, fill = Gender), alpha = .75, stat = "identity", position = position_dodge(.45)) +
+  xlab("Occupation") + 
+  theme(panel.grid.major = element_blank(),
+        panel.background = element_rect(fill = '#211103', colour = 'black'),
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual("Gender", values = c("#f62681", "#88c6ed"))
+```
+
+## Conclusion
+
+We came a long way from the beginning to the end, and what I liked most about the final product is that beyond observing the practical ways we could create the bar plot for presentation and readability, we were able to further customize our visualization to make it exciting and fun.
