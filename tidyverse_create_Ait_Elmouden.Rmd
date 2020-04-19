@@ -1,0 +1,117 @@
+---
+title: "Tidyverse Create"
+author: "Ait elmouden"
+date: "4/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Assignment Objectives
+
+The goal of this assignment is to Create an Example.  Using one or more TidyVerse packages, and any dataset from fivethirtyeight.com, we'll create a programming sample “vignette” that demonstrates how to use one or more of the capabilities of the selected TidyVerse package with your selected dataset.
+
+### Source of Data 
+
+We will use the fivethirtyeight Package, so we can load any data we want from the R package instead of through the importing of comma separated values (CSV) files, Excel spreadsheets, andother file formats.
+
+First we'll load the fivethirtyeight package, as well as tidyr, tibble and dplyr and then call murder_2015_final
+
+Let's explore the data
+
+```{r}
+library(fivethirtyeight)
+library(tidyr)
+library(tibble)
+library(dplyr)
+
+murder_data <- murder_2015_final
+head(murder_data)
+```
+
+### Look at the dataset’s column names
+
+Use names(Data) to list out the dataset’s column names.
+
+```{r}
+names(murder_data)
+```
+
+
+### Gather variables into a single column
+
+Lets gather up the two year variables, murders_2014 and murders_2015 into a single year column we’ll name murder_year. We’ll store the number of murders in a column titled murders and call this new object murders_gathered.
+
+```{r}
+murders_gathered <- murder_data %>% 
+    gather(
+        murder_year,
+        murders,
+        murders_2014:murders_2015,
+        na.rm = TRUE)
+murders_gathered
+```
+
+### Arrange data alphabetically by state and city
+
+```{r}
+murders_arranged <- murders_gathered %>% 
+    arrange(
+        state, 
+        city)
+murders_arranged
+```
+
+So now we have the two years in a single column (murder_year), but the repeating murder_ text is redundant. We want to get the year in a column by itself.
+
+### Separate “murder_year” column into “text” and “year”
+
+```{r}
+murders_separate <- murders_arranged %>%
+    separate(
+        murder_year,
+            into = c("text", 
+                     "year")
+        )
+murders_separate
+```
+
+Now we can use spread() to put the year back into two different columns, 2014 & 2015. But I will combine this with arrange() so the output is easier to read.
+
+```{r}
+murders_spread <- murders_separate %>% 
+    spread(
+        year,
+        murders
+        ) %>% 
+        arrange(
+            state,
+            city)
+murders_spread
+```
+
+### Combine city and state into a single column city_state using unite()
+
+```{r}
+murders_final <- murders_spread %>%
+unite(
+    city_state, 
+    city, 
+    state) %>% 
+        arrange(
+            city_state
+            ) %>% 
+            select(
+                -(text)
+                )
+murders_final
+```
+
+### Output the new table as a csv
+
+```{r}
+write.csv(murders_final, file = "murders_final.csv",row.names=FALSE, na="")
+```
+
