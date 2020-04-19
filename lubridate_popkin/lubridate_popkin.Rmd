@@ -1,6 +1,7 @@
 ---
 title: "Working with Lubridate"
-author: "Ken Popkin"
+author: "Code by Ken Popkin - Extended by Christian Thieme"
+exteded by: "Christian Thieme"
 date: "3/12/2020"
 output: html_document
 ---
@@ -79,3 +80,66 @@ This has been a small subset of the many capabilities of the Lubridate package. 
 ```{r}
 energy2
 ```
+
+#### **Tidyverse Extend Assignment by Christian Thieme 4/10/2020 - Extension of Ken Popkin's Lubridate Tidyverse Create Assignment**
+
+As Ken mentioned above, lubridate is an incredible R library for working with dates. Dates are notoriously difficult to work with in many programming languages, however, lubridate makes even the most complex date manipulations simple. For example, the data set that Ken chose is the estimated energy comsumption in Megawatts (MW) by hour. Looking at data at such a fine grain can be incredibly difficult. Let's take a look at the first 10 rows of this data to get a feel for it.   
+
+```{r}
+energy3 <- energy %>% 
+  mutate(Datetime = as_datetime(Datetime))
+head(energy3,10)
+```
+
+This dataset contains 57,000+ rows of data. So we have the ability to look at 57,000+ hours of energy consumption. Let's say we are interested in observing KW usage overtime. If we create a line chart visualizing the data at its current grain, it is going to be incredibly crowded. Take a look at the chart below: 
+
+```{r}
+ggplot(energy3) + 
+  aes(x = Datetime, y = DEOK_MW) + 
+  geom_line( color = "red" )
+```
+
+Looking at the chart above, we can see some trends within the data. However, looking at it at an hourly grain makes spotting any type of trends, other than high level or and seasonal trends, very difficult.  
+
+Let's make use of some of the incredibly powerful lubridate functions to simplify our chart above. A powerful feature of lubridate is the ability to round dates up or down to different measures of time (i.e. week, month, year). If you are familiar with the floor and ceiling functions in R for rounding numbers, you will feel right at home with lubridate's `floor_date()` and `ceiling_date()` functions. These functions give you the ability to round a date up (ceiling) or down (floor) to a specified measure of time, such as second, minute, hour, day, week, month, bimonth, quarter, season, halfyear and year. For example, let's say I take row one of our data set which has the date value '2012-12-31 01:00:00' and I want to round it up to the next closest month - I can use the `ceiling_date()` function: 
+
+```{r}
+#original value is '2012-12-31 01:00:00'
+ceiling_date(energy3$Datetime[1], "month")
+```
+
+Notice how this rounded the value from December 31, 2012 at 1AM to January 1, 2013 as that is the first day of the next month, rounding up. Now let's see what the output would be if we round down using the `floor_date()` function:
+
+```{r}
+floor_date(energy3$Datetime[1], "month")
+```
+
+You can see in the output above, this function has rounded December 31, 2012 at 1AM down to December 1, 2012, just as we would expect. So how can this help us with our messy chart above? Well, we can use `floor_date()` to round all of our dates down to the closest month so we can aggregate some of our data points to more easily visualize this data. I will use `floor_date()` inside of a `dplyr::mutate()` function to manipulate the Datetime column so that it contains our new rounded dates. 
+
+```{r}
+energy3 %>% 
+  mutate(Datetime = floor_date(Datetime, "month")) %>%
+  group_by(Datetime) %>% 
+  summarize(usage = sum(DEOK_MW)) %>%
+  ggplot() + 
+  aes(x = Datetime, y = usage) + 
+  geom_line( color = "red" )
+```
+
+In looking at the chart above, and comparing it to our previous chart, you can see this data is much more digestible than what we were looking at before. What if we decide we lost too much grain and we want to look at it by week instead? Simple, change your rounding unit of measure from "month" to "week" like so: 
+
+```{r}
+energy3 %>% 
+  mutate(Datetime = floor_date(Datetime, "week")) %>%
+  group_by(Datetime) %>% 
+  summarize(usage = sum(DEOK_MW)) %>%
+  ggplot() + 
+  aes(x = Datetime, y = usage) + 
+  geom_line( color = "red" )
+```
+
+As you can see, we made what could have been a difficult date conversion for every row in our data set, simply by changing one word in the function. 
+
+#### Tidyverse Extend Conclusion
+
+Lubridate has a host of powerful functions to make working with dates incredibly simple. Several key functions have been shown above in Ken's examples as well as my own. Programmers utilizing different languages have often lived in fear of working with dates because conversions can be very complex, however, lubridate has abstracted much of that and made even some of the most challenging conversions, such as timezones conversions, easy. Next time you need to do any type of datetime conversions, reach into your R toolbox an pull out lubridate. 

@@ -1,7 +1,7 @@
 ---
 title: "***stringr:*** a package used to manipulate strings"
-author: "Devin Teran"
-date: "2020-03-28"
+author: "Devin Teran.  Extended by David Blumnstiel"
+date: "2020-03-28.  Extended 2020-04-17"
 output: rmdformats::readthedown
 
 ---
@@ -125,6 +125,50 @@ str_length(murder$city)
 ```{r view-more-9-letter-city}
 filter(murder,str_length(murder$city) > 9)
 ```
+
+##  (Extension) **Highlight Parts of a String/Set of Strings**
+#### **str_view(strings, pattern)**
+**Purpose:**    
+Highlight a pattern within a string or st of strings
+Helpfull for testing testing regex patterns
+
+**Input:**       
+String or vector of strings     
+
+**Output:**     
+Highlighted Text    
+  
+**Example:**  
+Let's find 'Ohio' within a list of states
+```{r str_view}
+str_view(murder$state, 'Ohio')
+```
+
+##  (Extension) **Wrap Long Strings to Lines of Similar Length **
+#### **str_wrap(strings, width, indent, exdent)**
+**Purpose:**    
+Will take a vector of strings and wrap into seperate lines by width, adds paragraph indents, and exdents
+Adds indicators for new lines
+Keeps words whole by taking whitespace into account
+
+**Input:**       
+String or vector of strings, and interger length for width, indent, and exdent
+If given multiple strings, will consider each string a paragraph
+
+**Output:**     
+Text with whitespace indents/exdents for paragraphs, and '\\n' for new lines.    
+  
+**Example:**  
+Let's wrap a paragraph
+```{r}
+paragraph <- "Bananna. Banna nanner nana! Bannananana banonna; banana BANANA!  Bonana?  Fruit fruity frippty fruit. Frap fruits! Fruit fruit flippy frutty fruits; frute fruit, bananna frutty frute. Fruit fruits fruity fruitfruit."
+
+wrapped <- str_wrap(paragraph, width = 25, indent = 5)
+
+wrapped
+cat(wrapped, '\n')
+```
+
 
 ### **Conclusion**
 These examples are just the beginning of what you can do with stringr.  If you need to manipulate, combine or work with strings in general, stringr is a great package to do so.  Here's a great stringr cheatsheet released by RStudio (https://rstudio.com/resources/cheatsheets/).

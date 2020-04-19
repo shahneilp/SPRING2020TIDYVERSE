@@ -17,3 +17,7 @@ Lubridate is an R Tidyverse package that makes it easier to work with dates and 
 AUTHOR:
 Ken Popkin
 
+EXTENSION AUTHOR: 
+Christian Thieme
+RPubs link: https://rpubs.com/christianthieme/597573
+
