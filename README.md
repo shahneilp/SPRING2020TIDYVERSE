@@ -545,6 +545,9 @@ Showcase a few more styles and customizations in GGPlot. Themes, guides, manual 
 Author: Bonnie Cooper
 This vignette uses global shark attack data to demonstrate several purrr functions for filtering lists
 
+B. Cooper extended Nilsa Bermusez' TidyverseRecipe.
+Added some text and a parallel reshaping of the Bob Ross dataset with the pivot_longer() function
+
 =======
 ### ggplot2::geom_polygon:
 Author: Adam Gersowitz
