@@ -1,0 +1,200 @@
+---
+title: 'DATA 607: Tidyverse Create Assignment'
+author: "James Williams"
+date: "3/29/2020"
+output:
+  html_document:
+    df_print: paged
+---
+# Task
+Your task here is to Create an Example.  Using one or more TidyVerse packages, and any dataset from fivethirtyeight.com or Kaggle, create a programming sample “vignette” that demonstrates how to use one or more of the capabilities of the selected TidyVerse package with your selected dataset. 
+
+# Import Data
+Data comes from https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset.
+```{r, echo=TRUE, warning = FALSE, message=FALSE}
+library(tidyverse)
+```
+
+```{r, echo=TRUE, warning = FALSE, message = FALSE}
+URL <- 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
+death_rates <- read_csv(URL)
+head(death_rates)
+```
+# Condition Data
+```{r, echo=TRUE, warning = FALSE}
+death_sums <-death_rates %>%
+  replace(is.na(.), 0) %>%
+  mutate(sum = rowSums(.[5:71]))
+head(death_sums)
+```
+```{r, echo=TRUE, warning = FALSE}
+data<- death_sums[, c("Country/Region", "sum")]
+data<- rename(data, Country = "Country/Region", Death_Count = "sum")
+head(data)
+```
+```{r, warning = FALSE}
+final_data <- data %>%
+  group_by(Country) %>%
+  summarize(sum(Death_Count))
+head(final_data)
+```
+```{r, warning = FALSE}
+final_data <- rename(final_data, Death_Count = `sum(Death_Count)`)
+head(final_data)
+summary(final_data)
+
+```
+
+
+
+# Visualize Data
+```{r, warning = FALSE}
+graph <- ggplot(final_data, aes(x = Country, y = Death_Count)) + 
+  geom_point() + 
+  theme(axis.text.x = element_text(size = 3, angle = 90))  + 
+  geom_text(aes(label=ifelse(Death_Count>5000, as.character(Country), '')), hjust=1, vjust=1) + 
+  labs(x = "Country", y = "Death Count", title = "COVID 19 Pandemic: Total Death Counts Worldwide Since 22 January 2020") +
+  scale_y_discrete()
+graph
+```
+
+# TIDYVERSE Extend: Calculating the total contribution of "Other" countries to Death Count
+
+The previous example defines the notable countries as having deaths greater than 5,000 since January 22nd. For the first part of my Tidyverse Extend project, I'll see how much other countries are contributing to the death count.
+```{r other-countries}
+
+global_death_count <- sum(final_data$Death_Count)
+Other_deaths <- final_data %>% 
+  filter(Death_Count <5000) %>%
+  summarize(sum(Death_Count))
+Other_deaths/global_death_count
+```
+The assumption of 5,000 holds up as unlabeled countries comprise less than 10% of the total deaths.  
+
+# Conclusion
+Tidyverse features helpful tools to transform messy data sets into more accessible formats.
+
+# Resources
+https://www.tidyverse.org/packages/
+
+
+# TIDYVERSE Extend: Verifying the use of 'sum' in the original dataset
+
+For this extension, I decided to take a second look at the code for reporting COVID-19 deaths. I expected a lot of changes in one month, which makes this a particularly interesting second look.
+
+```{r call-data}
+head(death_rates)
+death_rates %>%
+  filter(`Country/Region` == 'Italy')
+summary(death_rates$`4/18/20`)
+
+```
+At the time of this project, 4/18/20, I took a look at the current values. There are a few unusual observations. First, it appears that in the original data, deaths are given cumulatively. The number of deaths in the latest date is the grand total. This conflicts with the original treatment of the data which spent some time conditioning the data by generating a 'sum' column. This step was unnecessary as the latest date should be the sum. Secondly, there are some negative values in the datas_et, which is nonsense.
+
+
+## Fixing the original dataframe
+
+```{r remove-zeroes}
+death_rates[death_rates <0] <- NA
+summary(death_rates$'4/18/20')
+names(death_rates)
+names(death_rates[71])
+```
+
+```{r data-revised}
+data_rev<- death_rates %>%
+  select(`Country/Region`, '3/28/20') %>%
+  rename('Death_Count' = '3/28/20') %>%
+  rename('Country' = 'Country/Region')
+
+final_data_rev <- data_rev %>%
+  group_by(Country) %>%
+  summarize(Death_Count = sum(Death_Count))
+final_data_rev
+summary(final_data_rev$Death_Count)
+```
+
+## Revisualizing the Data
+
+Next, I'll generate the same graph using the same dataset, then update it with the existing data. I also made the following changes to treatment of the data: I changed the filter so that more labels would be given to the new death totals, decreasing the 'ifelse' threshold from 5,00 to 200. I also added a label count on the y-axis to confirm that the magnitudes made sense.
+
+```{r death-visual, warning = FALSE}
+
+graph_mar_28 <- ggplot(final_data_rev, aes(x = Country, y = Death_Count)) + 
+  geom_point() + 
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())  + 
+  geom_text(aes(label=ifelse(Death_Count>300, as.character(Country), '')), hjust=1, vjust=1) + 
+  labs(x = "Country", y = "Death Count", title = "COVID 19 Pandemic: Total Death Counts Worldwide, 22 January - 28 Mar 2020")
+graph
+graph_mar_28
+```
+
+There appear to be major changes made when the final dates are taken as the sum total deaths. The country China, where the virus supposedly first spread, was vastly overcounted in the original analysis. Instead, my updated graph for the timeframe in question shows that populations in Spain and Italy were the hardest hit at the end of March. Experts remain skeptical about China's official death rates, but based on the best available information two European countries had the highest deaths at this time.
+
+## Viewing the Current Death Counts
+
+Finally, I've decided to change the original code so that it remains generalizable for future dates. Instead of specifying a specific date, the new code will always pick the latest date data is available for. In this case, it is April 18, 2020.
+
+```{r april-update-covid-deaths}
+
+current_deaths <- death_rates[c(2,ncol(death_rates))]
+
+current_data <- current_deaths %>%
+  rename('Country' = 1) %>%
+  rename('Death_Count' = 2) 
+
+final_current_data <- current_data %>%
+  group_by(Country) %>%
+  summarize(Death_Count = sum(Death_Count))
+
+head(final_current_data,20)
+
+worldwide_deaths <- sum(final_current_data$Death_Count, na.rm = TRUE)
+
+
+```
+
+I also changed the conditional label function to only label if a country contributed more than 2.5% of worldwide deaths.
+
+```{r graph-current-data}
+graph_current_data <- ggplot(final_current_data, aes(x = Country, y = Death_Count)) + 
+  geom_point() + 
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())  + 
+  geom_text(aes(label=ifelse(Death_Count>(0.025*worldwide_deaths), as.character(Country), '')), hjust=1, vjust=1) + 
+  labs(x = "Country", y = "Death Count", title = "COVID 19 Pandemic: Total Death Counts Worldwide, 22 January 2020 - Present")
+graph_current_data
+```
+
+As a final step, I decided to compare information from 3/28 to 4/18 in a dumbbell plot, which should compare the two dates and display a line demonstrating the change over this time period. Since it's established that the original data shows cumulative totals, this treatment of the original data will be especially meaningful 
+
+
+```{r COVID-19-dumbell-plot}
+library(ggalt)
+
+rates_before_after <- death_rates %>%
+  select(c(2,71,92)) %>%
+  group_by('Country/Region') %>%
+  rename('Create' = '3/28/20') %>%
+  rename('Extend' = '4/18/20') %>%
+  rename('Country'= 'Country/Region') %>%
+  arrange(desc(Extend))
+
+top_ten_deaths <- head(rates_before_after,10)
+
+graph_before_after <- ggplot(top_ten_deaths, aes(x=Create, xend=Extend, y = reorder(Country, -Extend))) +
+  labs(x = "Total COVID-19 deaths, 3/28/20 - 4/18/20", title = "Change in COVID-19 Deaths") + 
+  geom_dumbbell() +
+  scale_x_log10()
+
+graph_before_after
+
+```
+
+The dumbbell plot shows that while Europe was the hardest hit originally, in the past two weeks the US has doubled over 4 times.  In general, we can interpret the 'length' of the line to show how much conditions have worsend over this time period, and in which countries have measures stifled the spread of COVID-19 in this time period.
+
+## Conclusion
+
+Visualizing the spread and change of a disease is an important tool in changing perceptions of its severity and scope. Looking at available data, COVID-19 showed its first profound effect in Europe, but in the past 2 weeks has claimed many lives in the USA.
+
