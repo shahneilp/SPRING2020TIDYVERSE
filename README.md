@@ -688,10 +688,16 @@ The purpose of this Vignette is to demonstrate how some of tidyverse packages ca
 The purpose of this Vignette is to demonstrate how some of tidyverse packages can be used to explore and manipulate a dataset in R. A dataset was selected from the fivethirtyeight Package. the R markdown file can be accessed from [here](/tidyverse_AitElmouden) 
 
 
+### Extend tidyverse assignment:
+Author: Subhalaxmi Rout
+Extended tidyverse assignment from Manolis Manoli’s tidyverse assignment. 
+Assignment shows examples of stringr, tidyr, tibble and ggplot.
+
+============================================================
+=======
 
 ### Amit Kapoor EXTENDS Devin Teran TidyVerse stringr package
 #### I have extended Devin Teran TidyVerse stringr assignment.
-
 
 
 
