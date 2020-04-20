@@ -1,0 +1,52 @@
+---
+title: "Tidyverse Lubridate Example"
+author: "Christopher Bloome"
+date: "4/2/2020"
+output: html_document
+---
+
+
+## Introduction
+
+I have always struggled when dealing with Time, Dates and Duration in most computer programs. There does not seem to be an intuitive way to represent the idiosyncrasies we are so accustomed to in these concepts: from the fact that duration and time of day appear similar, to time zones, leap years, and even our "sexagesimal" system. For this project I wanted to explore a package to deal with all of the above - the Tidyverse package Lubridate.
+
+In searching the FiveThirtyEight data sets, I found an interesting set which I wanted to explore. FiveThirtyEight did an analysis on tweets during a big boxing match - Mayweather vs McGregor. The team ran an analysis on emoji use as a proxy for fight excitement and how the fight was progressing. I will be limiting my analysis to the time stamp of each of the 12 thousand tweets. 
+
+## Data Upload
+
+``` {r} 
+library(RCurl)
+Tweets <- read.csv(text = getURL("https://raw.githubusercontent.com/ChristopherBloome/607/master/Boxing.Tweets.csv"))
+head(Tweets)
+Tweets$created_at[1]
+class(Tweets$created_at[1])
+```
+## Conversion
+
+While the data may seem to be in the correct form, the created_at column is in the class "factor." If it was a time stamp, we would expect it to be in class "POSIXct". Luckily we have lubridate to help us convert. 
+
+
+```{r}
+library(tidyverse)
+library(lubridate)
+
+Tweets$created_at_timestamp <- mdy_hm(Tweets$created_at)
+Tweets$created_at_timestamp[1]
+class(Tweets$created_at_timestamp[1])
+
+```
+LubriDate has a very simple interface. As you see above, the function is nothing more than mdy_hm(). This of course stands for Month, Date, Year, Hour, Minute. The package Lubridate has a number of functions with variation of these letters. Using these functions is as simple as listing each of the letters in the order they appear in the string. The underscore is in place to represent the space between the date and time in the string. This underscore is not to be used when the string contains a slash, dash or colon as LubriDate understands that these are used in splitting dates and times, but it  required for letters. 
+
+## Timezones 
+
+As you may notice, the timestamp above is listed in UTC. After a quick search, I learned that the fight started at 12:05 am ET, which is 4:05 UTC. This means the above timestamp is incorrect. We have two options for converting our time correctly - we could either represent this time with the correct time in UTC, or the correct time in Eastern Time. Due to the nature of the data, it is more logical to convert to the correct time zone. 
+
+```{r}
+
+Tweets$created_at_timestamp <- force_tz(Tweets$created_at_timestamp, tzone = "America/New_York") 
+
+```
+
+The force_tz function maintains the clock time and simply changes the time zone. Alternatively, if the UTC time was correct, but we wanted to represent the time in a new time zone, we could use the with_tz function to convert the clock time to the equivalent time in a different time zone. 
+
+As a final note, the time zones are not exactly intuitive. To find a complete list, use OlsonNames(). As we saw above, the name of the time zone in the function is not how it will be represented in the time stamp. 
