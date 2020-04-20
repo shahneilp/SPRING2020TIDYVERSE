@@ -600,3 +600,8 @@ The purpose of this Vignette is to demonstrate how some of tidyverse packages ca
 ## Using dplyr: slice to Choose rows by their ordinal position in the tbl. Grouped tbls use the ordinal position within the group.  
 <!-- End: Extended Dennis Pong Create by Vinayak on 04/15/2020--> 
 
+======
+### extended Neil Shah's tidyverse:
+Author: Manolis Manoli
+made some changes to fomatting and added filtering example and grouping and averaging
+=======
