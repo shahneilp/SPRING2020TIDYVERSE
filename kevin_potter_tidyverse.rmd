@@ -1,0 +1,93 @@
+---
+title: "kevin_potter_tidyverse"
+output: html_document
+---
+
+##Introduction
+
+This notebook goes through the use of map, map2, and pmap in the tidyverse purr package. We will start with the use of tibble, which is also contained in the purr package. We will use this function to create a list of numbers 1-26 to test the use of the map functions.
+
+```{r}
+library(tidyverse)
+num_list <- tibble(x = 1:26)
+head(num_list)
+```
+
+###Map(x, f)
+
+Map takes three main arguments 'x' which is a list that you want to map, 'f' which is the function you want to preform the map on. Map will apply some sort of change to elements in a list and return a result. The function can be as complicated or as simple as you like. The same number of lists that are passed into the function will be in the result 1:1.
+
+```{r}
+# returns a list of numbers double the size
+num_list %>% map(function(x) x*2)
+# returns a list of numbers half the size
+num_list %>% map(function(x) x*.5)
+```
+
+###Map2(x, y, f)
+
+Map2 two takes in the same arguments as map with one addition. 'y' which is the second vector, which need to the same size and greater than one. Map2 will perform a change using two lists and output a single list. The function will use both elements in the row to perform the transformation.  
+
+```{r}
+x = 6:10
+y = 51:55
+# this will return the sum of both columns to a sinlge list of same size
+map2(x, y,  `+`)
+```
+```{r}
+# this will return the product of the two columns to a list of same size
+map2(x, y, `*`)
+```
+
+###Pmap(l,f)
+
+Pmap takes in two arguments, 'f' which we have explained before and, 'l' which is a list of vectors, such as a data frame. The length of .l determines the number of arguments that .f will be called with. List names will be used if present. Pmap can perform a change to multiple variables and output a single list or dataframe.
+
+```{r}
+three_num_list <- tibble(x = 0:5, y = 10:15, z = 20:25)
+three_num_list
+```
+```{r}
+#takes the sum of all three columns
+pmap(list(three_num_list$x,three_num_list$y, three_num_list$z ), sum)
+```
+## Using Real Data
+
+In this code block we will load in data from [fivethirtyeight's](https://github.com/fivethirtyeight/data/blob/master/alcohol-consumption/drinks.csv) dataset on alchohol consumtion by country.  
+
+```{r}
+library(RCurl)
+data <- getURL('https://raw.githubusercontent.com/fivethirtyeight/data/master/alcohol-consumption/drinks.csv')
+alchohol_df <- read.csv(text = data)
+head(alchohol_df)
+```
+```{r}
+#map_chr can apply map to character vectors
+alchohol_df$country <- (alchohol_df$country) %>% map_chr(paste0, ': Surveyed')
+head(alchohol_df)
+```
+```{r}
+product_function <- function(arg1, arg2){
+col <- arg1 * arg2
+x <- as.data.frame(col)
+}
+alchohol_df$beer_wine_prod <- (map2_df(alchohol_df$beer_servings, alchohol_df$wine_servings, product_function))
+head(alchohol_df$beer_wine_prod)
+```
+
+
+```{r}
+head(pmap(list(alchohol_df$beer_servings, alchohol_df$spirit_servings, alchohol_df$wine_servings), mean))
+```
+
+
+
+###Information From R Help Docs
+
+**Map Description:**
+The map functions transform their input by applying a function to each element and returning a vector the same length as the input.
+
+
+**Map2 & Pmap Description **
+These functions are variants of map() that iterate over multiple arguments simultaneously. They are parallel in the sense that each input is processed in parallel with the others, not in the sense of multicore computing. They share the same notion of "parallel" as base::pmax() and base::pmin(). map2() and walk2() are specialised for the two argument case; pmap() and pwalk() allow you to provide any number of arguments in a list. Note that a data frame is a very important special case, in which case pmap() and pwalk() apply the function .f to each row. map_dfr(), pmap_dfr() and map2_dfc(), pmap_dfc() return data frames created by row-binding and column-binding respectively. They require dplyr to be installed.
+
