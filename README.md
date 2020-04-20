@@ -617,6 +617,15 @@ This vignette looks at varisous ways to display visual data using ggplot2 and sp
 This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.
 
 
+### Kevin Potter 
+
+**Create**    
+This notebook goes through the use of map, map2, and pmap in the tidyverse purr package. We will start with the use of tibble, which is also contained in the purr package. We will use this function to create a list of numbers 1-26 to test the use of the map functions.  
+
+**Extend**  
+I created and extend assignment of the ggplo2 geom function by adding the functionality of plotly. A common open source package for easy to use interactivity with plots.  
+
+
 ### Group_by
 Author: David Blumenstiel
 
