@@ -73,7 +73,8 @@ This vignette is meant to teach you how to use the unite and pivot_wider functio
 # Neil Shah Tidy
  A vignette describing the progressive use of as_tibble(), dplyr functions select, arrange, filter and a gpplot to visualizae data.
 Author: Neil Shah
-
+Added a section about purrr and how it adds to R's functional programming capabilities
+Extend: Justin Hsi
 
 # DATA607_Tidyverse_Vignette
  A vignette describing the prepration of an online table for ggplot and facet_wrap
