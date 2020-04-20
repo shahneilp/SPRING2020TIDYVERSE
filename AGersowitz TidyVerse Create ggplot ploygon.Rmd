@@ -11,61 +11,51 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Using ggplot2::geom_polygon in Visual Context 
 
+By using the tidyverse, we can reduce the dependent library calls required downstream.
 
-```{r library}
-library (readr)
-library(RCurl)
-library(sqldf)
-library(ggplot2)
+```{r library, message=FALSE}
+library(tidyverse)
 ```
 
 ## Load information from 538 on Information on Foul Balls in the MLB
 
 In this section I bring in a dataset from 538 that contains information on MLB fould balls. In this analysis I would like to look at the number of balls and the average exit velocity of balls that reach the stands in baseball. I acquire these summary statistics after removing records that do not have an exit velocity or would not have reached the stands.
 
+Having extended the original version of this to make use of the `dplyr` library, we can use piping and various manipulation verbs to achieve the same effects as before. Because we've used `readr::read_csv`, we no longer can to filter for `exit_velocity != "NA"` (we'd use `is.na()` instead) and then roll our original conditions `type_of_hit != "Ground"` and `type_of_hit != "Batter hits self"` into a single membership test). This also reduces our lines nicely.
 
-```{r csv}
-x <- getURL("https://raw.githubusercontent.com/agersowitz/Data-607-Datasets/master/foul-balls%5B1%5D.csv")
-foul <- read.csv(text=x)
+```{r csv, message=FALSE}
 
-foul<-subset(foul, foul$type_of_hit != "Ground")
-foul<-subset(foul, foul$type_of_hit != "Batter hits self")
-foulev<-subset(foul,foul$exit_velocity!="NA")
+foul <- read_csv("https://raw.githubusercontent.com/agersowitz/Data-607-Datasets/master/foul-balls%5B1%5D.csv")
+foul <- foul %>% filter(!type_of_hit %in% c("Ground", "Batter hits self"))
 
-
-
-avg_exit<-sqldf("select avg(exit_velocity) aev, used_zone from foulev group by used_zone")
-count_hit<-sqldf("select count(exit_velocity) cev, used_zone from foul group by used_zone")
+foulev <- foul %>% filter(!is.na(exit_velocity))
+```
 
 
+Similarly, we can replace the original SQL-style group aggregation with the tidyverse way of doing it.
 
+
+```{r}
+avg_exit <- group_by(foulev, used_zone) %>% summarize(aev = mean(exit_velocity))
+count_hit <- count(foulev, used_zone, name = "cev")
 ```
 
 ## Mapping this data to the rough outline of a baseball diamond
 
 In this final section I use various ggplot functions to create a baseball diamond based on an x,y plot. I roughly based the sections off of the graphic found at https://fivethirtyeight.com/features/we-watched-906-foul-balls-to-find-out-where-the-most-dangerous-ones-land/
 
+Replacing the usual work of dataframes with tibbles makes things easier on our end when working in the console. Creating a new vector to produce a set of IDs is handy, but the mutate function lets us leverage existing structures.
 
 ```{r baseball}
+simple_mutate <- function(x) {
+  mutate_at(x, "used_zone", factor) %>% rename("id" = "used_zone")
+}
 
+ev <- simple_mutate(avg_exit)
+ch <- simple_mutate(count_hit)
 
-
-
-
-ids <- factor(c( "1", "2", "3", "4", "5","6","7"))
-
-ev <- data.frame(
-  id = ids,
-  value = c(avg_exit$aev)
-)
-
-ch <- data.frame(
-  id = ids,
-  value = c(count_hit$cev)
-)
-
-positions <- data.frame(
-  id = rep(ids, each = 5),
+positions <- tibble(
+  id = rep(ev$id, each = 5),
   x = c(
         -0.25, -0.5, 0.5, 0.25, 0,
         -0.25,-0.5, -0.75, -0.5,-0.5,
@@ -85,41 +75,50 @@ positions <- data.frame(
         -0.25, -.25, 0, 0, 0)
 )
 
+```
 
-datapoly <- merge(ev, positions, by = c("id"))
+The `dplyr` package includes a variety of join functions that make the join-type employed explicit to the reader, versus the base `merge` function. 
 
-datapolych <- merge(ch, positions, by = c("id"))
+```{r}
+datapoly <- inner_join(ev, positions, by = "id")
+datapolych <- inner_join(ch, positions, by = "id")
 
+```
 
-p <- ggplot(datapoly, aes(x = x, y = y)) +
-  geom_polygon(aes(fill = value, group = id))
+Because the goal we have to is to create two essentially identical geometries (they accord with a baseball diamond), we can create a function to handle our `ggplot2` calls. Using `aes_string` is an easy way to make flexible functions within the plotting realm, as it permits you to pass arguments as strings and avoid the (sometimes) confusing world of quosures.
 
-pc <- ggplot(datapolych, aes(x = x, y = y)) +
-  geom_polygon(aes(fill = value, group = id))
-  
-baseline<-data.frame(
-  x = c(-1,0,1),
-  y = c(0,-1,0)
-)
+```{r}
+geom_baseball <- function(dataframe, fill_value, low_color, high_color,
+                          label_list) {
+  ggplot(dataframe, aes_string("x", "y")) +
+    geom_polygon(aes_string(fill = fill_value, group = "id")) +
+    geom_line(data = baseline, color = "grey30", size = 2) +
+    scale_fill_gradient(low = low_color, high = high_color) +
+    labs(title = label_list$title, x = label_list$x, y = label_list$y,
+         fill = label_list$legend) +
+    theme(axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank())
+}
 
-field <- data.frame(x = c(1, 0, -1, 0), y = c(0, 1, 0, -1))
+baseline <- tibble(x = c(-1,0,1), y = c(0,-1,0))
 
-pev<-p + scale_fill_gradient(low = "pink", high = "red") + 
-  ggtitle("Average Exit Velocity of Foul Balls by Seating Zone") +
- geom_line(data = baseline, colour = "grey30", size = 2) 
-  
+pev_labs <- list(title = "Average Exit Velocity of Foul Balls by Seating Zone",
+                 x = "", y = "", legend = "Avg. Exit Velocity")
+pch_labs <- list(title = "Number of Foul Balls by Seating Zone",
+                 x = "", y = "", legend = "Number of Foul Balls")
+```
 
-pch<-pc + scale_fill_gradient(low = "cyan", high = "blue") + 
-  ggtitle("Number of Foul Balls by Seating Zone") +
-  geom_line(data = baseline, colour = "grey30", size = 2)
-pev
-pch
+Having set definitions for both the type of graphic we're producing and a helper tibble to achieve the desired results, it becomes a lot easier to produce and display our visual. By taking out the axis text and ticks using `theme()`, we can achieve a much simpler version that focuses solely on the geometric figure.
 
+```{r}
+(pev <- geom_baseball(datapoly, "aev", "pink", "red", pev_labs))
+(pch <- geom_baseball(datapolych, "cev", "cyan", "blue", pch_labs))
 ```
 
 
 
 ## Conclusion
 
-By the end of this analysis you can visualy see statistics on foul balls in MLB. This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.
-
+By the end of this analysis you can visualy see statistics on fould balls in MLB. This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.

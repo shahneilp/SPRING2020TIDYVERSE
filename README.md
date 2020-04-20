@@ -23,10 +23,10 @@ You should complete both parts of the assignment and make your submissions on th
 
 * https://acatlin.github.io/SPRING2020TIDYVERSE/forcats_makes_plots_better.html - how to use capabilities of forcats package to improve your plots!  Andy Catlin and Ait Elmouden Abdellah
 
-* http://rpubs.com/christianthieme/589762 (RMD file: PurrrMap-LoseTheForLoop.rmd) - Using purrr::map() and purrr::pmap() instead of for loops in R - By Christian Thieme 
+* http://rpubs.com/christianthieme/589762 (RMD file: PurrrMap-LoseTheForLoop.rmd) - Using purrr::map() and purrr::pmap() instead of for loops in R - By Christian Thieme
 
-### dbplyr 
-dbplyr is great and simple to use backend solution for working with data that is stored on a SQL server. dbplyr follows the same grammar and formatting as dplyr, but translates R code into a SQL query to directly access the SQL database. 
+### dbplyr
+dbplyr is great and simple to use backend solution for working with data that is stored on a SQL server. dbplyr follows the same grammar and formatting as dplyr, but translates R code into a SQL query to directly access the SQL database.
 
 ### forcats::fct_lump
 From the forcats package, this function allows you to quickly group levels of a categorical variable if they are above/below a certain count or proportion.
@@ -84,10 +84,10 @@ Instructions:
 Please follow along with the steps I took to prepare date for ggplot exploration.  I based this off of a previous project and added some annotations about the functions I called.
 
 ### tidyverse
-Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout) 
+Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout)
 
 
-### An Example using TidyVerse packages - **ggplot2** and **dplyr**  and using tesla-stock-data-from-2010-to-2020 Data set from Kaggle 
+### An Example using TidyVerse packages - **ggplot2** and **dplyr**  and using tesla-stock-data-from-2010-to-2020 Data set from Kaggle
 Author: Vinayak Kamath
 
 #### Package Selected : **ggplot2**  and **dplyr**
@@ -96,25 +96,25 @@ Author: Vinayak Kamath
 
 ###### Usage:  
 ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
-  
+
 ###### Demo:  
 ggplot2 geom_line to show the stock price movement over the years for Tesla shares.  
 
 ##### Capability 2: **dplyr filter**
-  
+
 ###### Usage:  
 dplyr filter helps in filtering of data based on one or more conditions.    
-  
+
 ###### Demo:   
 dplyr filter to show the days when the stock price for Tesla moved by over 15% (profit or loss) in one day.    
 
 ##### Capability 3: **dplyr group by and summarise**
-  
+
 ###### Usage:  
 dplyr group by and summarise helps in getting aggregated data from the given data set for one or more columns.      
-    
+
 ###### Demo:   
-dplyr group by and summarise to show the yearly minimum and maximum stock price close and arranging it in descending order of movement in a year. 
+dplyr group by and summarise to show the yearly minimum and maximum stock price close and arranging it in descending order of movement in a year.
 
 ##### Extension of Vinayak Kamath's vignette
 Author: Ken Popkin
@@ -132,14 +132,12 @@ Author: Samuel Bellows
 calling basic geometries, calling aes and when arguments should go inside/outside aes, facet grid, and basic plot customization.
 Also includes some use of dplyr and lubridate.
 
-
-
 Nilsa Bermudez
 
 Vinayak Kamath
 
-### Extend GGPlot 
-Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels. 
+### Extend GGPlot
+Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels.
 
 ### ggplot2::geom_polygon:
 Author: Adam Gersowitz
@@ -148,11 +146,18 @@ This vignette looks at varisous ways to display visual data using ggplot2 and sp
 
 This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.
 
+
 ### Tidyverse stringr Extension:
 ### Original Author: Philip Tanofsky
 ### Extension Author: Adam Gersowitz
 
 In the original vignette by Philip he demonstrated 8 string functions: Detect, Count, Subset, Locate, Extract, MAtch, Replace, Split. In my extension I usede the same format that Philip was using and provided examples fo 5 more string functions: Length, Upper, Trim, Truncate, Sub.
+=======
+### Extend ggplot2::geom_polygon
+Extended this assignment to include more tidyverse-style data loading and manipulation. Also added more ggplot2 plot building/function writing.
+
+Michael Munguia
+
 
 ### Tidyverse: stringr
 Author: Michael Munguia
@@ -184,10 +189,10 @@ You should complete both parts of the assignment and make your submissions on th
 
 * https://acatlin.github.io/SPRING2020TIDYVERSE/forcats_makes_plots_better.html - how to use capabilities of forcats package to improve your plots!  Andy Catlin and Ait Elmouden Abdellah
 
-* http://rpubs.com/christianthieme/589762 (RMD file: PurrrMap-LoseTheForLoop.rmd) - Using purrr::map() and purrr::pmap() instead of for loops in R - By Christian Thieme 
+* http://rpubs.com/christianthieme/589762 (RMD file: PurrrMap-LoseTheForLoop.rmd) - Using purrr::map() and purrr::pmap() instead of for loops in R - By Christian Thieme
 
-### dbplyr 
-dbplyr is great and simple to use backend solution for working with data that is stored on a SQL server. dbplyr follows the same grammar and formatting as dplyr, but translates R code into a SQL query to directly access the SQL database. 
+### dbplyr
+dbplyr is great and simple to use backend solution for working with data that is stored on a SQL server. dbplyr follows the same grammar and formatting as dplyr, but translates R code into a SQL query to directly access the SQL database.
 
 ### forcats::fct_lump
 From the forcats package, this function allows you to quickly group levels of a categorical variable if they are above/below a certain count or proportion.
@@ -205,10 +210,16 @@ Instructions:
 Please follow along with the steps I took to prepare date for ggplot exploration.  I based this off of a previous project and added some annotations about the functions I called.
 
 ### tidyverse
+Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout)
+
+
+### An Example using TidyVerse packages - **ggplot2** and **dplyr**  and using tesla-stock-data-from-2010-to-2020 Data set from Kaggle
+=======
 Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout) 
 
 
 ### An Example using TidyVerse packages - **ggplot2** and **dplyr**  and using tesla-stock-data-from-2010-to-2020 Data set from Kaggle 
+
 Author: Vinayak Kamath
 
 #### Package Selected : **ggplot2**  and **dplyr**
@@ -217,11 +228,18 @@ Author: Vinayak Kamath
 
 ###### Usage:  
 ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+
+=======
   
 ###### Demo:  
 ggplot2 geom_line to show the stock price movement over the years for Tesla shares.  
 
 ##### Capability 2: **dplyr filter**
+
+###### Usage:  
+dplyr filter helps in filtering of data based on one or more conditions.    
+
+=======
   
 ###### Usage:  
 dplyr filter helps in filtering of data based on one or more conditions.    
@@ -230,6 +248,13 @@ dplyr filter helps in filtering of data based on one or more conditions.
 dplyr filter to show the days when the stock price for Tesla moved by over 15% (profit or loss) in one day.    
 
 ##### Capability 3: **dplyr group by and summarise**
+
+###### Usage:  
+dplyr group by and summarise helps in getting aggregated data from the given data set for one or more columns.      
+
+###### Demo:   
+dplyr group by and summarise to show the yearly minimum and maximum stock price close and arranging it in descending order of movement in a year.
+=======
   
 ###### Usage:  
 dplyr group by and summarise helps in getting aggregated data from the given data set for one or more columns.      
@@ -264,6 +289,9 @@ Nilsa Bermudez - Tidyverse recipe
 
 Vinayak Kamath
 
+### Extend GGPlot
+Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels.
+=======
 ### Extend GGPlot 
 Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels. 
 
@@ -341,6 +369,11 @@ You should complete both parts of the assignment and make your submissions on th
 
 * https://acatlin.github.io/SPRING2020TIDYVERSE/forcats_makes_plots_better.html - how to use capabilities of forcats package to improve your plots!  Andy Catlin and Ait Elmouden Abdellah
 
+* http://rpubs.com/christianthieme/589762 (RMD file: PurrrMap-LoseTheForLoop.rmd) - Using purrr::map() and purrr::pmap() instead of for loops in R - By Christian Thieme
+
+### dbplyr
+dbplyr is great and simple to use backend solution for working with data that is stored on a SQL server. dbplyr follows the same grammar and formatting as dplyr, but translates R code into a SQL query to directly access the SQL database.
+=======
 * http://rpubs.com/christianthieme/589762 (RMD file: PurrrMap-LoseTheForLoop.rmd) - Using purrr::map() and purrr::pmap() instead of for loops in R - By Christian Thieme 
 
 ### dbplyr 
@@ -371,10 +404,10 @@ Instructions:
 Please follow along with the steps I took to prepare date for ggplot exploration.  I based this off of a previous project and added some annotations about the functions I called.
 
 ### tidyverse
-Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout) 
+Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout)
 
 
-### An Example using TidyVerse packages - **ggplot2** and **dplyr**  and using tesla-stock-data-from-2010-to-2020 Data set from Kaggle 
+### An Example using TidyVerse packages - **ggplot2** and **dplyr**  and using tesla-stock-data-from-2010-to-2020 Data set from Kaggle
 Author: Vinayak Kamath
 
 #### Package Selected : **ggplot2**  and **dplyr**
@@ -383,25 +416,25 @@ Author: Vinayak Kamath
 
 ###### Usage:  
 ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
-  
+
 ###### Demo:  
 ggplot2 geom_line to show the stock price movement over the years for Tesla shares.  
 
 ##### Capability 2: **dplyr filter**
-  
+
 ###### Usage:  
 dplyr filter helps in filtering of data based on one or more conditions.    
-  
+
 ###### Demo:   
 dplyr filter to show the days when the stock price for Tesla moved by over 15% (profit or loss) in one day.    
 
 ##### Capability 3: **dplyr group by and summarise**
-  
+
 ###### Usage:  
 dplyr group by and summarise helps in getting aggregated data from the given data set for one or more columns.      
-    
+
 ###### Demo:   
-dplyr group by and summarise to show the yearly minimum and maximum stock price close and arranging it in descending order of movement in a year. 
+dplyr group by and summarise to show the yearly minimum and maximum stock price close and arranging it in descending order of movement in a year.
 
 ##### Extension of Vinayak Kamath's vignette
 Author: Ken Popkin
@@ -420,6 +453,13 @@ calling basic geometries, calling aes and when arguments should go inside/outsid
 Also includes some use of dplyr and lubridate.
 
 Nilsa Bermudez
+
+Vinayak Kamath
+
+### Extend GGPlot
+Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels.
+
+=======
 
 Vinayak Kamath
 
@@ -463,6 +503,12 @@ You should complete both parts of the assignment and make your submissions on th
 
 * https://acatlin.github.io/SPRING2020TIDYVERSE/forcats_makes_plots_better.html - how to use capabilities of forcats package to improve your plots!  Andy Catlin and Ait Elmouden Abdellah
 
+
+* http://rpubs.com/christianthieme/589762 (RMD file: PurrrMap-LoseTheForLoop.rmd) - Using purrr::map() and purrr::pmap() instead of for loops in R - By Christian Thieme
+
+### dbplyr
+dbplyr is great and simple to use backend solution for working with data that is stored on a SQL server. dbplyr follows the same grammar and formatting as dplyr, but translates R code into a SQL query to directly access the SQL database.
+=======
 * http://rpubs.com/christianthieme/589762 (RMD file: PurrrMap-LoseTheForLoop.rmd) - Using purrr::map() and purrr::pmap() instead of for loops in R - By Christian Thieme 
 
 ### dbplyr 
@@ -485,6 +531,11 @@ Instructions:
 Please follow along with the steps I took to prepare date for ggplot exploration.  I based this off of a previous project and added some annotations about the functions I called.
 
 ### tidyverse
+Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout)
+
+
+### An Example using TidyVerse packages - **ggplot2** and **dplyr**  and using tesla-stock-data-from-2010-to-2020 Data set from Kaggle
+=======
 Using `titanic` dataset from `Kaggle`, clean and manipulate data using various functions of tidyvesrse package. (Subhalaxmi Rout) 
 
 
@@ -497,11 +548,18 @@ Author: Vinayak Kamath
 
 ###### Usage:  
 ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+
+=======
   
 ###### Demo:  
 ggplot2 geom_line to show the stock price movement over the years for Tesla shares.  
 
 ##### Capability 2: **dplyr filter**
+
+###### Usage:  
+dplyr filter helps in filtering of data based on one or more conditions.    
+
+=======
   
 ###### Usage:  
 dplyr filter helps in filtering of data based on one or more conditions.    
@@ -510,6 +568,13 @@ dplyr filter helps in filtering of data based on one or more conditions.
 dplyr filter to show the days when the stock price for Tesla moved by over 15% (profit or loss) in one day.    
 
 ##### Capability 3: **dplyr group by and summarise**
+
+###### Usage:  
+dplyr group by and summarise helps in getting aggregated data from the given data set for one or more columns.      
+
+###### Demo:   
+dplyr group by and summarise to show the yearly minimum and maximum stock price close and arranging it in descending order of movement in a year.
+=======
   
 ###### Usage:  
 dplyr group by and summarise helps in getting aggregated data from the given data set for one or more columns.      
@@ -544,8 +609,8 @@ Nilsa Bermudez - Tidyverse recipe
 
 Vinayak Kamath
 
-### Extend GGPlot 
-Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels. 
+### Extend GGPlot
+Showcase a few more styles and customizations in GGPlot. Themes, guides, manual color fills, and labels.
 
 ### purrr functions for filtering lists
 Author: Bonnie Cooper
@@ -558,6 +623,15 @@ Author: Adam Gersowitz
 This vignette looks at varisous ways to display visual data using ggplot2 and specifically geom_polygon.
 
 This can be very useful when trying to convey information that has a physical correlation to people who aren't data scientists. For example population data on a map based on county or a blueprint of a building that shows where certain problems are occurring with certain tenants.
+
+
+### Kevin Potter 
+
+**Create**    
+This notebook goes through the use of map, map2, and pmap in the tidyverse purr package. We will start with the use of tibble, which is also contained in the purr package. We will use this function to create a list of numbers 1-26 to test the use of the map functions.  
+
+**Extend**  
+I created and extend assignment of the ggplo2 geom function by adding the functionality of plotly. A common open source package for easy to use interactivity with plots.  
 
 
 ### Group_by
@@ -597,6 +671,15 @@ Vignette for the popular stringr functions from the Tidyverse packages. The stri
 
 ### Explore and manipulate a dataset using dplyr and tidyr (by Abdellah Ait Elmouden)
 
+The purpose of this Vignette is to demonstrate how some of tidyverse packages can be used to explore and manipulate a dataset in R. A dataset was selected from the fivethirtyeight Package. the R markdown file can be accessed from [here](/tidyverse_AitElmouden)
+
+
+<!-- Start: Extended Dennis Pong Create by Vinayak on 04/15/2020-->
+## Using dplyr: mutate to add new variables that are functions of existing variables  
+## Using dplyr: arrange to changes the ordering of the rows  
+## Using dplyr: slice to Choose rows by their ordinal position in the tbl. Grouped tbls use the ordinal position within the group.  
+<!-- End: Extended Dennis Pong Create by Vinayak on 04/15/2020-->
+=======
 The purpose of this Vignette is to demonstrate how some of tidyverse packages can be used to explore and manipulate a dataset in R. A dataset was selected from the fivethirtyeight Package. the R markdown file can be accessed from [here](/tidyverse_AitElmouden) 
 
 
@@ -605,4 +688,5 @@ The purpose of this Vignette is to demonstrate how some of tidyverse packages ca
 ## Using dplyr: arrange to changes the ordering of the rows  
 ## Using dplyr: slice to Choose rows by their ordinal position in the tbl. Grouped tbls use the ordinal position within the group.  
 <!-- End: Extended Dennis Pong Create by Vinayak on 04/15/2020--> 
+
 
