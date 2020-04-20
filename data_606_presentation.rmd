@@ -1,0 +1,67 @@
+---
+title: "data_606_presentation"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+
+8.23 The Coast Starlight, Part II. Exercise 8.11 introduces data on the Coast Starlight Amtrak train that runs from Seattle to Los Angeles. The mean travel time from one stop to the next on the Coast Starlight is 129 mins, with a standard deviation of 113 minutes. The mean distance traveled from one stop to the next is 108 miles with a standard deviation of 99 miles. The correlation between travel time and distance is
+0.636.
+
+(a) Write the equation of the regression line for predicting travel time.
+
+```{r}
+y <- coast_starlight$travel_time
+x <-  coast_starlight$dist
+lm(y ~ x)
+```
+
+Time = .7259 (distance) + 50.8842
+
+
+
+(b) Interpret the slope and the intercept in this context.
+
+Intercept: When distance is 0 miles the travel time is 50 minutes.
+
+Slope: For every increase in mile traveled the time it takes to get there increases by .7259 minutes.
+
+
+(c) Calculate R2 of the regression line for predicting travel time from distance traveled for the Coast Starlight, and interpret R2 in the context of the application.
+
+```{r}
+cs_line <- lm(y ~ x)
+summary(cs_line)
+```
+r2 = .4044
+
+40.44%  of the variance from the true time and predicted time can be explained by my the model.
+
+
+(d) The distance between Santa Barbara and Los Angeles is 103 miles. Use the model to estimate the time it takes for the Starlight to travel between these two cities.
+
+```{r}
+distance <- 103
+time <- (.7259 *distance) + 50.8842
+time
+```
+I would estimate it would take approximately 125.65 minutes to get from Santa Barbara to LA.
+
+
+(e) It actually takes the Coast Starlight about 168 mins to travel from Santa Barbara to Los Angeles. Calculate the residual and explain the meaning of this residual value.
+
+```{r}
+predicted <- time
+actual <-  168
+residual <- actual - predicted
+residual
+```
+Our model underestimated the travel time from Santa Barbara to LA by about 42 minutes.
+
+(f) Suppose Amtrak is considering adding a stop to the Coast Starlight 500 miles away from Los Angeles. Would it be appropriate to use this linear model to predict the travel time from Los Angeles to this point?
+
+500 miles is almost double the length of any train in the sample. A 500 mile train ride would be considered an outlier in this dataset. I would not consider this model a good way to predict travel time.
+
