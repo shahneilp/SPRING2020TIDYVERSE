@@ -1,8 +1,8 @@
 ---
-title: "maloney-extend"
-author: "Patrick Maloney"
-date: "4/19/2020"
-output: html_document
+title: 'Neil Shah: DATA 607: Tidvyverse Project'
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
