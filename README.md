@@ -275,6 +275,8 @@ Abdellah Ait Elmouden
 Author: Neil Shah
 Extended this vignette to also include how to deal with missing values
 
+Link: https://github.com/acatlin/SPRING2020TIDYVERSE/blob/master/tidyverse-SubhalaxmiRoutNeilShah.Rmd
+
 Abdellah Ait Elmouden
 ### Basic Functionalities of GGplot using polling data
 Author: Samuel Bellows
@@ -710,12 +712,6 @@ Assignment shows examples of stringr, tidyr, tibble and ggplot.
 ## Using dplyr: slice to Choose rows by their ordinal position in the tbl. Grouped tbls use the ordinal position within the group.  
 <!-- End: Extended Dennis Pong Create by Vinayak on 04/15/2020--> 
 
-======
-### extended Neil Shah's tidyverse:
-Author: Manolis Manoli
-made some changes to fomatting and added filtering example and grouping and averaging
-=======
-=======
 
 <!-- Start: Extended Vincent Miceli Created by Bruno de Melo on 04/19/2020--> 
 ## Using forcats: functions fct_recode and fct_lump 
@@ -724,4 +720,5 @@ made some changes to fomatting and added filtering example and grouping and aver
  
 <!-- End: Extended Vincent Miceli Created by Bruno de Melo on 04/19/2020--> 
 =======
+
 
