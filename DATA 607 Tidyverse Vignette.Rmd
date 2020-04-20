@@ -1,0 +1,204 @@
+---
+title: "DATA 607 Tidyverse Assignment"
+output: html_document
+---
+
+***Gehad Gad***
+
+***March 27th, 2020***
+
+
+**Assignment Instruction**
+
+My task here is to Create an Example. Using one or more TidyVerse packages, and any dataset from fivethirtyeight.com or Kaggle, create a programming sample “vignette” that demonstrates how to use one or more of the capabilities of the selected TidyVerse package with your selected dataset.
+
+I chose a heart disease dataset from Kaggle.
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library (dplyr)
+```
+
+
+***Columns meanings:***
+
+age:age in years.
+
+sex:(1 = male; 0 = female)
+
+cpchest: pain type. Type of chest-pain experienced by the individual:
+1 = typical angina
+2 = atypical angina
+3 = non-angina pain
+4 = asymptomatic angina
+
+trestbps: Resting blood pressure (in mm Hg on admission to the hospital).
+
+chol:Serum cholestoral in mg/dl.
+
+fbs:(fasting blood sugar > 120 mg/dl) (1 = true; 0 = false).
+
+restecg: Resting electrocardiographic results:
+0 = normal
+1 = ST-T wave abnormality
+2 = left ventricle hyperthrophy
+
+thalach: Maximum heart rate achieved.
+
+exang: Exercise induced angina (1 = yes; 0 = no).
+
+oldpeak: ST depression induced by exercise relative to rest.
+
+slope: the slope of the peak exercise ST segment.
+
+ca: number of major vessels (0-3) colored by flourosopy.
+
+thal: 3 = normal; 6 = fixed defect; 7 = reversable defect.
+
+target: 1 or 0.
+
+
+```{r}
+#Source: https://www.kaggle.com/ronitf/heart-disease-uci/data#heart.csv
+
+Heart <- read.csv("https://github.com/GehadGad/Heart-Dataset/raw/master/HeartDisease.csv")
+
+#Display the first few rows in the data.
+
+head(Heart)
+
+```
+
+```{r}
+#Rename columns:
+
+names (Heart) <- c("Age","Gender", "Chest_Pain_Type","Resting_Blood_Pressure","Serum_Cholesterol","Fasting_Blood_Sugar","Resting_ECG","Max_Heart_Rate_Achieved","Exercise_Induced_Angina","ST_Depression_Exercise","Peak_Exercise_ST_Segment","Num_Major_Vessels_Flouro", "Thalassemia","Diagnosis_Heart_Disease")
+
+#Display the first few rows in the data.
+
+head(Heart)
+
+```
+
+```{r}
+#Display the numbers of rows and columns in the dataset.
+
+dim(Heart)
+```
+The data contain 303 observation and 12 vaiables.
+
+```{r}
+#Another way to check the number of rows, columns, and types.
+str(Heart)
+```
+
+
+```{r}
+#Check if there is any NA values.
+
+sum(is.na(Heart))
+```
+```{r}
+#Matrix coercion to tibble. as_tibble is one of the funtions in dpyr.
+
+tibble <- as_tibble(Heart)
+```
+Coerce to tibble. "Enable preserving row names when coercing matrix and time-series-like objects with row names".
+
+
+```{r}
+#Set features as factors. 
+Heart$Age <- as.factor(Heart$Age)
+Heart$Gender <- as.factor (Heart$Gender)
+Heart$Diagnosis_Heart_Disease <- as.factor (Heart$Diagnosis_Heart_Disease)
+```
+
+```{r}
+summary(Heart)
+```
+
+The summary function explains alot of things about the data. In this data, we can have some knowledge about our data features and observation. For example, minimum, maximum, mean, median, quarters. 
+
+```{r}
+#In addition to the summary function, we can use summarise or summarize to get more statistical parameters for a column in one step using summarize function.
+
+#Resting_Blood_Pressure column
+
+Heart %>%
+  summarise (Mean = mean(Resting_Blood_Pressure ), Max = max(Resting_Blood_Pressure), Mean = mean(Resting_Blood_Pressure ), Variance= var(Resting_Blood_Pressure ), SD= sd(Resting_Blood_Pressure))
+
+```
+
+```{r}
+ggplot(Heart,aes(x= Num_Major_Vessels_Flouro,fill= Diagnosis_Heart_Disease)) +
+  geom_bar()+
+  labs(y ="count",
+       title = "Heart disease diagnosis based on number of major vessels")
+
+
+```
+
+This graph shows that major vessel 0 causes heart diseases the most. 
+
+```{r}
+
+ggplot(Heart,aes(x= Max_Heart_Rate_Achieved,fill= Diagnosis_Heart_Disease)) +
+  geom_bar()+
+  labs(y ="count",
+       title = "Heart disease diagnosis Max Heart Rate Achieved")
+
+```
+
+Heart rate is also important in diagnosis of heart disease
+
+
+```{r}
+ggplot(Heart,aes(x= Gender,fill= Diagnosis_Heart_Disease)) +
+  geom_bar()+
+  labs(y ="Age",
+       title = "Heart disease diagnosis rate distribution by Gender and Age")
+
+```
+
+This graph show that males are diagnosed with heart disease more than females.
+
+
+```{r}
+ggplot(Heart,aes(x= Chest_Pain_Type,fill= Diagnosis_Heart_Disease)) +
+  theme_bw() +
+  geom_bar() +
+  facet_wrap(~Gender) +
+  labs(y ="count",
+       title = "Heart Disease distribution by Gender based on Chest_Pain_Type")
+
+```
+
+This graph shows that people (males and females) experience chest pain (2), which is (non-angina pain) have higher chance of having a heart disease.This graph also shows that Males have higher exposure to have heart diseases if they suffer from (typical angina, atypical angina, or asymptomatic angina)
+
+
+```{r}
+ggplot(Heart,aes(x= Resting_Blood_Pressure,fill= Diagnosis_Heart_Disease)) +
+  geom_bar()+
+   labs(y ="count",
+       title = "Heart Disease diagnostic Rates based on Resting_Blood_Pressure")
+ 
+```
+
+
+```{r}
+ggplot(Heart,aes(x= Serum_Cholesterol,fill= Diagnosis_Heart_Disease)) +
+  geom_bar()+
+  labs(y ="Freq",
+       title = "Heart Disease diagnostic Rates based on Serum_Cholesterol")
+```
+
+```{r}
+ggplot(Heart, aes(ST_Depression_Exercise, Resting_Blood_Pressure, colour = Thalassemia)) + 
+    geom_point()
+
+```
+
+***Conclusion***
+
+Heart disease is a major healt concern and there are factors that people should be aware of.In addition to age, Chest Pain, Cholesterol, and Blood Pressure are important factors to consider.
