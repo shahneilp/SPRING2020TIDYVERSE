@@ -701,3 +701,12 @@ The purpose of this Vignette is to demonstrate how some of tidyverse packages ca
 <!-- End: Extended Dennis Pong Create by Vinayak on 04/15/2020--> 
 
 
+<!-- Start: Extended Vincent Miceli Created by Bruno de Melo on 04/19/2020--> 
+## Using forcats: functions fct_recode and fct_lump 
+## fct_recode: allows to change value of factors, also allows for combining factors into groups
+## fct_lump: allows to lump together group of factors. Useful for make a plot or table simpler
+ 
+<!-- End: Extended Vincent Miceli Created by Bruno de Melo on 04/19/2020--> 
+=======
+
+
