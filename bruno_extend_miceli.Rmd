@@ -1,0 +1,74 @@
+---
+title: "Tidyverse Create"
+author: "Vincent Miceli"
+date: "3/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+The tidyverse packages make it much easier to clean and tidy your data, preparing it for analysis.  An untidy dataset will make it almost impossible to find any meaningful conclusions.  One package in the tidyverse that is interesting is the forcats package, meant for handling categorical variables.  Along with dplyr and ggplot2, we can see the usefulness of forcats.
+
+```{r}
+pacman::p_load(tidyr, dplyr, ggplot2, forcats)
+```
+
+We import the countries of the world dataset from kaggle
+
+```{r}
+countries <- read.csv('countries_world.csv')
+colnames(countries)
+```
+
+We can see there are various variables about each country, both categorical and continuous.  One simple way to use forcats is to see the count of each factor of a variable in order.
+
+```{r}
+ggplot(countries, aes(x = fct_infreq(Region))) + 
+  xlab('Region') + 
+  geom_bar() + 
+  coord_flip()
+```
+
+## Extension - Modifying Factor Levels
+
+1: fct_recode()   
+It allows for changing values of each level. For example, Region column shows a region named 'C.W. of Ind. States'. As per Wikipedia, it refers to the Commonwealth of Independent States (CIS) is an international organization consisting of 11 of the 15 states of the former Soviet Union, the exceptions being the three Baltic states and, since 2009, Georgia. 
+
+Let's change it to CIS for a shorter label.
+
+
+```{r}
+countries %>% mutate(Region = fct_recode(Region, "CIS"="C.W. OF IND. STATES ")) %>% count(Region)
+```
+    
+It allows also for combining groups, assigning multiple old levels to the same new level. Let's aggregate Asia (ex. near east) + Near east into ASIA, and Latin America and Northern America into Americas.
+
+```{r}
+countries %>% mutate(Region = fct_recode(Region,
+                                         "AMERICAS"="NORTHERN AMERICA                   ",
+                                         "AMERICAS"="LATIN AMER. & CARIB    ",
+                                         "ASIA" = "ASIA (EX. NEAR EAST)         ",
+                                         "ASIA" = "NEAR EAST                          "
+                                         )) %>% count(Region)
+```
+2: fct_lump    
+Function allows to lump together small groups to make a table or a plot simpler.
+
+```{r}
+countries %>% mutate(Region=fct_lump(Region,n=2)) %>% count(Region, sort =TRUE)
+```
+
+Parameter 'n' defines how many groups to keep. It aggregates around the largest factors.
+
+```{r}
+countries %>% mutate(Region=fct_lump(Region,n=5)) %>% count(Region, sort =TRUE)
+```
+
+
+## Conclusion Extension - Modifying Factor Levels
+
+Functions *fct_recode* and *fct_lump* are very useful and powerful when dealing with datesets containing factors.

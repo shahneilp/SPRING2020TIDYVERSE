@@ -1,7 +1,7 @@
 ---
--title: "How to use dplyr"
-author: "Patrick Maloney"
-date: "3/28/2020"
+title: "How to use dplyr"
+author: "Patrick Maloney extended by Philip Tanofsky"
+date: "3/28/2020 (extended on 4/19/2020)"
 output: html_document
 ---
 
@@ -20,6 +20,8 @@ df <- read.csv("https://raw.githubusercontent.com/pmalo46/SPRING2020TIDYVERSE/ma
 head(df)
 ```
 
+### filter function
+
 One of the most useful functions in the dplyr package is the filter function, which allows us to filter down to only rows that meet a certain condition.
 
 ```{r}
@@ -28,14 +30,16 @@ filter(df, Win_Loss == 1)
 
 The table above shows the winners of the last five seasons. Another useful function is the group_by function.
 
+### group_by function
+
 ```{r}
 group_by(df, State) %>%
   summarise(mean(Height..cm.))
-
-
 ```
 
 The chunk above uses the group_by method to group the contestants by which state they are from, and then take the average height by state.  Another dplyr method, 'summarise' is on display here, which allows us to reduce multiple values down to a single value. Another useful function is arrange()
+
+### arrange function
 
 ```{r}
 as_tibble(tail(arrange(df, Occupation), 15))
@@ -44,3 +48,57 @@ as_tibble(tail(arrange(df, Occupation), 15))
 The chunk above uses arrange() to sort the contestants alphabetically, while the as_tibble method makes the output more easily viewable.
 
 These demonstrate some of the many uses of the great dplyr package.
+
+## Extension
+
+The dplyr package provides several other powerful functions including the select and mutate functions. The following examples highlight the functions' value and ease-of-use on the same data set of contestants on the Bachelorette season's 11-15.
+
+### select function
+
+Another useful function in the dplyr package is the select function, which allows us to select variables (or columns) by name.
+
+```{r}
+as_tibble(select(df, ends_with("Color")))
+```
+
+The tibble above includes only the variables that end with the string 'Color' which results in 'Hair.Color' and 'Eye.Color'.
+
+```{r}
+as_tibble(select(df, -ends_with("Color")))
+```
+
+The tibble above show the simplicity in removing a variable by using the minus symbol (-) as the two variables ending in 'Color' are no longer present.
+
+```{r}
+as_tibble(select(df, Occupation, everything()))
+```
+
+The resulting tibble above move the Occupation variable to the front of the data frame and output as the tibble.
+
+```{r}
+# first select all variables except Season, then re-select Season
+as_tibble(select(df, -Season, Season))
+```
+
+The inverse of moving a variable to the front, the select function can easily move a variable to the end of the data frame as shown above with the Season variable.
+
+### Mutate
+
+The dplyr package provides useful tool in the mutate function, which can add or transform variables.
+
+```{r}
+df %>% mutate(
+  Year.Of.Birth = 2020 - Age,
+  Height..inch = Height..cm. / 2.54 # convert to inches
+) %>% head()
+```
+
+The resulting data frame above shows the capability of the mutate function to add new variables based on existing variables. The 'Year.Of.Birth' is calculated from the existing variable of 'Age', and the 'Height..inch' is based on the conversion from the existing variable 'Height..cm.'.
+
+```{r}
+df %>% mutate(State = NULL) %>% head()
+```
+
+The mutate function can easily remove variable by simply setting a variable to NULL as shown above with the variable 'State'.
+
+The additional functions and examples outline some of the valuable uses of the powerful dplyr package.

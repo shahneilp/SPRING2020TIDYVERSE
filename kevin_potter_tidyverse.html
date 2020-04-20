@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Patrick Maloney extended by Philip Tanofsky" />
 
 
-<title>How to use dplyr</title>
+<title>kevin_potter_tidyverse</title>
 
 <script>/*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */
 !function(a,b){"object"==typeof module&&"object"==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error("jQuery requires a window with a document");return b(a)}:b(a)}("undefined"!=typeof window?window:this,function(a,b){var c=[],d=c.slice,e=c.concat,f=c.push,g=c.indexOf,h={},i=h.toString,j=h.hasOwnProperty,k={},l="1.11.3",m=function(a,b){return new m.fn.init(a,b)},n=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,o=/^-ms-/,p=/-([\da-z])/gi,q=function(a,b){return b.toUpperCase()};m.fn=m.prototype={jquery:l,constructor:m,selector:"",length:0,toArray:function(){return d.call(this)},get:function(a){return null!=a?0>a?this[a+this.length]:this[a]:d.call(this)},pushStack:function(a){var b=m.merge(this.constructor(),a);return b.prevObject=this,b.context=this.context,b},each:function(a,b){return m.each(this,a,b)},map:function(a){return this.pushStack(m.map(this,function(b,c){return a.call(b,c,b)}))},slice:function(){return this.pushStack(d.apply(this,arguments))},first:function(){return this.eq(0)},last:function(){return this.eq(-1)},eq:function(a){var b=this.length,c=+a+(0>a?b:0);return this.pushStack(c>=0&&b>c?[this[c]]:[])},end:function(){return this.prevObject||this.constructor(null)},push:f,sort:c.sort,splice:c.splice},m.extend=m.fn.extend=function(){var a,b,c,d,e,f,g=arguments[0]||{},h=1,i=arguments.length,j=!1;for("boolean"==typeof g&&(j=g,g=arguments[h]||{},h++),"object"==typeof g||m.isFunction(g)||(g={}),h===i&&(g=this,h--);i>h;h++)if(null!=(e=arguments[h]))for(d in e)a=g[d],c=e[d],g!==c&&(j&&c&&(m.isPlainObject(c)||(b=m.isArray(c)))?(b?(b=!1,f=a&&m.isArray(a)?a:[]):f=a&&m.isPlainObject(a)?a:{},g[d]=m.extend(j,f,c)):void 0!==c&&(g[d]=c));return g},m.extend({expando:"jQuery"+(l+Math.random()).replace(/\D/g,""),isReady:!0,error:function(a){throw new Error(a)},noop:function(){},isFunction:function(a){return"function"===m.type(a)},isArray:Array.isArray||function(a){return"array"===m.type(a)},isWindow:function(a){return null!=a&&a==a.window},isNumeric:function(a){return!m.isArray(a)&&a-parseFloat(a)+1>=0},isEmptyObject:function(a){var b;for(b in a)return!1;return!0},isPlainObject:function(a){var b;if(!a||"object"!==m.type(a)||a.nodeType||m.isWindow(a))return!1;try{if(a.constructor&&!j.call(a,"constructor")&&!j.call(a.constructor.prototype,"isPrototypeOf"))return!1}catch(c){return!1}if(k.ownLast)for(b in a)return j.call(a,b);for(b in a);return void 0===b||j.call(a,b)},type:function(a){return null==a?a+"":"object"==typeof a||"function"==typeof a?h[i.call(a)]||"object":typeof a},globalEval:function(b){b&&m.trim(b)&&(a.execScript||function(b){a.eval.call(a,b)})(b)},camelCase:function(a){return a.replace(o,"ms-").replace(p,q)},nodeName:function(a,b){return a.nodeName&&a.nodeName.toLowerCase()===b.toLowerCase()},each:function(a,b,c){var d,e=0,f=a.length,g=r(a);if(c){if(g){for(;f>e;e++)if(d=b.apply(a[e],c),d===!1)break}else for(e in a)if(d=b.apply(a[e],c),d===!1)break}else if(g){for(;f>e;e++)if(d=b.call(a[e],e,a[e]),d===!1)break}else for(e in a)if(d=b.call(a[e],e,a[e]),d===!1)break;return a},trim:function(a){return null==a?"":(a+"").replace(n,"")},makeArray:function(a,b){var c=b||[];return null!=a&&(r(Object(a))?m.merge(c,"string"==typeof a?[a]:a):f.call(c,a)),c},inArray:function(a,b,c){var d;if(b){if(g)return g.call(b,a,c);for(d=b.length,c=c?0>c?Math.max(0,d+c):c:0;d>c;c++)if(c in b&&b[c]===a)return c}return-1},merge:function(a,b){var c=+b.length,d=0,e=a.length;while(c>d)a[e++]=b[d++];if(c!==c)while(void 0!==b[d])a[e++]=b[d++];return a.length=e,a},grep:function(a,b,c){for(var d,e=[],f=0,g=a.length,h=!c;g>f;f++)d=!b(a[f],f),d!==h&&e.push(a[f]);return e},map:function(a,b,c){var d,f=0,g=a.length,h=r(a),i=[];if(h)for(;g>f;f++)d=b(a[f],f,c),null!=d&&i.push(d);else for(f in a)d=b(a[f],f,c),null!=d&&i.push(d);return e.apply([],i)},guid:1,proxy:function(a,b){var c,e,f;return"string"==typeof b&&(f=a[b],b=a,a=f),m.isFunction(a)?(c=d.call(arguments,2),e=function(){return a.apply(b||this,c.concat(d.call(arguments)))},e.guid=a.guid=a.guid||m.guid++,e):void 0},now:function(){return+new Date},support:k}),m.each("Boolean Number String Function Array Date RegExp Object Error".split(" "),function(a,b){h["[object "+b+"]"]=b.toLowerCase()});function r(a){var b="length"in a&&a.length,c=m.type(a);return"function"===c||m.isWindow(a)?!1:1===a.nodeType&&b?!0:"array"===c||0===b||"number"==typeof b&&b>0&&b-1 in a}var s=function(a){var b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u="sizzle"+1*new Date,v=a.document,w=0,x=0,y=ha(),z=ha(),A=ha(),B=function(a,b){return a===b&&(l=!0),0},C=1<<31,D={}.hasOwnProperty,E=[],F=E.pop,G=E.push,H=E.push,I=E.slice,J=function(a,b){for(var c=0,d=a.length;d>c;c++)if(a[c]===b)return c;return-1},K="checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",L="[\\x20\\t\\r\\n\\f]",M="(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",N=M.replace("w","w#"),O="\\["+L+"*("+M+")(?:"+L+"*([*^$|!~]?=)"+L+"*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|("+N+"))|)"+L+"*\\]",P=":("+M+")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|"+O+")*)|.*)\\)|)",Q=new RegExp(L+"+","g"),R=new RegExp("^"+L+"+|((?:^|[^\\\\])(?:\\\\.)*)"+L+"+$","g"),S=new RegExp("^"+L+"*,"+L+"*"),T=new RegExp("^"+L+"*([>+~]|"+L+")"+L+"*"),U=new RegExp("="+L+"*([^\\]'\"]*?)"+L+"*\\]","g"),V=new RegExp(P),W=new RegExp("^"+N+"$"),X={ID:new RegExp("^#("+M+")"),CLASS:new RegExp("^\\.("+M+")"),TAG:new RegExp("^("+M.replace("w","w*")+")"),ATTR:new RegExp("^"+O),PSEUDO:new RegExp("^"+P),CHILD:new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\("+L+"*(even|odd|(([+-]|)(\\d*)n|)"+L+"*(?:([+-]|)"+L+"*(\\d+)|))"+L+"*\\)|)","i"),bool:new RegExp("^(?:"+K+")$","i"),needsContext:new RegExp("^"+L+"*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\("+L+"*((?:-\\d)?\\d*)"+L+"*\\)|)(?=[^-]|$)","i")},Y=/^(?:input|select|textarea|button)$/i,Z=/^h\d$/i,$=/^[^{]+\{\s*\[native \w/,_=/^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,aa=/[+~]/,ba=/'|\\/g,ca=new RegExp("\\\\([\\da-f]{1,6}"+L+"?|("+L+")|.)","ig"),da=function(a,b,c){var d="0x"+b-65536;return d!==d||c?b:0>d?String.fromCharCode(d+65536):String.fromCharCode(d>>10|55296,1023&d|56320)},ea=function(){m()};try{H.apply(E=I.call(v.childNodes),v.childNodes),E[v.childNodes.length].nodeType}catch(fa){H={apply:E.length?function(a,b){G.apply(a,I.call(b))}:function(a,b){var c=a.length,d=0;while(a[c++]=b[d++]);a.length=c-1}}}function ga(a,b,d,e){var f,h,j,k,l,o,r,s,w,x;if((b?b.ownerDocument||b:v)!==n&&m(b),b=b||n,d=d||[],k=b.nodeType,"string"!=typeof a||!a||1!==k&&9!==k&&11!==k)return d;if(!e&&p){if(11!==k&&(f=_.exec(a)))if(j=f[1]){if(9===k){if(h=b.getElementById(j),!h||!h.parentNode)return d;if(h.id===j)return d.push(h),d}else if(b.ownerDocument&&(h=b.ownerDocument.getElementById(j))&&t(b,h)&&h.id===j)return d.push(h),d}else{if(f[2])return H.apply(d,b.getElementsByTagName(a)),d;if((j=f[3])&&c.getElementsByClassName)return H.apply(d,b.getElementsByClassName(j)),d}if(c.qsa&&(!q||!q.test(a))){if(s=r=u,w=b,x=1!==k&&a,1===k&&"object"!==b.nodeName.toLowerCase()){o=g(a),(r=b.getAttribute("id"))?s=r.replace(ba,"\\$&"):b.setAttribute("id",s),s="[id='"+s+"'] ",l=o.length;while(l--)o[l]=s+ra(o[l]);w=aa.test(a)&&pa(b.parentNode)||b,x=o.join(",")}if(x)try{return H.apply(d,w.querySelectorAll(x)),d}catch(y){}finally{r||b.removeAttribute("id")}}}return i(a.replace(R,"$1"),b,d,e)}function ha(){var a=[];function b(c,e){return a.push(c+" ")>d.cacheLength&&delete b[a.shift()],b[c+" "]=e}return b}function ia(a){return a[u]=!0,a}function ja(a){var b=n.createElement("div");try{return!!a(b)}catch(c){return!1}finally{b.parentNode&&b.parentNode.removeChild(b),b=null}}function ka(a,b){var c=a.split("|"),e=a.length;while(e--)d.attrHandle[c[e]]=b}function la(a,b){var c=b&&a,d=c&&1===a.nodeType&&1===b.nodeType&&(~b.sourceIndex||C)-(~a.sourceIndex||C);if(d)return d;if(c)while(c=c.nextSibling)if(c===b)return-1;return a?1:-1}function ma(a){return function(b){var c=b.nodeName.toLowerCase();return"input"===c&&b.type===a}}function na(a){return function(b){var c=b.nodeName.toLowerCase();return("input"===c||"button"===c)&&b.type===a}}function oa(a){return ia(function(b){return b=+b,ia(function(c,d){var e,f=a([],c.length,b),g=f.length;while(g--)c[e=f[g]]&&(c[e]=!(d[e]=c[e]))})})}function pa(a){return a&&"undefined"!=typeof a.getElementsByTagName&&a}c=ga.support={},f=ga.isXML=function(a){var b=a&&(a.ownerDocument||a).documentElement;return b?"HTML"!==b.nodeName:!1},m=ga.setDocument=function(a){var b,e,g=a?a.ownerDocument||a:v;return g!==n&&9===g.nodeType&&g.documentElement?(n=g,o=g.documentElement,e=g.defaultView,e&&e!==e.top&&(e.addEventListener?e.addEventListener("unload",ea,!1):e.attachEvent&&e.attachEvent("onunload",ea)),p=!f(g),c.attributes=ja(function(a){return a.className="i",!a.getAttribute("className")}),c.getElementsByTagName=ja(function(a){return a.appendChild(g.createComment("")),!a.getElementsByTagName("*").length}),c.getElementsByClassName=$.test(g.getElementsByClassName),c.getById=ja(function(a){return o.appendChild(a).id=u,!g.getElementsByName||!g.getElementsByName(u).length}),c.getById?(d.find.ID=function(a,b){if("undefined"!=typeof b.getElementById&&p){var c=b.getElementById(a);return c&&c.parentNode?[c]:[]}},d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){return a.getAttribute("id")===b}}):(delete d.find.ID,d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){var c="undefined"!=typeof a.getAttributeNode&&a.getAttributeNode("id");return c&&c.value===b}}),d.find.TAG=c.getElementsByTagName?function(a,b){return"undefined"!=typeof b.getElementsByTagName?b.getElementsByTagName(a):c.qsa?b.querySelectorAll(a):void 0}:function(a,b){var c,d=[],e=0,f=b.getElementsByTagName(a);if("*"===a){while(c=f[e++])1===c.nodeType&&d.push(c);return d}return f},d.find.CLASS=c.getElementsByClassName&&function(a,b){return p?b.getElementsByClassName(a):void 0},r=[],q=[],(c.qsa=$.test(g.querySelectorAll))&&(ja(function(a){o.appendChild(a).innerHTML="<a id='"+u+"'></a><select id='"+u+"-\f]' msallowcapture=''><option selected=''></option></select>",a.querySelectorAll("[msallowcapture^='']").length&&q.push("[*^$]="+L+"*(?:''|\"\")"),a.querySelectorAll("[selected]").length||q.push("\\["+L+"*(?:value|"+K+")"),a.querySelectorAll("[id~="+u+"-]").length||q.push("~="),a.querySelectorAll(":checked").length||q.push(":checked"),a.querySelectorAll("a#"+u+"+*").length||q.push(".#.+[+~]")}),ja(function(a){var b=g.createElement("input");b.setAttribute("type","hidden"),a.appendChild(b).setAttribute("name","D"),a.querySelectorAll("[name=d]").length&&q.push("name"+L+"*[*^$|!~]?="),a.querySelectorAll(":enabled").length||q.push(":enabled",":disabled"),a.querySelectorAll("*,:x"),q.push(",.*:")})),(c.matchesSelector=$.test(s=o.matches||o.webkitMatchesSelector||o.mozMatchesSelector||o.oMatchesSelector||o.msMatchesSelector))&&ja(function(a){c.disconnectedMatch=s.call(a,"div"),s.call(a,"[s!='']:x"),r.push("!=",P)}),q=q.length&&new RegExp(q.join("|")),r=r.length&&new RegExp(r.join("|")),b=$.test(o.compareDocumentPosition),t=b||$.test(o.contains)?function(a,b){var c=9===a.nodeType?a.documentElement:a,d=b&&b.parentNode;return a===d||!(!d||1!==d.nodeType||!(c.contains?c.contains(d):a.compareDocumentPosition&&16&a.compareDocumentPosition(d)))}:function(a,b){if(b)while(b=b.parentNode)if(b===a)return!0;return!1},B=b?function(a,b){if(a===b)return l=!0,0;var d=!a.compareDocumentPosition-!b.compareDocumentPosition;return d?d:(d=(a.ownerDocument||a)===(b.ownerDocument||b)?a.compareDocumentPosition(b):1,1&d||!c.sortDetached&&b.compareDocumentPosition(a)===d?a===g||a.ownerDocument===v&&t(v,a)?-1:b===g||b.ownerDocument===v&&t(v,b)?1:k?J(k,a)-J(k,b):0:4&d?-1:1)}:function(a,b){if(a===b)return l=!0,0;var c,d=0,e=a.parentNode,f=b.parentNode,h=[a],i=[b];if(!e||!f)return a===g?-1:b===g?1:e?-1:f?1:k?J(k,a)-J(k,b):0;if(e===f)return la(a,b);c=a;while(c=c.parentNode)h.unshift(c);c=b;while(c=c.parentNode)i.unshift(c);while(h[d]===i[d])d++;return d?la(h[d],i[d]):h[d]===v?-1:i[d]===v?1:0},g):n},ga.matches=function(a,b){return ga(a,null,null,b)},ga.matchesSelector=function(a,b){if((a.ownerDocument||a)!==n&&m(a),b=b.replace(U,"='$1']"),!(!c.matchesSelector||!p||r&&r.test(b)||q&&q.test(b)))try{var d=s.call(a,b);if(d||c.disconnectedMatch||a.document&&11!==a.document.nodeType)return d}catch(e){}return ga(b,n,null,[a]).length>0},ga.contains=function(a,b){return(a.ownerDocument||a)!==n&&m(a),t(a,b)},ga.attr=function(a,b){(a.ownerDocument||a)!==n&&m(a);var e=d.attrHandle[b.toLowerCase()],f=e&&D.call(d.attrHandle,b.toLowerCase())?e(a,b,!p):void 0;return void 0!==f?f:c.attributes||!p?a.getAttribute(b):(f=a.getAttributeNode(b))&&f.specified?f.value:null},ga.error=function(a){throw new Error("Syntax error, unrecognized expression: "+a)},ga.uniqueSort=function(a){var b,d=[],e=0,f=0;if(l=!c.detectDuplicates,k=!c.sortStable&&a.slice(0),a.sort(B),l){while(b=a[f++])b===a[f]&&(e=d.push(f));while(e--)a.splice(d[e],1)}return k=null,a},e=ga.getText=function(a){var b,c="",d=0,f=a.nodeType;if(f){if(1===f||9===f||11===f){if("string"==typeof a.textContent)return a.textContent;for(a=a.firstChild;a;a=a.nextSibling)c+=e(a)}else if(3===f||4===f)return a.nodeValue}else while(b=a[d++])c+=e(b);return c},d=ga.selectors={cacheLength:50,createPseudo:ia,match:X,attrHandle:{},find:{},relative:{">":{dir:"parentNode",first:!0}," ":{dir:"parentNode"},"+":{dir:"previousSibling",first:!0},"~":{dir:"previousSibling"}},preFilter:{ATTR:function(a){return a[1]=a[1].replace(ca,da),a[3]=(a[3]||a[4]||a[5]||"").replace(ca,da),"~="===a[2]&&(a[3]=" "+a[3]+" "),a.slice(0,4)},CHILD:function(a){return a[1]=a[1].toLowerCase(),"nth"===a[1].slice(0,3)?(a[3]||ga.error(a[0]),a[4]=+(a[4]?a[5]+(a[6]||1):2*("even"===a[3]||"odd"===a[3])),a[5]=+(a[7]+a[8]||"odd"===a[3])):a[3]&&ga.error(a[0]),a},PSEUDO:function(a){var b,c=!a[6]&&a[2];return X.CHILD.test(a[0])?null:(a[3]?a[2]=a[4]||a[5]||"":c&&V.test(c)&&(b=g(c,!0))&&(b=c.indexOf(")",c.length-b)-c.length)&&(a[0]=a[0].slice(0,b),a[2]=c.slice(0,b)),a.slice(0,3))}},filter:{TAG:function(a){var b=a.replace(ca,da).toLowerCase();return"*"===a?function(){return!0}:function(a){return a.nodeName&&a.nodeName.toLowerCase()===b}},CLASS:function(a){var b=y[a+" "];return b||(b=new RegExp("(^|"+L+")"+a+"("+L+"|$)"))&&y(a,function(a){return b.test("string"==typeof a.className&&a.className||"undefined"!=typeof a.getAttribute&&a.getAttribute("class")||"")})},ATTR:function(a,b,c){return function(d){var e=ga.attr(d,a);return null==e?"!="===b:b?(e+="","="===b?e===c:"!="===b?e!==c:"^="===b?c&&0===e.indexOf(c):"*="===b?c&&e.indexOf(c)>-1:"$="===b?c&&e.slice(-c.length)===c:"~="===b?(" "+e.replace(Q," ")+" ").indexOf(c)>-1:"|="===b?e===c||e.slice(0,c.length+1)===c+"-":!1):!0}},CHILD:function(a,b,c,d,e){var f="nth"!==a.slice(0,3),g="last"!==a.slice(-4),h="of-type"===b;return 1===d&&0===e?function(a){return!!a.parentNode}:function(b,c,i){var j,k,l,m,n,o,p=f!==g?"nextSibling":"previousSibling",q=b.parentNode,r=h&&b.nodeName.toLowerCase(),s=!i&&!h;if(q){if(f){while(p){l=b;while(l=l[p])if(h?l.nodeName.toLowerCase()===r:1===l.nodeType)return!1;o=p="only"===a&&!o&&"nextSibling"}return!0}if(o=[g?q.firstChild:q.lastChild],g&&s){k=q[u]||(q[u]={}),j=k[a]||[],n=j[0]===w&&j[1],m=j[0]===w&&j[2],l=n&&q.childNodes[n];while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if(1===l.nodeType&&++m&&l===b){k[a]=[w,n,m];break}}else if(s&&(j=(b[u]||(b[u]={}))[a])&&j[0]===w)m=j[1];else while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if((h?l.nodeName.toLowerCase()===r:1===l.nodeType)&&++m&&(s&&((l[u]||(l[u]={}))[a]=[w,m]),l===b))break;return m-=e,m===d||m%d===0&&m/d>=0}}},PSEUDO:function(a,b){var c,e=d.pseudos[a]||d.setFilters[a.toLowerCase()]||ga.error("unsupported pseudo: "+a);return e[u]?e(b):e.length>1?(c=[a,a,"",b],d.setFilters.hasOwnProperty(a.toLowerCase())?ia(function(a,c){var d,f=e(a,b),g=f.length;while(g--)d=J(a,f[g]),a[d]=!(c[d]=f[g])}):function(a){return e(a,0,c)}):e}},pseudos:{not:ia(function(a){var b=[],c=[],d=h(a.replace(R,"$1"));return d[u]?ia(function(a,b,c,e){var f,g=d(a,null,e,[]),h=a.length;while(h--)(f=g[h])&&(a[h]=!(b[h]=f))}):function(a,e,f){return b[0]=a,d(b,null,f,c),b[0]=null,!c.pop()}}),has:ia(function(a){return function(b){return ga(a,b).length>0}}),contains:ia(function(a){return a=a.replace(ca,da),function(b){return(b.textContent||b.innerText||e(b)).indexOf(a)>-1}}),lang:ia(function(a){return W.test(a||"")||ga.error("unsupported lang: "+a),a=a.replace(ca,da).toLowerCase(),function(b){var c;do if(c=p?b.lang:b.getAttribute("xml:lang")||b.getAttribute("lang"))return c=c.toLowerCase(),c===a||0===c.indexOf(a+"-");while((b=b.parentNode)&&1===b.nodeType);return!1}}),target:function(b){var c=a.location&&a.location.hash;return c&&c.slice(1)===b.id},root:function(a){return a===o},focus:function(a){return a===n.activeElement&&(!n.hasFocus||n.hasFocus())&&!!(a.type||a.href||~a.tabIndex)},enabled:function(a){return a.disabled===!1},disabled:function(a){return a.disabled===!0},checked:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&!!a.checked||"option"===b&&!!a.selected},selected:function(a){return a.parentNode&&a.parentNode.selectedIndex,a.selected===!0},empty:function(a){for(a=a.firstChild;a;a=a.nextSibling)if(a.nodeType<6)return!1;return!0},parent:function(a){return!d.pseudos.empty(a)},header:function(a){return Z.test(a.nodeName)},input:function(a){return Y.test(a.nodeName)},button:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&"button"===a.type||"button"===b},text:function(a){var b;return"input"===a.nodeName.toLowerCase()&&"text"===a.type&&(null==(b=a.getAttribute("type"))||"text"===b.toLowerCase())},first:oa(function(){return[0]}),last:oa(function(a,b){return[b-1]}),eq:oa(function(a,b,c){return[0>c?c+b:c]}),even:oa(function(a,b){for(var c=0;b>c;c+=2)a.push(c);return a}),odd:oa(function(a,b){for(var c=1;b>c;c+=2)a.push(c);return a}),lt:oa(function(a,b,c){for(var d=0>c?c+b:c;--d>=0;)a.push(d);return a}),gt:oa(function(a,b,c){for(var d=0>c?c+b:c;++d<b;)a.push(d);return a})}},d.pseudos.nth=d.pseudos.eq;for(b in{radio:!0,checkbox:!0,file:!0,password:!0,image:!0})d.pseudos[b]=ma(b);for(b in{submit:!0,reset:!0})d.pseudos[b]=na(b);function qa(){}qa.prototype=d.filters=d.pseudos,d.setFilters=new qa,g=ga.tokenize=function(a,b){var c,e,f,g,h,i,j,k=z[a+" "];if(k)return b?0:k.slice(0);h=a,i=[],j=d.preFilter;while(h){(!c||(e=S.exec(h)))&&(e&&(h=h.slice(e[0].length)||h),i.push(f=[])),c=!1,(e=T.exec(h))&&(c=e.shift(),f.push({value:c,type:e[0].replace(R," ")}),h=h.slice(c.length));for(g in d.filter)!(e=X[g].exec(h))||j[g]&&!(e=j[g](e))||(c=e.shift(),f.push({value:c,type:g,matches:e}),h=h.slice(c.length));if(!c)break}return b?h.length:h?ga.error(a):z(a,i).slice(0)};function ra(a){for(var b=0,c=a.length,d="";c>b;b++)d+=a[b].value;return d}function sa(a,b,c){var d=b.dir,e=c&&"parentNode"===d,f=x++;return b.first?function(b,c,f){while(b=b[d])if(1===b.nodeType||e)return a(b,c,f)}:function(b,c,g){var h,i,j=[w,f];if(g){while(b=b[d])if((1===b.nodeType||e)&&a(b,c,g))return!0}else while(b=b[d])if(1===b.nodeType||e){if(i=b[u]||(b[u]={}),(h=i[d])&&h[0]===w&&h[1]===f)return j[2]=h[2];if(i[d]=j,j[2]=a(b,c,g))return!0}}}function ta(a){return a.length>1?function(b,c,d){var e=a.length;while(e--)if(!a[e](b,c,d))return!1;return!0}:a[0]}function ua(a,b,c){for(var d=0,e=b.length;e>d;d++)ga(a,b[d],c);return c}function va(a,b,c,d,e){for(var f,g=[],h=0,i=a.length,j=null!=b;i>h;h++)(f=a[h])&&(!c||c(f,d,e))&&(g.push(f),j&&b.push(h));return g}function wa(a,b,c,d,e,f){return d&&!d[u]&&(d=wa(d)),e&&!e[u]&&(e=wa(e,f)),ia(function(f,g,h,i){var j,k,l,m=[],n=[],o=g.length,p=f||ua(b||"*",h.nodeType?[h]:h,[]),q=!a||!f&&b?p:va(p,m,a,h,i),r=c?e||(f?a:o||d)?[]:g:q;if(c&&c(q,r,h,i),d){j=va(r,n),d(j,[],h,i),k=j.length;while(k--)(l=j[k])&&(r[n[k]]=!(q[n[k]]=l))}if(f){if(e||a){if(e){j=[],k=r.length;while(k--)(l=r[k])&&j.push(q[k]=l);e(null,r=[],j,i)}k=r.length;while(k--)(l=r[k])&&(j=e?J(f,l):m[k])>-1&&(f[j]=!(g[j]=l))}}else r=va(r===g?r.splice(o,r.length):r),e?e(null,g,r,i):H.apply(g,r)})}function xa(a){for(var b,c,e,f=a.length,g=d.relative[a[0].type],h=g||d.relative[" "],i=g?1:0,k=sa(function(a){return a===b},h,!0),l=sa(function(a){return J(b,a)>-1},h,!0),m=[function(a,c,d){var e=!g&&(d||c!==j)||((b=c).nodeType?k(a,c,d):l(a,c,d));return b=null,e}];f>i;i++)if(c=d.relative[a[i].type])m=[sa(ta(m),c)];else{if(c=d.filter[a[i].type].apply(null,a[i].matches),c[u]){for(e=++i;f>e;e++)if(d.relative[a[e].type])break;return wa(i>1&&ta(m),i>1&&ra(a.slice(0,i-1).concat({value:" "===a[i-2].type?"*":""})).replace(R,"$1"),c,e>i&&xa(a.slice(i,e)),f>e&&xa(a=a.slice(e)),f>e&&ra(a))}m.push(c)}return ta(m)}function ya(a,b){var c=b.length>0,e=a.length>0,f=function(f,g,h,i,k){var l,m,o,p=0,q="0",r=f&&[],s=[],t=j,u=f||e&&d.find.TAG("*",k),v=w+=null==t?1:Math.random()||.1,x=u.length;for(k&&(j=g!==n&&g);q!==x&&null!=(l=u[q]);q++){if(e&&l){m=0;while(o=a[m++])if(o(l,g,h)){i.push(l);break}k&&(w=v)}c&&((l=!o&&l)&&p--,f&&r.push(l))}if(p+=q,c&&q!==p){m=0;while(o=b[m++])o(r,s,g,h);if(f){if(p>0)while(q--)r[q]||s[q]||(s[q]=F.call(i));s=va(s)}H.apply(i,s),k&&!f&&s.length>0&&p+b.length>1&&ga.uniqueSort(i)}return k&&(w=v,j=t),r};return c?ia(f):f}return h=ga.compile=function(a,b){var c,d=[],e=[],f=A[a+" "];if(!f){b||(b=g(a)),c=b.length;while(c--)f=xa(b[c]),f[u]?d.push(f):e.push(f);f=A(a,ya(e,d)),f.selector=a}return f},i=ga.select=function(a,b,e,f){var i,j,k,l,m,n="function"==typeof a&&a,o=!f&&g(a=n.selector||a);if(e=e||[],1===o.length){if(j=o[0]=o[0].slice(0),j.length>2&&"ID"===(k=j[0]).type&&c.getById&&9===b.nodeType&&p&&d.relative[j[1].type]){if(b=(d.find.ID(k.matches[0].replace(ca,da),b)||[])[0],!b)return e;n&&(b=b.parentNode),a=a.slice(j.shift().value.length)}i=X.needsContext.test(a)?0:j.length;while(i--){if(k=j[i],d.relative[l=k.type])break;if((m=d.find[l])&&(f=m(k.matches[0].replace(ca,da),aa.test(j[0].type)&&pa(b.parentNode)||b))){if(j.splice(i,1),a=f.length&&ra(j),!a)return H.apply(e,f),e;break}}}return(n||h(a,o))(f,b,!p,e,aa.test(a)&&pa(b.parentNode)||b),e},c.sortStable=u.split("").sort(B).join("")===u,c.detectDuplicates=!!l,m(),c.sortDetached=ja(function(a){return 1&a.compareDocumentPosition(n.createElement("div"))}),ja(function(a){return a.innerHTML="<a href='#'></a>","#"===a.firstChild.getAttribute("href")})||ka("type|href|height|width",function(a,b,c){return c?void 0:a.getAttribute(b,"type"===b.toLowerCase()?1:2)}),c.attributes&&ja(function(a){return a.innerHTML="<input/>",a.firstChild.setAttribute("value",""),""===a.firstChild.getAttribute("value")})||ka("value",function(a,b,c){return c||"input"!==a.nodeName.toLowerCase()?void 0:a.defaultValue}),ja(function(a){return null==a.getAttribute("disabled")})||ka(K,function(a,b,c){var d;return c?void 0:a[b]===!0?b.toLowerCase():(d=a.getAttributeNode(b))&&d.specified?d.value:null}),ga}(a);m.find=s,m.expr=s.selectors,m.expr[":"]=m.expr.pseudos,m.unique=s.uniqueSort,m.text=s.getText,m.isXMLDoc=s.isXML,m.contains=s.contains;var t=m.expr.match.needsContext,u=/^<(\w+)\s*\/?>(?:<\/\1>|)$/,v=/^.[^:#\[\.,]*$/;function w(a,b,c){if(m.isFunction(b))return m.grep(a,function(a,d){return!!b.call(a,d,a)!==c});if(b.nodeType)return m.grep(a,function(a){return a===b!==c});if("string"==typeof b){if(v.test(b))return m.filter(b,a,c);b=m.filter(b,a)}return m.grep(a,function(a){return m.inArray(a,b)>=0!==c})}m.filter=function(a,b,c){var d=b[0];return c&&(a=":not("+a+")"),1===b.length&&1===d.nodeType?m.find.matchesSelector(d,a)?[d]:[]:m.find.matches(a,m.grep(b,function(a){return 1===a.nodeType}))},m.fn.extend({find:function(a){var b,c=[],d=this,e=d.length;if("string"!=typeof a)return this.pushStack(m(a).filter(function(){for(b=0;e>b;b++)if(m.contains(d[b],this))return!0}));for(b=0;e>b;b++)m.find(a,d[b],c);return c=this.pushStack(e>1?m.unique(c):c),c.selector=this.selector?this.selector+" "+a:a,c},filter:function(a){return this.pushStack(w(this,a||[],!1))},not:function(a){return this.pushStack(w(this,a||[],!0))},is:function(a){return!!w(this,"string"==typeof a&&t.test(a)?m(a):a||[],!1).length}});var x,y=a.document,z=/^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,A=m.fn.init=function(a,b){var c,d;if(!a)return this;if("string"==typeof a){if(c="<"===a.charAt(0)&&">"===a.charAt(a.length-1)&&a.length>=3?[null,a,null]:z.exec(a),!c||!c[1]&&b)return!b||b.jquery?(b||x).find(a):this.constructor(b).find(a);if(c[1]){if(b=b instanceof m?b[0]:b,m.merge(this,m.parseHTML(c[1],b&&b.nodeType?b.ownerDocument||b:y,!0)),u.test(c[1])&&m.isPlainObject(b))for(c in b)m.isFunction(this[c])?this[c](b[c]):this.attr(c,b[c]);return this}if(d=y.getElementById(c[2]),d&&d.parentNode){if(d.id!==c[2])return x.find(a);this.length=1,this[0]=d}return this.context=y,this.selector=a,this}return a.nodeType?(this.context=this[0]=a,this.length=1,this):m.isFunction(a)?"undefined"!=typeof x.ready?x.ready(a):a(m):(void 0!==a.selector&&(this.selector=a.selector,this.context=a.context),m.makeArray(a,this))};A.prototype=m.fn,x=m(y);var B=/^(?:parents|prev(?:Until|All))/,C={children:!0,contents:!0,next:!0,prev:!0};m.extend({dir:function(a,b,c){var d=[],e=a[b];while(e&&9!==e.nodeType&&(void 0===c||1!==e.nodeType||!m(e).is(c)))1===e.nodeType&&d.push(e),e=e[b];return d},sibling:function(a,b){for(var c=[];a;a=a.nextSibling)1===a.nodeType&&a!==b&&c.push(a);return c}}),m.fn.extend({has:function(a){var b,c=m(a,this),d=c.length;return this.filter(function(){for(b=0;d>b;b++)if(m.contains(this,c[b]))return!0})},closest:function(a,b){for(var c,d=0,e=this.length,f=[],g=t.test(a)||"string"!=typeof a?m(a,b||this.context):0;e>d;d++)for(c=this[d];c&&c!==b;c=c.parentNode)if(c.nodeType<11&&(g?g.index(c)>-1:1===c.nodeType&&m.find.matchesSelector(c,a))){f.push(c);break}return this.pushStack(f.length>1?m.unique(f):f)},index:function(a){return a?"string"==typeof a?m.inArray(this[0],m(a)):m.inArray(a.jquery?a[0]:a,this):this[0]&&this[0].parentNode?this.first().prevAll().length:-1},add:function(a,b){return this.pushStack(m.unique(m.merge(this.get(),m(a,b))))},addBack:function(a){return this.add(null==a?this.prevObject:this.prevObject.filter(a))}});function D(a,b){do a=a[b];while(a&&1!==a.nodeType);return a}m.each({parent:function(a){var b=a.parentNode;return b&&11!==b.nodeType?b:null},parents:function(a){return m.dir(a,"parentNode")},parentsUntil:function(a,b,c){return m.dir(a,"parentNode",c)},next:function(a){return D(a,"nextSibling")},prev:function(a){return D(a,"previousSibling")},nextAll:function(a){return m.dir(a,"nextSibling")},prevAll:function(a){return m.dir(a,"previousSibling")},nextUntil:function(a,b,c){return m.dir(a,"nextSibling",c)},prevUntil:function(a,b,c){return m.dir(a,"previousSibling",c)},siblings:function(a){return m.sibling((a.parentNode||{}).firstChild,a)},children:function(a){return m.sibling(a.firstChild)},contents:function(a){return m.nodeName(a,"iframe")?a.contentDocument||a.contentWindow.document:m.merge([],a.childNodes)}},function(a,b){m.fn[a]=function(c,d){var e=m.map(this,b,c);return"Until"!==a.slice(-5)&&(d=c),d&&"string"==typeof d&&(e=m.filter(d,e)),this.length>1&&(C[a]||(e=m.unique(e)),B.test(a)&&(e=e.reverse())),this.pushStack(e)}});var E=/\S+/g,F={};function G(a){var b=F[a]={};return m.each(a.match(E)||[],function(a,c){b[c]=!0}),b}m.Callbacks=function(a){a="string"==typeof a?F[a]||G(a):m.extend({},a);var b,c,d,e,f,g,h=[],i=!a.once&&[],j=function(l){for(c=a.memory&&l,d=!0,f=g||0,g=0,e=h.length,b=!0;h&&e>f;f++)if(h[f].apply(l[0],l[1])===!1&&a.stopOnFalse){c=!1;break}b=!1,h&&(i?i.length&&j(i.shift()):c?h=[]:k.disable())},k={add:function(){if(h){var d=h.length;!function f(b){m.each(b,function(b,c){var d=m.type(c);"function"===d?a.unique&&k.has(c)||h.push(c):c&&c.length&&"string"!==d&&f(c)})}(arguments),b?e=h.length:c&&(g=d,j(c))}return this},remove:function(){return h&&m.each(arguments,function(a,c){var d;while((d=m.inArray(c,h,d))>-1)h.splice(d,1),b&&(e>=d&&e--,f>=d&&f--)}),this},has:function(a){return a?m.inArray(a,h)>-1:!(!h||!h.length)},empty:function(){return h=[],e=0,this},disable:function(){return h=i=c=void 0,this},disabled:function(){return!h},lock:function(){return i=void 0,c||k.disable(),this},locked:function(){return!i},fireWith:function(a,c){return!h||d&&!i||(c=c||[],c=[a,c.slice?c.slice():c],b?i.push(c):j(c)),this},fire:function(){return k.fireWith(this,arguments),this},fired:function(){return!!d}};return k},m.extend({Deferred:function(a){var b=[["resolve","done",m.Callbacks("once memory"),"resolved"],["reject","fail",m.Callbacks("once memory"),"rejected"],["notify","progress",m.Callbacks("memory")]],c="pending",d={state:function(){return c},always:function(){return e.done(arguments).fail(arguments),this},then:function(){var a=arguments;return m.Deferred(function(c){m.each(b,function(b,f){var g=m.isFunction(a[b])&&a[b];e[f[1]](function(){var a=g&&g.apply(this,arguments);a&&m.isFunction(a.promise)?a.promise().done(c.resolve).fail(c.reject).progress(c.notify):c[f[0]+"With"](this===d?c.promise():this,g?[a]:arguments)})}),a=null}).promise()},promise:function(a){return null!=a?m.extend(a,d):d}},e={};return d.pipe=d.then,m.each(b,function(a,f){var g=f[2],h=f[3];d[f[1]]=g.add,h&&g.add(function(){c=h},b[1^a][2].disable,b[2][2].lock),e[f[0]]=function(){return e[f[0]+"With"](this===e?d:this,arguments),this},e[f[0]+"With"]=g.fireWith}),d.promise(e),a&&a.call(e,e),e},when:function(a){var b=0,c=d.call(arguments),e=c.length,f=1!==e||a&&m.isFunction(a.promise)?e:0,g=1===f?a:m.Deferred(),h=function(a,b,c){return function(e){b[a]=this,c[a]=arguments.length>1?d.call(arguments):e,c===i?g.notifyWith(b,c):--f||g.resolveWith(b,c)}},i,j,k;if(e>1)for(i=new Array(e),j=new Array(e),k=new Array(e);e>b;b++)c[b]&&m.isFunction(c[b].promise)?c[b].promise().done(h(b,k,c)).fail(g.reject).progress(h(b,j,i)):--f;return f||g.resolveWith(k,c),g.promise()}});var H;m.fn.ready=function(a){return m.ready.promise().done(a),this},m.extend({isReady:!1,readyWait:1,holdReady:function(a){a?m.readyWait++:m.ready(!0)},ready:function(a){if(a===!0?!--m.readyWait:!m.isReady){if(!y.body)return setTimeout(m.ready);m.isReady=!0,a!==!0&&--m.readyWait>0||(H.resolveWith(y,[m]),m.fn.triggerHandler&&(m(y).triggerHandler("ready"),m(y).off("ready")))}}});function I(){y.addEventListener?(y.removeEventListener("DOMContentLoaded",J,!1),a.removeEventListener("load",J,!1)):(y.detachEvent("onreadystatechange",J),a.detachEvent("onload",J))}function J(){(y.addEventListener||"load"===event.type||"complete"===y.readyState)&&(I(),m.ready())}m.ready.promise=function(b){if(!H)if(H=m.Deferred(),"complete"===y.readyState)setTimeout(m.ready);else if(y.addEventListener)y.addEventListener("DOMContentLoaded",J,!1),a.addEventListener("load",J,!1);else{y.attachEvent("onreadystatechange",J),a.attachEvent("onload",J);var c=!1;try{c=null==a.frameElement&&y.documentElement}catch(d){}c&&c.doScroll&&!function e(){if(!m.isReady){try{c.doScroll("left")}catch(a){return setTimeout(e,50)}I(),m.ready()}}()}return H.promise(b)};var K="undefined",L;for(L in m(k))break;k.ownLast="0"!==L,k.inlineBlockNeedsLayout=!1,m(function(){var a,b,c,d;c=y.getElementsByTagName("body")[0],c&&c.style&&(b=y.createElement("div"),d=y.createElement("div"),d.style.cssText="position:absolute;border:0;width:0;height:0;top:0;left:-9999px",c.appendChild(d).appendChild(b),typeof b.style.zoom!==K&&(b.style.cssText="display:inline;margin:0;border:0;padding:1px;width:1px;zoom:1",k.inlineBlockNeedsLayout=a=3===b.offsetWidth,a&&(c.style.zoom=1)),c.removeChild(d))}),function(){var a=y.createElement("div");if(null==k.deleteExpando){k.deleteExpando=!0;try{delete a.test}catch(b){k.deleteExpando=!1}}a=null}(),m.acceptData=function(a){var b=m.noData[(a.nodeName+" ").toLowerCase()],c=+a.nodeType||1;return 1!==c&&9!==c?!1:!b||b!==!0&&a.getAttribute("classid")===b};var M=/^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,N=/([A-Z])/g;function O(a,b,c){if(void 0===c&&1===a.nodeType){var d="data-"+b.replace(N,"-$1").toLowerCase();if(c=a.getAttribute(d),"string"==typeof c){try{c="true"===c?!0:"false"===c?!1:"null"===c?null:+c+""===c?+c:M.test(c)?m.parseJSON(c):c}catch(e){}m.data(a,b,c)}else c=void 0}return c}function P(a){var b;for(b in a)if(("data"!==b||!m.isEmptyObject(a[b]))&&"toJSON"!==b)return!1;
@@ -331,6 +329,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -362,256 +361,190 @@ summary {
 
 
 
-<h1 class="title toc-ignore">How to use dplyr</h1>
-<h4 class="author">Patrick Maloney extended by Philip Tanofsky</h4>
-<h4 class="date">3/28/2020 (extended on 4/19/2020)</h4>
+<h1 class="title toc-ignore">kevin_potter_tidyverse</h1>
 
 </div>
 
 
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
-<p>We will see some uses of the dplyr package by loading a data set of contestants on the Bachelorette season’s 11-15.</p>
-<pre class="r"><code>library(dplyr)</code></pre>
+<p>##Introduction</p>
+<p>This notebook goes through the use of map, map2, and pmap in the tidyverse purr package. We will start with the use of tibble, which is also contained in the purr package. We will use this function to create a list of numbers 1-26 to test the use of the map functions.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.2.1     ✓ purrr   0.3.3
+## ✓ tibble  2.1.3     ✓ dplyr   0.8.4
+## ✓ tidyr   1.0.2     ✓ stringr 1.4.0
+## ✓ readr   1.3.1     ✓ forcats 0.4.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>num_list &lt;- tibble(x = 1:26)
+head(num_list)</code></pre>
+<pre><code>## # A tibble: 6 x 1
+##       x
+##   &lt;int&gt;
+## 1     1
+## 2     2
+## 3     3
+## 4     4
+## 5     5
+## 6     6</code></pre>
+<p>###Map(x, f)</p>
+<p>Map takes three main arguments ‘x’ which is a list that you want to map, ‘f’ which is the function you want to preform the map on. Map will apply some sort of change to elements in a list and return a result. The function can be as complicated or as simple as you like. The same number of lists that are passed into the function will be in the result 1:1.</p>
+<pre class="r"><code># returns a list of numbers double the size
+num_list %&gt;% map(function(x) x*2)</code></pre>
+<pre><code>## $x
+##  [1]  2  4  6  8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50
+## [26] 52</code></pre>
+<pre class="r"><code># returns a list of numbers half the size
+num_list %&gt;% map(function(x) x*.5)</code></pre>
+<pre><code>## $x
+##  [1]  0.5  1.0  1.5  2.0  2.5  3.0  3.5  4.0  4.5  5.0  5.5  6.0  6.5  7.0  7.5
+## [16]  8.0  8.5  9.0  9.5 10.0 10.5 11.0 11.5 12.0 12.5 13.0</code></pre>
+<p>###Map2(x, y, f)</p>
+<p>Map2 two takes in the same arguments as map with one addition. ‘y’ which is the second vector, which need to the same size and greater than one. Map2 will perform a change using two lists and output a single list. The function will use both elements in the row to perform the transformation.</p>
+<pre class="r"><code>x = 6:10
+y = 51:55
+# this will return the sum of both columns to a sinlge list of same size
+map2(x, y,  `+`)</code></pre>
+<pre><code>## [[1]]
+## [1] 57
+## 
+## [[2]]
+## [1] 59
+## 
+## [[3]]
+## [1] 61
+## 
+## [[4]]
+## [1] 63
+## 
+## [[5]]
+## [1] 65</code></pre>
+<pre class="r"><code># this will return the product of the two columns to a list of same size
+map2(x, y, `*`)</code></pre>
+<pre><code>## [[1]]
+## [1] 306
+## 
+## [[2]]
+## [1] 364
+## 
+## [[3]]
+## [1] 424
+## 
+## [[4]]
+## [1] 486
+## 
+## [[5]]
+## [1] 550</code></pre>
+<p>###Pmap(l,f)</p>
+<p>Pmap takes in two arguments, ‘f’ which we have explained before and, ‘l’ which is a list of vectors, such as a data frame. The length of .l determines the number of arguments that .f will be called with. List names will be used if present. Pmap can perform a change to multiple variables and output a single list or dataframe.</p>
+<pre class="r"><code>three_num_list &lt;- tibble(x = 0:5, y = 10:15, z = 20:25)
+three_num_list</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##       x     y     z
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1     0    10    20
+## 2     1    11    21
+## 3     2    12    22
+## 4     3    13    23
+## 5     4    14    24
+## 6     5    15    25</code></pre>
+<pre class="r"><code>#takes the sum of all three columns
+pmap(list(three_num_list$x,three_num_list$y, three_num_list$z ), sum)</code></pre>
+<pre><code>## [[1]]
+## [1] 30
+## 
+## [[2]]
+## [1] 33
+## 
+## [[3]]
+## [1] 36
+## 
+## [[4]]
+## [1] 39
+## 
+## [[5]]
+## [1] 42
+## 
+## [[6]]
+## [1] 45</code></pre>
+<div id="using-real-data" class="section level2">
+<h2>Using Real Data</h2>
+<p>In this code block we will load in data from <a href="https://github.com/fivethirtyeight/data/blob/master/alcohol-consumption/drinks.csv">fivethirtyeight’s</a> dataset on alchohol consumtion by country.</p>
+<pre class="r"><code>library(RCurl)</code></pre>
 <pre><code>## 
-## Attaching package: 'dplyr'</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
+## Attaching package: 'RCurl'</code></pre>
+<pre><code>## The following object is masked from 'package:tidyr':
 ## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
+##     complete</code></pre>
+<pre class="r"><code>data &lt;- getURL('https://raw.githubusercontent.com/fivethirtyeight/data/master/alcohol-consumption/drinks.csv')
+alchohol_df &lt;- read.csv(text = data)
+head(alchohol_df)</code></pre>
+<pre><code>##             country beer_servings spirit_servings wine_servings
+## 1       Afghanistan             0               0             0
+## 2           Albania            89             132            54
+## 3           Algeria            25               0            14
+## 4           Andorra           245             138           312
+## 5            Angola           217              57            45
+## 6 Antigua &amp; Barbuda           102             128            45
+##   total_litres_of_pure_alcohol
+## 1                          0.0
+## 2                          4.9
+## 3                          0.7
+## 4                         12.4
+## 5                          5.9
+## 6                          4.9</code></pre>
+<pre class="r"><code>#map_chr can apply map to character vectors
+alchohol_df$country &lt;- (alchohol_df$country) %&gt;% map_chr(paste0, ': Surveyed')
+head(alchohol_df)</code></pre>
+<pre><code>##                       country beer_servings spirit_servings wine_servings
+## 1       Afghanistan: Surveyed             0               0             0
+## 2           Albania: Surveyed            89             132            54
+## 3           Algeria: Surveyed            25               0            14
+## 4           Andorra: Surveyed           245             138           312
+## 5            Angola: Surveyed           217              57            45
+## 6 Antigua &amp; Barbuda: Surveyed           102             128            45
+##   total_litres_of_pure_alcohol
+## 1                          0.0
+## 2                          4.9
+## 3                          0.7
+## 4                         12.4
+## 5                          5.9
+## 6                          4.9</code></pre>
+<pre class="r"><code>product_function &lt;- function(arg1, arg2){
+col &lt;- arg1 * arg2
+x &lt;- as.data.frame(col)
+}
+alchohol_df$beer_wine_prod &lt;- (map2_df(alchohol_df$beer_servings, alchohol_df$wine_servings, product_function))
+head(alchohol_df$beer_wine_prod)</code></pre>
+<pre><code>##     col
+## 1     0
+## 2  4806
+## 3   350
+## 4 76440
+## 5  9765
+## 6  4590</code></pre>
+<pre class="r"><code>head(pmap(list(alchohol_df$beer_servings, alchohol_df$spirit_servings, alchohol_df$wine_servings), mean))</code></pre>
+<pre><code>## [[1]]
+## [1] 0
 ## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>df &lt;- read.csv(&quot;https://raw.githubusercontent.com/pmalo46/SPRING2020TIDYVERSE/master/BacheloretteDSFinal-Dogu.csv&quot;)
-head(df)</code></pre>
-<pre><code>##   Season           Name Age                     Hometown State
-## 1     15      Jed Wyatt  25       Sevierville, Tennessee    TN
-## 2     15  Tyler Cameron  26             Jupiter, Florida    FL
-## 3     15    Peter Weber  27 Westlake Village, California    CA
-## 4     15    Luke Parker  24         Gainesville, Georgia    GA
-## 5     15 Garrett Powell  27            Homewood, Alabama    AL
-## 6     15   Mike Johnson  31           San Antonio, Texas    TX
-##                        College            Occupation Win_Loss Height..cm.
-## 1           Belmont University      Singer/Sonwriter        1      190.50
-## 2                  Wake Forest    General Contractor        0      187.96
-## 3            Baylor University                 Pilot        0      175.25
-## 4          Faulkner University Import/Export Manager        0      175.00
-## 5 Mississippi State University              Golf Pro        0         NaN
-## 6                          NaN     Portfolio Manager        0      180.00
-##   Girlfriend.While.on.the.Show. Hair.Color Eye.Color
-## 1                           Yes      Brown     Brown
-## 2                            No      Brown     Green
-## 3                            No      Brown     Brown
-## 4                            No     Blonde     Brown
-## 5                            No      Brown     Green
-## 6                            No      Brown     Brown</code></pre>
-<div id="filter-function" class="section level3">
-<h3>filter function</h3>
-<p>One of the most useful functions in the dplyr package is the filter function, which allows us to filter down to only rows that meet a certain condition.</p>
-<pre class="r"><code>filter(df, Win_Loss == 1)</code></pre>
-<pre><code>##   Season           Name Age                   Hometown State
-## 1     15      Jed Wyatt  25     Sevierville, Tennessee    TN
-## 2     14  Jason Tartick  29          Buffalo, New York    NY
-## 3     13  Bryan Abasolo  37             Miami, Florida    FL
-## 4     12 Jordan Rodgers  27          Chico, California    CA
-## 5     11    Shawn Booth  28 Windsor Locks, Connecticut    CT
-##                   College              Occupation Win_Loss Height..cm.
-## 1      Belmont University        Singer/Sonwriter        1      190.50
-## 2 University of Rochester Senior Corporate Banker        1      175.26
-## 3   University of Florida            Chiropractor        1      187.96
-## 4           Butte College  Former Pro Quarterback        1      187.96
-## 5     Keene State College        Personal Trainer        1      187.96
-##   Girlfriend.While.on.the.Show. Hair.Color Eye.Color
-## 1                           Yes      Brown     Brown
-## 2                            No      Brown     Brown
-## 3                            No      Brown     Brown
-## 4                            No      Brown     Brown
-## 5                            No      Brown     Brown</code></pre>
-<p>The table above shows the winners of the last five seasons. Another useful function is the group_by function.</p>
-</div>
-<div id="group_by-function" class="section level3">
-<h3>group_by function</h3>
-<pre class="r"><code>group_by(df, State) %&gt;%
-  summarise(mean(Height..cm.))</code></pre>
-<pre><code>## # A tibble: 32 x 2
-##    State `mean(Height..cm.)`
-##    &lt;fct&gt;               &lt;dbl&gt;
-##  1 AL                   NaN 
-##  2 AR                   188.
-##  3 AZ                   185.
-##  4 CA                   NaN 
-##  5 CO                   187.
-##  6 CT                   NaN 
-##  7 FL                   NaN 
-##  8 GA                   NaN 
-##  9 IA                   NaN 
-## 10 ID                   188.
-## # … with 22 more rows</code></pre>
-<p>The chunk above uses the group_by method to group the contestants by which state they are from, and then take the average height by state. Another dplyr method, ‘summarise’ is on display here, which allows us to reduce multiple values down to a single value. Another useful function is arrange()</p>
-</div>
-<div id="arrange-function" class="section level3">
-<h3>arrange function</h3>
-<pre class="r"><code>as_tibble(tail(arrange(df, Occupation), 15))</code></pre>
-<pre><code>## # A tibble: 15 x 12
-##    Season Name    Age Hometown State College Occupation Win_Loss
-##     &lt;int&gt; &lt;fct&gt; &lt;int&gt; &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt;   &lt;fct&gt;         &lt;int&gt;
-##  1     12 &quot;Nic…    26 San Fra… CA    Other   Software …        0
-##  2     11 &quot;Ben…    26 Warsaw,… IN    Indian… Software …        0
-##  3     14 &quot;Mic…    27 Cincinn… OH    Univer… Sports An…        0
-##  4     12 Pete…    26 Rockdal… IL    Joliet… Staffing …        0
-##  5     13 Dean…    26 Aspen, … CO    Univer… Startup R…        0
-##  6     15 Devi…    27 Sherman… CA    Univer… Talent Ma…        0
-##  7     15 Dyla…    24 San Die… CA    Willia… &quot;Tech Ent…        0
-##  8     12 Jona…    29 Vancouv… Other Other   Technical…        0
-##  9     12 Chri…    26 Los Ang… CA    Califo… Telecom C…        0
-## 10     15 Joe …    30 Chicago… IL    North … The Box K…        0
-## 11     12 &quot;Ale…    25 Oceansi… CA    Palm B… U.S. Mari…        0
-## 12     13 Blak…    29 San Fra… CA    Other   U.S. Mari…        0
-## 13     15 Gran…    30 San Cle… CA    Saddle… Unemployed        0
-## 14     14 Davi…    25 Cherry … NJ    Univer… Venture C…        0
-## 15     12 Luke…    31 Burnet,… TX    West P… War Veter…        0
-## # … with 4 more variables: Height..cm. &lt;dbl&gt;,
-## #   Girlfriend.While.on.the.Show. &lt;fct&gt;, Hair.Color &lt;fct&gt;, Eye.Color &lt;fct&gt;</code></pre>
-<p>The chunk above uses arrange() to sort the contestants alphabetically, while the as_tibble method makes the output more easily viewable.</p>
-<p>These demonstrate some of the many uses of the great dplyr package.</p>
-</div>
-</div>
-<div id="extension" class="section level2">
-<h2>Extension</h2>
-<p>The dplyr package provides several other powerful functions including the select and mutate functions. The following examples highlight the functions’ value and ease-of-use on the same data set of contestants on the Bachelorette season’s 11-15.</p>
-<div id="select-function" class="section level3">
-<h3>select function</h3>
-<p>Another useful function in the dplyr package is the select function, which allows us to select variables (or columns) by name.</p>
-<pre class="r"><code>as_tibble(select(df, ends_with(&quot;Color&quot;)))</code></pre>
-<pre><code>## # A tibble: 141 x 2
-##    Hair.Color Eye.Color
-##    &lt;fct&gt;      &lt;fct&gt;    
-##  1 Brown      Brown    
-##  2 Brown      Green    
-##  3 Brown      Brown    
-##  4 Blonde     Brown    
-##  5 Brown      Green    
-##  6 Brown      Brown    
-##  7 Brown      Brown    
-##  8 Brown      Brown    
-##  9 Brown      Brown    
-## 10 Brown      Brown    
-## # … with 131 more rows</code></pre>
-<p>The tibble above includes only the variables that end with the string ‘Color’ which results in ‘Hair.Color’ and ‘Eye.Color’.</p>
-<pre class="r"><code>as_tibble(select(df, -ends_with(&quot;Color&quot;)))</code></pre>
-<pre><code>## # A tibble: 141 x 10
-##    Season Name    Age Hometown State College Occupation Win_Loss
-##     &lt;int&gt; &lt;fct&gt; &lt;int&gt; &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt;   &lt;fct&gt;         &lt;int&gt;
-##  1     15 Jed …    25 Sevierv… TN    Belmon… Singer/So…        1
-##  2     15 Tyle…    26 Jupiter… FL    Wake F… General C…        0
-##  3     15 Pete…    27 Westlak… CA    Baylor… Pilot             0
-##  4     15 Luke…    24 Gainesv… GA    Faulkn… Import/Ex…        0
-##  5     15 Garr…    27 Homewoo… AL    Missis… Golf Pro          0
-##  6     15 Mike…    31 San Ant… TX    NaN     Portfolio…        0
-##  7     15 Conn…    24 Birming… MI    Southe… Investmen…        0
-##  8     15 Dust…    30 Chicago… IL    Northe… Real Esta…        0
-##  9     15 Dyla…    24 San Die… CA    Willia… &quot;Tech Ent…        0
-## 10     15 Devi…    27 Sherman… CA    Univer… Talent Ma…        0
-## # … with 131 more rows, and 2 more variables: Height..cm. &lt;dbl&gt;,
-## #   Girlfriend.While.on.the.Show. &lt;fct&gt;</code></pre>
-<p>The tibble above show the simplicity in removing a variable by using the minus symbol (-) as the two variables ending in ‘Color’ are no longer present.</p>
-<pre class="r"><code>as_tibble(select(df, Occupation, everything()))</code></pre>
-<pre><code>## # A tibble: 141 x 12
-##    Occupation Season Name    Age Hometown State College Win_Loss
-##    &lt;fct&gt;       &lt;int&gt; &lt;fct&gt; &lt;int&gt; &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt;      &lt;int&gt;
-##  1 Singer/So…     15 Jed …    25 Sevierv… TN    Belmon…        1
-##  2 General C…     15 Tyle…    26 Jupiter… FL    Wake F…        0
-##  3 Pilot          15 Pete…    27 Westlak… CA    Baylor…        0
-##  4 Import/Ex…     15 Luke…    24 Gainesv… GA    Faulkn…        0
-##  5 Golf Pro       15 Garr…    27 Homewoo… AL    Missis…        0
-##  6 Portfolio…     15 Mike…    31 San Ant… TX    NaN            0
-##  7 Investmen…     15 Conn…    24 Birming… MI    Southe…        0
-##  8 Real Esta…     15 Dust…    30 Chicago… IL    Northe…        0
-##  9 &quot;Tech Ent…     15 Dyla…    24 San Die… CA    Willia…        0
-## 10 Talent Ma…     15 Devi…    27 Sherman… CA    Univer…        0
-## # … with 131 more rows, and 4 more variables: Height..cm. &lt;dbl&gt;,
-## #   Girlfriend.While.on.the.Show. &lt;fct&gt;, Hair.Color &lt;fct&gt;, Eye.Color &lt;fct&gt;</code></pre>
-<p>The resulting tibble above move the Occupation variable to the front of the data frame and output as the tibble.</p>
-<pre class="r"><code># first select all variables except Season, then re-select Season
-as_tibble(select(df, -Season, Season))</code></pre>
-<pre><code>## # A tibble: 141 x 12
-##    Name    Age Hometown State College Occupation Win_Loss Height..cm.
-##    &lt;fct&gt; &lt;int&gt; &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt;   &lt;fct&gt;         &lt;int&gt;       &lt;dbl&gt;
-##  1 Jed …    25 Sevierv… TN    Belmon… Singer/So…        1        190.
-##  2 Tyle…    26 Jupiter… FL    Wake F… General C…        0        188.
-##  3 Pete…    27 Westlak… CA    Baylor… Pilot             0        175.
-##  4 Luke…    24 Gainesv… GA    Faulkn… Import/Ex…        0        175 
-##  5 Garr…    27 Homewoo… AL    Missis… Golf Pro          0        NaN 
-##  6 Mike…    31 San Ant… TX    NaN     Portfolio…        0        180 
-##  7 Conn…    24 Birming… MI    Southe… Investmen…        0        198 
-##  8 Dust…    30 Chicago… IL    Northe… Real Esta…        0        188 
-##  9 Dyla…    24 San Die… CA    Willia… &quot;Tech Ent…        0        180.
-## 10 Devi…    27 Sherman… CA    Univer… Talent Ma…        0        NaN 
-## # … with 131 more rows, and 4 more variables:
-## #   Girlfriend.While.on.the.Show. &lt;fct&gt;, Hair.Color &lt;fct&gt;,
-## #   Eye.Color &lt;fct&gt;, Season &lt;int&gt;</code></pre>
-<p>The inverse of moving a variable to the front, the select function can easily move a variable to the end of the data frame as shown above with the Season variable.</p>
-</div>
-<div id="mutate" class="section level3">
-<h3>Mutate</h3>
-<p>The dplyr package provides useful tool in the mutate function, which can add or transform variables.</p>
-<pre class="r"><code>df %&gt;% mutate(
-  Year.Of.Birth = 2020 - Age,
-  Height..inch = Height..cm. / 2.54 # convert to inches
-) %&gt;% head()</code></pre>
-<pre><code>##   Season           Name Age                     Hometown State
-## 1     15      Jed Wyatt  25       Sevierville, Tennessee    TN
-## 2     15  Tyler Cameron  26             Jupiter, Florida    FL
-## 3     15    Peter Weber  27 Westlake Village, California    CA
-## 4     15    Luke Parker  24         Gainesville, Georgia    GA
-## 5     15 Garrett Powell  27            Homewood, Alabama    AL
-## 6     15   Mike Johnson  31           San Antonio, Texas    TX
-##                        College            Occupation Win_Loss Height..cm.
-## 1           Belmont University      Singer/Sonwriter        1      190.50
-## 2                  Wake Forest    General Contractor        0      187.96
-## 3            Baylor University                 Pilot        0      175.25
-## 4          Faulkner University Import/Export Manager        0      175.00
-## 5 Mississippi State University              Golf Pro        0         NaN
-## 6                          NaN     Portfolio Manager        0      180.00
-##   Girlfriend.While.on.the.Show. Hair.Color Eye.Color Year.Of.Birth
-## 1                           Yes      Brown     Brown          1995
-## 2                            No      Brown     Green          1994
-## 3                            No      Brown     Brown          1993
-## 4                            No     Blonde     Brown          1996
-## 5                            No      Brown     Green          1993
-## 6                            No      Brown     Brown          1989
-##   Height..inch
-## 1     75.00000
-## 2     74.00000
-## 3     68.99606
-## 4     68.89764
-## 5          NaN
-## 6     70.86614</code></pre>
-<p>The resulting data frame above shows the capability of the mutate function to add new variables based on existing variables. The ‘Year.Of.Birth’ is calculated from the existing variable of ‘Age’, and the ‘Height..inch’ is based on the conversion from the existing variable ‘Height..cm.’.</p>
-<pre class="r"><code>df %&gt;% mutate(State = NULL) %&gt;% head()</code></pre>
-<pre><code>##   Season           Name Age                     Hometown
-## 1     15      Jed Wyatt  25       Sevierville, Tennessee
-## 2     15  Tyler Cameron  26             Jupiter, Florida
-## 3     15    Peter Weber  27 Westlake Village, California
-## 4     15    Luke Parker  24         Gainesville, Georgia
-## 5     15 Garrett Powell  27            Homewood, Alabama
-## 6     15   Mike Johnson  31           San Antonio, Texas
-##                        College            Occupation Win_Loss Height..cm.
-## 1           Belmont University      Singer/Sonwriter        1      190.50
-## 2                  Wake Forest    General Contractor        0      187.96
-## 3            Baylor University                 Pilot        0      175.25
-## 4          Faulkner University Import/Export Manager        0      175.00
-## 5 Mississippi State University              Golf Pro        0         NaN
-## 6                          NaN     Portfolio Manager        0      180.00
-##   Girlfriend.While.on.the.Show. Hair.Color Eye.Color
-## 1                           Yes      Brown     Brown
-## 2                            No      Brown     Green
-## 3                            No      Brown     Brown
-## 4                            No     Blonde     Brown
-## 5                            No      Brown     Green
-## 6                            No      Brown     Brown</code></pre>
-<p>The mutate function can easily remove variable by simply setting a variable to NULL as shown above with the variable ‘State’.</p>
-<p>The additional functions and examples outline some of the valuable uses of the powerful dplyr package.</p>
-</div>
+## [[2]]
+## [1] 89
+## 
+## [[3]]
+## [1] 25
+## 
+## [[4]]
+## [1] 245
+## 
+## [[5]]
+## [1] 217
+## 
+## [[6]]
+## [1] 102</code></pre>
+<p>###Information From R Help Docs</p>
+<p><strong>Map Description:</strong> The map functions transform their input by applying a function to each element and returning a vector the same length as the input.</p>
+<p><strong>Map2 &amp; Pmap Description </strong> These functions are variants of map() that iterate over multiple arguments simultaneously. They are parallel in the sense that each input is processed in parallel with the others, not in the sense of multicore computing. They share the same notion of “parallel” as base::pmax() and base::pmin(). map2() and walk2() are specialised for the two argument case; pmap() and pwalk() allow you to provide any number of arguments in a list. Note that a data frame is a very important special case, in which case pmap() and pwalk() apply the function .f to each row. map_dfr(), pmap_dfr() and map2_dfc(), pmap_dfc() return data frames created by row-binding and column-binding respectively. They require dplyr to be installed.</p>
 </div>
 
 

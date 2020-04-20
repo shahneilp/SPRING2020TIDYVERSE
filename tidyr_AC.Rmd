@@ -114,6 +114,67 @@ datatable(pivot_wider(after,
           options = list(pageLength = 4))
 ```
 
+
+```{r}
+datatable(netflix_raw)
+```
+
+### TidyVerse EXTEND (by Abdellah Ait elmouden)
+
+I like these examples that shows pivoting data frames using pivot_wide(), I just want to mention that to go from wide to long data sets, there is also pivot_long() function. 
+
+In the extend version i'll add some plots:
+
+**Count Over Video Type**
+
+```{r}
+video_type_count<-count(netflix_raw,type)
+names(video_type_count)[names(video_type_count) == "type"] <- "Content_Type"
+names(video_type_count)[names(video_type_count) == "n"] <- "Total_Count"
+plot1<-ggplot(video_type_count, aes(x=Content_Type,y=Total_Count)) + geom_bar(stat = 'identity') + labs(title="Count by Content Type")
+
+ggsave(plot = q, width = 3, height = 3, dpi = 300, filename = "Video_types.png")
+
+plot1
+```
+
+**Count Over Rating Type**
+
+```{r}
+video_rating_count<-count(netflix_raw,rating)
+names(video_rating_count)[names(video_rating_count) == "rating"] <- "Content_Rating"
+names(video_rating_count)[names(video_rating_count) == "n"] <- "Total_Count"
+plot2 <-ggplot(video_rating_count, aes(x=Content_Rating,y=Total_Count))+ geom_bar(stat = 'identity', fill="firebrick") + labs(title="Count by Rating Type") + theme(axis.text.x=element_text(size=10, angle=90))
+ggsave(plot = q, width = 5, height = 7, dpi = 300, filename = "Rating_types.png")
+
+plot2
+```
+
+**Country wise and year wise uploads (top countires)**
+
+```{r}
+netflix1<-filter(netflix_raw,netflix_raw$country!="" && netflix_raw$date_added!="" && !is.na(netflix_raw$date_added) )
+
+netflix1<-netflix1%>%
+        mutate( country=strsplit(as.character(netflix1$country), ",")) %>% 
+        unnest(country)
+
+count_group_type_upload<- netflix1%>%group_by(type,country)%>%count(date_added) 
+
+count_group_type_upload$date_added <- format(as.Date.character( count_group_type_upload$date_added,format="%B %d,%Y"),'%Y')
+
+count_group_type_upload$country<-trimws(count_group_type_upload$country)
+count_group_type_upload<-count_group_type_upload%>%group_by(country,date_added)%>%summarize(total=sum(n))%>%filter(total>30)
+
+plot3 <-ggplot(subset(count_group_type_upload,!is.na(date_added)), aes(x =country ,y=total, color=date_added)) +
+        geom_count(position = 'stack') + theme(axis.text.x=element_text(size=15, angle=90))
+
+ggsave(plot = q, width = 7, height = 4, dpi = 300, filename = "content_uploads.png")
+
+plot3
+```
+
+
 # III. Conclusion
 
 As you can see, there are many way to tackle problems in R using Tidyverse. For example, instead of using **select** or **mutate**, one may consider **unite** as a better way to go to for brevity and readabililty. As your coding skills mature, so will your taste for refinement of solutions - the goal is not so much the solution anymore, but how _best_ you can deliver the solution with optimal results and maintainability (sometimes referred to as elegance).
