@@ -51,7 +51,7 @@ We will be manipulating the [Master Candy Power Rankings](https://fivethirtyeigh
 ## Loading Packages 
 
 Tidyverse and tidyr can be loaded easily as follows
-```{r}
+```{r, message=FALSE}
 library(tidyverse)
 library(tidyr)
 ```
@@ -216,6 +216,42 @@ Compare that with the previous used code
 ```
 arrange(select(as_tibble(df),competitorname,sugarpercent),desc(sugarpercent))
 ```
+
+
+## Using dplyr::filter to filter
+
+Assume we have a love for choclate candy. We might want to filter for candy that has chocolate in it
+
+
+We can use dplyr::filter
+
+### Description:
+
+Use filter() find rows/cases where conditions are true. Unlike base subsetting with [, rows where the condition evaluates to NA are dropped.
+
+
+### Usage
+
+filter(.data, ...)
+
+### Example: Sorting candy's by ascending sugarpercent 
+
+```{r}
+filter(as_tibble(df),chocolate ==1)
+```
+
+If we are worried about high chocolate amount in chocoalte treats we could want to have a look at average sugar content in choclate versus non-choclate treats:
+
+```{r}
+as_tibble(df) %>% 
+  dplyr::group_by(chocolate) %>% 
+  dplyr::summarize(avgsugarpercent = mean(sugarpercent, na.rm = TRUE))
+```
+
+As we can see chocolate candy only has 6% more sugar on average so nothing too worrying.
+
+
+
 
 ### Example piping via ggplot2
 
